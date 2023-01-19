@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox fx:id="vBox" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="Diagnosis">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Find diagnosis by id" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Find all diagnosis" />
+                  <MenuItem mnemonicParsing="false" text="Find all diagnosis by patient" />
+                  <MenuItem mnemonicParsing="false" text="Find all diagnosis by date" />
+                  <MenuItem mnemonicParsing="false" text="Find all diagnosis on teraphy" />
+               </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Daily Notes">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Find note by id" />
+            <MenuItem mnemonicParsing="false" text="Find note by date" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Find all notes" />
+            <MenuItem mnemonicParsing="false" text="Find all notes by patient" />
+            <MenuItem mnemonicParsing="false" text="Find all patient edited notes" />
+            <MenuItem mnemonicParsing="false" text="Find all patient notes by not readable" />
+            <MenuItem mnemonicParsing="false" text="Find all patient notes between dates" />
+            <MenuItem mnemonicParsing="false" text="Find all patient notes between day scores" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Appointments">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Find appointment by id" />
+                  <MenuItem mnemonicParsing="false" text="Find appointment by date" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Find all appointments" />
+                  <MenuItem mnemonicParsing="false" text="Find all appointment by change" />
+               </items>
+        </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="User Manual" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="&lt;User&gt;">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Find all users" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Register a psychologist" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Change Password" />
+                  <MenuItem mnemonicParsing="false" text="Log out" />
+               </items>
+            </Menu>
+      </menus>
+    </MenuBar>
+    <AnchorPane fx:id="AnchorPane" maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" style="-fx-background-color: e7f1ff;" VBox.vgrow="ALWAYS">
+         <children>
+            <Pane fx:id="paneSearch" layoutX="135.0" layoutY="14.0" prefHeight="200.0" prefWidth="931.0">
+               <children>
+                  <Text fx:id="txtDiagnosisID" layoutX="86.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Diagnosis ID" />
+                  <TextField fx:id="tfDiagnosisID" layoutX="45.0" layoutY="113.0" />
+                  <Text fx:id="txtPatientDNI" layoutX="93.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Patient DNI" />
+                  <TextField fx:id="tfPatientDNI" layoutX="45.0" layoutY="39.0" />
+                  <Text fx:id="txtDateLow" layoutX="307.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date Low" />
+                  <DatePicker fx:id="dpDateLow" layoutX="246.0" layoutY="39.0" />
+                  <Text fx:id="txtDateGreat" layoutX="307.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date Great" />
+                  <DatePicker fx:id="dtDateGreat" layoutX="246.0" layoutY="113.0" />
+                  <CheckBox fx:id="cbxOnTherapy" layoutX="466.0" layoutY="80.0" mnemonicParsing="false" text="On Therapy" />
+                  <ComboBox fx:id="comboboxSearchByID" layoutX="565.0" layoutY="76.0" prefWidth="150.0" promptText="Search By ID" />
+                  <Button fx:id="btnSearch" layoutX="814.0" layoutY="76.0" mnemonicParsing="false" text="Search" />
+                  <Text fx:id="txtSearchMethod" fill="#9a8a8a" layoutX="565.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search method" />
+               </children>
+            </Pane>
+            <Separator layoutX="21.0" layoutY="192.0" prefHeight="0.0" prefWidth="1149.0" />
+            <Pane fx:id="paneTables" layoutX="139.0" layoutY="210.0" prefHeight="616.0" prefWidth="938.0">
+               <children>
+                  <Text fx:id="txtdiagnosises" fill="#9a8a8a" layoutX="101.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Diagnosises" />
+                  <TableView fx:id="tbDiagnosis" layoutX="101.0" layoutY="27.0" prefHeight="248.0" prefWidth="737.0">
+                    <columns>
+                        <TableColumn prefWidth="75.0" text="Patient" />
+                        <TableColumn prefWidth="87.0" text="Psychologist" />
+                      <TableColumn prefWidth="150.0" text="Date of Creation" />
+                        <TableColumn prefWidth="75.0" text="On Therapy" />
+                        <TableColumn prefWidth="123.0" text="Mental Disease" />
+                        <TableColumn prefWidth="226.0" text="Last Treatment Change" />
+                    </columns>
+                  </TableView>
+                  <Separator layoutX="15.0" layoutY="292.0" prefHeight="16.0" prefWidth="908.0" />
+                  <Text fx:id="txtTreatments" fill="#9a8a8a" layoutX="99.0" layoutY="321.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Treatment for diagnosis:" />
+                  <TableView fx:id="tbTreatment" layoutX="100.0" layoutY="328.0" prefHeight="277.0" prefWidth="357.0">
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="Day" />
+                      <TableColumn prefWidth="75.0" text="Daytime" />
+                        <TableColumn prefWidth="75.0" text="Medication" />
+                        <TableColumn prefWidth="130.0" text="Type of Medication" />
+                    </columns>
+                  </TableView>
+                  <Text fx:id="txtMentalDisease" fill="#9a8a8a" layoutX="505.0" layoutY="321.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Information about: &lt;MentalDisease&gt;" />
+                  <TextField fx:id="tfMentalDisease" editable="false" layoutX="505.0" layoutY="328.0" prefHeight="277.0" prefWidth="333.0" />
+               </children>
+            </Pane>
+            <Separator layoutX="34.0" layoutY="825.0" prefHeight="0.0" prefWidth="1149.0" />
+            <Text fx:id="txtmessage" fill="#9a8a8a" layoutX="371.0" layoutY="853.0" strokeType="OUTSIDE" strokeWidth="0.0" text="“When your heart is set on something, you get closer to your goal with each passing day.”" />
+            <Button fx:id="btnPrint" layoutX="1066.0" layoutY="789.0" mnemonicParsing="false" text="Print" />
+         </children>
+    </AnchorPane>
+  </children>
+</VBox>
