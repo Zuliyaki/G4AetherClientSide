@@ -1,44 +1,48 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package application;
 
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import static javafx.application.Application.launch;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import view.Appointment.AppointmentPatientController;
 
 /**
  *
- * @author 2dam
+ * @author Leire
  */
-public class G4AetherClientSide extends Application {
-    
-    @Override
-    public void start(Stage primaryStage) {
-        Button btn = new Button();
-        btn.setText("Say 'Hello World'");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
-            }
-        });
+public class G4AetherClientSide extends javafx.application.Application {
+
+    /**
+     * Open the Appointment window
+     *
+     * @param stage Stage where the scene will be projected
+     * @throws Exception
+     */
+    public void start(Stage stage) throws Exception {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Appointment/AppointmentPatient.fxml"));
+
+        Parent root = (Parent) loader.load();
+
+        AppointmentPatientController controller = (AppointmentPatientController) loader.getController();
+
+        controller.initialize(root);
+
+        controller.initialize(root);
+
+        Scene scene = new Scene(root);
+
+        stage.setResizable(false);
         
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
+        stage.setTitle("Appointment");
         
-        Scene scene = new Scene(root, 300, 250);
+        stage.getIcons().add(new Image("/resources/icon.png"));
+
+        stage.setScene(scene);
         
-        primaryStage.setTitle("Hello World!");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        stage.show();
     }
 
     /**
@@ -47,5 +51,5 @@ public class G4AetherClientSide extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }
