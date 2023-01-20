@@ -53,7 +53,6 @@ public class Patient extends User {
         this.mbti = mbti;
     }
 
-    @XmlTransient
     public Set<DailyNote> getDailyNotes() {
         return dailyNotes;
     }
@@ -62,7 +61,6 @@ public class Patient extends User {
         this.dailyNotes = dailyNotes;
     }
 
-    @XmlTransient
     public Set<Diagnosis> getDiagnosises() {
         return diagnosises;
     }
@@ -79,7 +77,6 @@ public class Patient extends User {
         this.psychologist = psychologist;
     }
 
-    @XmlTransient
     public Set<Appointment> getAppointments() {
         return appointments;
     }
@@ -87,4 +84,10 @@ public class Patient extends User {
     public void setAppointments(Set<Appointment> appointments) {
         this.appointments = appointments;
     }
+
+    @Override
+    public String toString() {
+        return this.getDni();
+    }
+    
 }

@@ -6,6 +6,7 @@
 package application;
 
 import java.io.IOException;
+import static java.lang.System.out;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -18,22 +19,28 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import view.logIn.LogInController;
 import view.viewDiagnosis.DiagnosisController;
 
 /**
  *
  * @author 2dam
  */
-public class G4AetherClientSide extends Application {
+public class G4AetherClientSide extends javafx.application.Application {
     
     @Override
-    public void start(Stage stage) throws Exception{
-   FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Diagnosis/Diagnosis.fxml"));
+    public void start(Stage stage) {
+           //System.out.println(getClass().getResource("/view/viewDiagnosis/Diagnosis.fxml"));
+
+     FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/viewDiagnosis/Diagnosis.fxml"));
         
       
         
-        Parent root = (Parent) loader.load();
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+        }
       
               DiagnosisController controller = (DiagnosisController) loader.getController();
 
@@ -44,8 +51,8 @@ public class G4AetherClientSide extends Application {
         Scene scene = new Scene(root);
 
         stage.setResizable(false);
-        stage.setTitle("LogIn");
-        stage.getIcons().add(new Image("/resources/icon.png"));
+        stage.setTitle("Diagnosis");
+        //stage.getIcons().add(new Image("/resources/icon.png"));
 
         stage.setScene(scene);
         stage.show();

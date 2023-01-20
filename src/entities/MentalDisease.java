@@ -120,4 +120,9 @@ public class MentalDisease implements Serializable {
         this.diagnosis = diagnosis;
     }
 
+    @Override
+    public String toString() {
+        return this.getMdName();
+    }
+
 }

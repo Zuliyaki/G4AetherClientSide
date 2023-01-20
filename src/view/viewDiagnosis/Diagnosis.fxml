@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="vBox" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="vBox" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.viewDiagnosis.DiagnosisController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -83,9 +83,9 @@
                   <Text fx:id="txtDateGreat" layoutX="307.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date Great" />
                   <DatePicker fx:id="dtDateGreat" layoutX="246.0" layoutY="113.0" />
                   <CheckBox fx:id="cbxOnTherapy" layoutX="466.0" layoutY="80.0" mnemonicParsing="false" text="On Therapy" />
-                  <ComboBox fx:id="comboboxSearchByID" layoutX="565.0" layoutY="76.0" prefWidth="150.0" promptText="Search By ID" />
+                  <ComboBox fx:id="comboboxSearchByID" layoutX="584.0" layoutY="75.0" prefWidth="150.0" promptText="Search By ID" />
                   <Button fx:id="btnSearch" layoutX="814.0" layoutY="76.0" mnemonicParsing="false" text="Search" />
-                  <Text fx:id="txtSearchMethod" fill="#9a8a8a" layoutX="565.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search method" />
+                  <Text fx:id="txtSearchMethod" fill="#9a8a8a" layoutX="584.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search method" />
                </children>
             </Pane>
             <Separator layoutX="21.0" layoutY="192.0" prefHeight="0.0" prefWidth="1149.0" />
@@ -94,22 +94,22 @@
                   <Text fx:id="txtdiagnosises" fill="#9a8a8a" layoutX="101.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Diagnosises" />
                   <TableView fx:id="tbDiagnosis" layoutX="101.0" layoutY="27.0" prefHeight="248.0" prefWidth="737.0">
                     <columns>
-                        <TableColumn prefWidth="75.0" text="Patient" />
-                        <TableColumn prefWidth="87.0" text="Psychologist" />
-                      <TableColumn prefWidth="150.0" text="Date of Creation" />
-                        <TableColumn prefWidth="75.0" text="On Therapy" />
-                        <TableColumn prefWidth="123.0" text="Mental Disease" />
-                        <TableColumn prefWidth="226.0" text="Last Treatment Change" />
+                        <TableColumn fx:id="tbcPatient" prefWidth="75.0" text="Patient" />
+                        <TableColumn fx:id="tbcPsychologist" prefWidth="87.0" text="Psychologist" />
+                      <TableColumn fx:id="tbcDateOfCreation" prefWidth="150.0" text="Date of Creation" />
+                        <TableColumn fx:id="tbcOnTherapy" prefWidth="75.0" text="On Therapy" />
+                        <TableColumn fx:id="tbcMentalDisease" prefWidth="123.0" text="Mental Disease" />
+                        <TableColumn fx:id="tbcLastTreatmentChange" prefWidth="226.0" text="Last Treatment Change" />
                     </columns>
                   </TableView>
                   <Separator layoutX="15.0" layoutY="292.0" prefHeight="16.0" prefWidth="908.0" />
                   <Text fx:id="txtTreatments" fill="#9a8a8a" layoutX="99.0" layoutY="321.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Treatment for diagnosis:" />
                   <TableView fx:id="tbTreatment" layoutX="100.0" layoutY="328.0" prefHeight="277.0" prefWidth="357.0">
                     <columns>
-                      <TableColumn prefWidth="75.0" text="Day" />
-                      <TableColumn prefWidth="75.0" text="Daytime" />
-                        <TableColumn prefWidth="75.0" text="Medication" />
-                        <TableColumn prefWidth="130.0" text="Type of Medication" />
+                      <TableColumn fx:id="tbcDay" prefWidth="75.0" text="Day" />
+                      <TableColumn fx:id="tbcDayTime" prefWidth="75.0" text="Daytime" />
+                        <TableColumn fx:id="tbcMedication" prefWidth="75.0" text="Medication" />
+                        <TableColumn fx:id="tbcTypeOfMedication" prefWidth="130.0" text="Type of Medication" />
                     </columns>
                   </TableView>
                   <Text fx:id="txtMentalDisease" fill="#9a8a8a" layoutX="505.0" layoutY="321.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Information about: &lt;MentalDisease&gt;" />

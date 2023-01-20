@@ -80,4 +80,9 @@ public class Psychologist extends User {
         this.appointments = appointments;
     }
 
+    @Override
+    public String toString() {
+        return this.getDni();
+    }
+
 }
