@@ -5,8 +5,8 @@
  */
 package view.signUp;
 
-import classes.*;
-import factories.FactoryClient;
+//import classes.*;
+//import factories.FactoryClient;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -46,7 +46,7 @@ public class SignUpController {
     private boolean passwordFieldCorrect = false;
     private boolean allFieldsFill = false;
     
-    private User user;
+//    private User user;
 
     @FXML
     private TextField tfUsername;
@@ -305,7 +305,7 @@ public class SignUpController {
             if (!this.pfPassword.getText().matches(PASSWORD_REGEX)) {
                 throw new Exception("The password can only use this special characters [@$!%*#?&]");
             }
-
+/*
             //The information of all text fields will be collected, validated, and stored in an object of type User.
             User newUser = new User();
             newUser.setLogin(tfUsername.getText().toLowerCase());
@@ -332,7 +332,7 @@ public class SignUpController {
             //Close the stage
             Stage stage = (Stage) this.btnContinue.getScene().getWindow();
             stage.close();
-            
+            */
         } catch (Exception e) {
             //If there is any error, the exception that has been received will be managed by an alert.
             new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();

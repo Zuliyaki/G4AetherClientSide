@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package view.logIn;
+package view.dailyNote.psychologistView;
 
+import view.logIn.*;
 import entities.User;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -34,7 +35,7 @@ import view.signUp.SignUpController;
  *
  * @author LeireyZulu
  */
-public class LogInController {
+public class DailyNoteWindowPsychologist {
 
     private User user;
     private Stage stage;
@@ -174,39 +175,7 @@ public class LogInController {
      */
     @FXML
     private void handleLogInButtonAction(ActionEvent event) throws IOException, Exception {
-/*
-        try {
-            LOGGER.info("inicio de envio información al servidor");
-            User loginUser = new User();
-            loginUser.setLogin(tfDNI.getText());
-            loginUser.setPassword(pfPassword.getText());
-
-            LoginLogout clientLoginLogout = null;
-
-            clientLoginLogout = FactoryClient.getLoginLogout();
-            loginUser = clientLoginLogout.logIn(loginUser);
-
-            Stage stage = new Stage();
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/logOut/LogOut.fxml"));
-
-            Parent root = (Parent) loader.load();
-
-            LogOutController controller = (LogOutController) loader.getController();
-
-            controller.setStage(stage);
-
-            controller.initData(loginUser);
-
-            controller.initialize(root);
-
-            tfDNI.setText("");
-            pfPassword.setText("");
-        } catch (Exception ex) {
-            showErrorAlert(ex.getMessage());
-            LOGGER.log(Level.SEVERE, ex.getMessage());
-
-        }*/
+        
     }
 
     /**

@@ -8,26 +8,20 @@ package entities;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.logging.Logger;
-import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
+
 
 /**
  *
- * @author 2dam
+ * @author zuli
  */
-@Embeddable
 public class TreatmentId implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long diagnosisId;
     private Long medicationId;
 
-    @Enumerated(EnumType.STRING)
     private EnumDay day;
 
-    @Enumerated(EnumType.STRING)
     private EnumDayTime dayTime;
 
     //CONSTRUCTOR

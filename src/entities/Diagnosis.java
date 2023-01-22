@@ -5,55 +5,32 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.*;
-import static javax.persistence.FetchType.EAGER;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlRootElement;
+import javafx.beans.property.*;
+import javafx.collections.ObservableSet;
 import javax.xml.bind.annotation.XmlTransient;
 
-@Entity
-@Table(name = "diagnosis", schema = "aether")
-@NamedQueries({
-    @NamedQuery(
-            name = "findAllDiagnosis", query = "SELECT dia FROM Diagnosis dia"
-    )
-    ,
-    @NamedQuery(
-            name = "findDiagnosisById", query = "SELECT dia FROM Diagnosis dia WHERE dia.diagnosisId=:diagnosisId"
-    )
-    ,
-    @NamedQuery(
-            name = "findAllDiagnosisByPatient", query = "SELECT dia FROM Diagnosis dia WHERE dia.patient.dni=:patient"
-    )
-    ,
-    @NamedQuery(
-            name = "findPatientDiagnosisByDate", query = "SELECT dia FROM Diagnosis dia WHERE dia.patient.dni=:patient and dia.diagnosisDate BETWEEN :diaDateLow AND :diaDateGreat"
-    )
-    ,
-    @NamedQuery(
-            name = "findAllIfPatientOnTeraphy", query = "SELECT dia FROM Diagnosis dia WHERE dia.patient.dni=:patient and dia.onTherapy=true"
-    )
-})
-@XmlRootElement
+
+/**
+ *
+ * @author zuli
+ */
 public class Diagnosis implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long diagnosisId;
-    @Temporal(TemporalType.DATE)
-    private Date diagnosisDate;
-    @Temporal(TemporalType.DATE)
-    private Date lastDiagnosisChangeDate;
-    @ManyToOne
-    private Patient patient;
-    @ManyToOne
-    private Psychologist psychologist;
-    @ManyToOne
-    private MentalDisease mentalDisease;
-    @OneToMany(targetEntity = Treatment.class, mappedBy = "diagnosis")
+ 
+    private SimpleLongProperty  diagnosisId;
+   
+    private SimpleObjectProperty<Date> diagnosisDate;
+  
+    private SimpleObjectProperty<Date> lastDiagnosisChangeDate;
+  
+    private SimpleObjectProperty<Patient> patient;
+   
+    private SimpleObjectProperty<Psychologist> psychologist;
+ 
+    private SimpleObjectProperty<MentalDisease> mentalDisease;
     private Set<Treatment> treatments;
-    private Boolean onTherapy;
+    private SimpleBooleanProperty onTherapy;
 
     /**
      * Empty constructor
@@ -64,61 +41,61 @@ public class Diagnosis implements Serializable {
 
     public Diagnosis(Long diagnosisId, Date diagnosisDate, Date lastDiagnosisChangeDate, Patient patient, Psychologist psychologist, MentalDisease mentalDisease, Set<Treatment> treatments, Boolean onTherapy) {
       //   this.diagnosisId = diagnosisId;
-        this.diagnosisDate = diagnosisDate;
-        this.lastDiagnosisChangeDate = lastDiagnosisChangeDate;
-        this.patient = patient;
-        this.psychologist = psychologist;
-        this.mentalDisease = mentalDisease;
+        this.diagnosisDate = new SimpleObjectProperty(diagnosisDate);
+        this.lastDiagnosisChangeDate = new SimpleObjectProperty(lastDiagnosisChangeDate);
+        this.patient = new SimpleObjectProperty(patient);
+        this.psychologist = new SimpleObjectProperty(psychologist);
+        this.mentalDisease =  new SimpleObjectProperty(mentalDisease);
         this.treatments = treatments;
-        this.onTherapy = onTherapy;
+        this.onTherapy = new SimpleBooleanProperty(onTherapy);
     }
 
     public Long getDiagnosisId() {
-        return diagnosisId;
+        return diagnosisId.get();
     }
 
     public void setDiagnosisId(Long diagnosisId) {
-        this.diagnosisId = diagnosisId;
+        this.diagnosisId.set(diagnosisId);
     }
 
     public Date getDiagnosisDate() {
-        return diagnosisDate;
+        return diagnosisDate.get();
     }
 
     public void setDiagnosisDate(Date diagnosisDate) {
-        this.diagnosisDate = diagnosisDate;
+        this.diagnosisDate.set(diagnosisDate);
     }
 
     public Date getLastDiagnosisChangeDate() {
-        return lastDiagnosisChangeDate;
+        return lastDiagnosisChangeDate.get();
     }
 
     public void setLastDiagnosisChangeDate(Date lastDiagnosisChangeDate) {
-        this.lastDiagnosisChangeDate = lastDiagnosisChangeDate;
+        this.lastDiagnosisChangeDate.set(lastDiagnosisChangeDate);
     }
 
     public Patient getPatient() {
-        return patient;
+        return patient.get();
     }
 
     public void setPatient(Patient patient) {
-        this.patient = patient;
+        this.patient.set(patient);
     }
 
     public Psychologist getPsychologist() {
-        return psychologist;
+        return psychologist.get();
     }
 
     public void setPsychologist(Psychologist psychologist) {
-        this.psychologist = psychologist;
+        this.psychologist.set(psychologist);
     }
 
     public MentalDisease getMentalDisease() {
-        return mentalDisease;
+        return mentalDisease.get();
     }
 
     public void setMentalDisease(MentalDisease mentalDisease) {
-        this.mentalDisease = mentalDisease;
+        this.mentalDisease.set(mentalDisease);
     }
     
     @XmlTransient
@@ -131,11 +108,11 @@ public class Diagnosis implements Serializable {
     }
 
     public Boolean getOnTherapy() {
-        return onTherapy;
+        return onTherapy.get();
     }
 
     public void setOnTherapy(Boolean onTherapy) {
-        this.onTherapy = onTherapy;
+        this.onTherapy.set(true);
     }
 
     @Override
