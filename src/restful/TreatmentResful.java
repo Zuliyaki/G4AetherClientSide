@@ -5,6 +5,7 @@
  */
 package restful;
 
+import interfaces.TreatmentInterface;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -15,7 +16,7 @@ import javax.ws.rs.core.GenericType;
  * [entities.treatment]<br>
  * USAGE:
  * <pre>
- *        TreatmentResful client = new TreatmentResful();
+ *        tuki client = new tuki();
  *        Object response = client.XXX(...);
  *        // do whatever with response
  *        client.close();
@@ -23,7 +24,7 @@ import javax.ws.rs.core.GenericType;
  *
  * @author 2dam
  */
-public class TreatmentResful implements interfaces.TreatmentInterface{
+public class TreatmentResful implements TreatmentInterface{
 
     private WebTarget webTarget;
     private Client client;
@@ -36,6 +37,16 @@ public class TreatmentResful implements interfaces.TreatmentInterface{
 
     public void deleteTreatment() throws ClientErrorException {
         webTarget.request().delete();
+    }
+
+    public <T> T findAllTreatments_XML(Class<T> responseType) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T findAllTreatments_JSON(Class<T> responseType) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
     public <T> T findTreatmentByID_XML(Class<T> responseType, String treatmentId, String MedicationId, String Day, String Daytime) throws ClientErrorException {

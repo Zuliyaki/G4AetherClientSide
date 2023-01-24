@@ -37,6 +37,7 @@ public class Diagnosis implements Serializable {
      * Empty constructor
      */
     public Diagnosis() {
+        this.diagnosisId = new SimpleLongProperty();
         this.diagnosisDate = new SimpleObjectProperty();
         this.diagnosisDate = new SimpleObjectProperty();
         this.lastDiagnosisChangeDate = new SimpleObjectProperty();
@@ -47,7 +48,7 @@ public class Diagnosis implements Serializable {
     }
 
     public Diagnosis(Long diagnosisId, Date diagnosisDate, Date lastDiagnosisChangeDate, Patient patient, Psychologist psychologist, MentalDisease mentalDisease, Set<Treatment> treatments, Boolean onTherapy) {
-        //   this.diagnosisId = diagnosisId;
+        this.diagnosisId = new SimpleLongProperty(diagnosisId);
         this.diagnosisDate = new SimpleObjectProperty(diagnosisDate);
         this.lastDiagnosisChangeDate = new SimpleObjectProperty(lastDiagnosisChangeDate);
         this.patient = new SimpleObjectProperty(patient);

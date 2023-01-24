@@ -92,14 +92,15 @@
             <Pane fx:id="paneTables" layoutX="139.0" layoutY="210.0" prefHeight="616.0" prefWidth="938.0">
                <children>
                   <Text fx:id="txtdiagnosises" fill="#9a8a8a" layoutX="101.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Diagnosises" />
-                  <TableView fx:id="tbDiagnosis" layoutX="101.0" layoutY="27.0" prefHeight="248.0" prefWidth="737.0">
+                  <TableView fx:id="tbDiagnosis" layoutX="8.0" layoutY="27.0" prefHeight="248.0" prefWidth="908.0">
                     <columns>
-                        <TableColumn fx:id="tbcPatient" prefWidth="75.0" text="Patient" />
-                        <TableColumn fx:id="tbcPsychologist" prefWidth="87.0" text="Psychologist" />
-                      <TableColumn fx:id="tbcDateOfCreation" prefWidth="150.0" text="Date of Creation" />
-                        <TableColumn fx:id="tbcOnTherapy" prefWidth="75.0" text="On Therapy" />
-                        <TableColumn fx:id="tbcMentalDisease" prefWidth="123.0" text="Mental Disease" />
-                        <TableColumn fx:id="tbcLastTreatmentChange" prefWidth="226.0" text="Last Treatment Change" />
+                        <TableColumn fx:id="tbcDg" prefWidth="75.0" text="DiagnosisID" />
+                        <TableColumn fx:id="tbcPatient" prefWidth="89.5999755859375" text="Patient" />
+                        <TableColumn fx:id="tbcPsychologist" prefWidth="104.00006103515625" text="Psychologist" />
+                      <TableColumn fx:id="tbcDateOfCreation" prefWidth="124.7999267578125" text="Date of Creation" />
+                        <TableColumn fx:id="tbcOnTherapy" minWidth="8.800048828125" prefWidth="69.60003662109375" text="On Therapy" />
+                        <TableColumn fx:id="tbcMentalDisease" prefWidth="207.199951171875" text="Mental Disease" />
+                        <TableColumn fx:id="tbcLastTreatmentChange" prefWidth="239.20001220703125" text="Last Treatment Change" />
                     </columns>
                   </TableView>
                   <Separator layoutX="15.0" layoutY="292.0" prefHeight="16.0" prefWidth="908.0" />

@@ -8,13 +8,15 @@ package entities;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.logging.Logger;
-
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author zuli
  */
 public class TreatmentId implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     private Long diagnosisId;
@@ -52,14 +54,15 @@ public class TreatmentId implements Serializable {
         this.medicationId = medicationId;
     }
 
-    public EnumDay getDay() {
-        return day;
+    @XmlElement(name = "day")
+    public String getDay() {
+        return day.toString();
     }
 
     public void setDay(EnumDay day) {
         this.day = day;
     }
-
+        @XmlElement(name="dayTime")
     public EnumDayTime getDayTime() {
         return dayTime;
     }
@@ -104,7 +107,5 @@ public class TreatmentId implements Serializable {
         }
         return true;
     }
-
-   
 
 }

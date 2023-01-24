@@ -119,8 +119,10 @@ public class DiagnosisController {
     @FXML
     private TableColumn tbcLastTreatmentChange;
     @FXML
+    private TableColumn tbcDg;
+    @FXML
     private Text txtTreatments;
-
+    
     @FXML
     private TableView<Treatment> tbTreatment;
     @FXML
@@ -173,16 +175,17 @@ public class DiagnosisController {
                 new PropertyValueFactory<>("mentalDisease"));
         tbcLastTreatmentChange.setCellValueFactory(
                 new PropertyValueFactory<>("lastDiagnosisChangeDate"));
-
+        tbcDg.setCellValueFactory(
+                new PropertyValueFactory<>("diagnosisId"));
         diagnosises = loadAllDiagnosises();
 
         tbTreatment.setEditable(true);
         tbTreatment.getSelectionModel().selectedItemProperty().addListener(this::handleTreatmentTableSelectionChanged);
         tbcDay.setCellValueFactory(
-                new PropertyValueFactory<>("day"));
-        tbcDayTime.setCellValueFactory( new PropertyValueFactory<>("dayTime"));
+                new PropertyValueFactory<>("treatmentId"));
+        tbcDayTime.setCellValueFactory( new PropertyValueFactory<>("treatmentId"));
         tbcMedication.setCellValueFactory( new PropertyValueFactory<>("medication"));
-        tbcMedication.setCellValueFactory( new PropertyValueFactory<>("typeOfMedication"));
+        tbcTypeOfMedication.setCellValueFactory( new PropertyValueFactory<>("medication"));
         
         stage.show();
     }

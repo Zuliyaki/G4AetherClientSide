@@ -16,6 +16,9 @@ import javax.ws.rs.core.GenericType;
 public interface TreatmentInterface {
 
     public void deleteTreatment() throws ClientErrorException;
+    public <T> T findAllTreatments_XML(Class<T> responseType) throws ClientErrorException;
+
+    public <T> T findAllTreatments_JSON(Class<T> responseType) throws ClientErrorException;
 
     public <T> T findTreatmentByID_XML(Class<T> responseType, String treatmentId, String MedicationId, String Day, String Daytime) throws ClientErrorException;
 

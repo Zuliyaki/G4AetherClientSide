@@ -3,13 +3,16 @@ package entities;
 import java.io.Serializable;
 import java.util.Objects;
 import javafx.beans.property.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement(name = "treatment")
 public class Treatment implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private SimpleObjectProperty<TreatmentId> treatmentId;
+    
     private SimpleObjectProperty<Diagnosis> diagnosis;
-
     private Medication medication;
 
     public Treatment() {
@@ -21,6 +24,7 @@ public class Treatment implements Serializable {
         this.medication = medication;
     }
 
+    @XmlElement(name = "treatmentId")
     public TreatmentId getTreatmentId() {
         return treatmentId.get();
     }

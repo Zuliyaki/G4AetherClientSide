@@ -10,8 +10,8 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 
 /**
- * Jersey REST client generated for REST resource:DiagnosisFacadeREST
- * [entities.diagnosis]<br>
+ * Jersey REST client generated for REST resource:TreatmentFacadeREST
+ * [entities.treatment]<br>
  * USAGE:
  * <pre>
  *        tuki client = new tuki();
@@ -30,84 +30,60 @@ public class tuki {
 
     public tuki() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
-        webTarget = client.target(BASE_URI).path("entities.diagnosis");
+        webTarget = client.target(BASE_URI).path("entities.treatment");
     }
 
-    public void createDiagnosis_XML(Object requestEntity) throws ClientErrorException {
+    public void deleteTreatment() throws ClientErrorException {
+        webTarget.request().delete();
+    }
+
+    public <T> T findAllTreatments_XML(Class<T> responseType) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T findAllTreatments_JSON(Class<T> responseType) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+    }
+
+    public <T> T findTreatmentByID_XML(Class<T> responseType, String treatmentId, String MedicationId, String Day, String Daytime) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("get/{0}/{1}/{2}/{3}", new Object[]{treatmentId, MedicationId, Day, Daytime}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    public <T> T findTreatmentByID_JSON(Class<T> responseType, String treatmentId, String MedicationId, String Day, String Daytime) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("get/{0}/{1}/{2}/{3}", new Object[]{treatmentId, MedicationId, Day, Daytime}));
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+    }
+
+    public void createTreatment_XML(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
-    public void createDiagnosis_JSON(Object requestEntity) throws ClientErrorException {
+    public void createTreatment_JSON(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
-    public <T> T findAllIfPatientOnTeraphy_XML(Class<T> responseType, String id) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("onteraphy/{0}", new Object[]{id}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
-    }
-
-    public <T> T findAllIfPatientOnTeraphy_JSON(Class<T> responseType, String id) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("onteraphy/{0}", new Object[]{id}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
-    }
-
-    public <T> T findDiagnosisById_XML(Class<T> responseType, String id) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
-    }
-
-    public <T> T findDiagnosisById_JSON(Class<T> responseType, String id) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
-    }
-
-    public void updateDiagnosis_XML(Object requestEntity) throws ClientErrorException {
+    public void updateTreatment_XML(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
-    public void updateDiagnosis_JSON(Object requestEntity) throws ClientErrorException {
+    public void updateTreatment_JSON(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
-    public <T> T findAllDiagnosis_XML(Class<T> responseType) throws ClientErrorException {
+    public <T> T findTreatmentsByDiagnosisId_XML(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("diagnosis/{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findAllDiagnosis_JSON(Class<T> responseType) throws ClientErrorException {
+    public <T> T findTreatmentsByDiagnosisId_JSON(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
-    }
-
-    public <T> T findPatientDiagnosisByDate_XML(Class<T> responseType, String id, String dateLow, String dateGreat) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("findDiagnosisByPatientIdbeetweenDates/{0}/{1}/{2}", new Object[]{id, dateLow, dateGreat}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
-    }
-
-    public <T> T findPatientDiagnosisByDate_JSON(Class<T> responseType, String id, String dateLow, String dateGreat) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("findDiagnosisByPatientIdbeetweenDates/{0}/{1}/{2}", new Object[]{id, dateLow, dateGreat}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
-    }
-
-    public void deleteDiagnosis(String id) throws ClientErrorException {
-        webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
-    }
-
-    public <T> T findAllDiagnosisByPatient_XML(Class<T> responseType, String id) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("patients/{0}", new Object[]{id}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
-    }
-
-    public <T> T findAllDiagnosisByPatient_JSON(Class<T> responseType, String id) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("patients/{0}", new Object[]{id}));
+        resource = resource.path(java.text.MessageFormat.format("diagnosis/{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 

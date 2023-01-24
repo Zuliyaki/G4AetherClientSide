@@ -3,12 +3,16 @@ package entities;
 import java.io.Serializable;
 import java.util.Set;
 import javafx.beans.property.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author zuli
  */
+
+
 public class Medication implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -16,6 +20,7 @@ public class Medication implements Serializable {
     private SimpleLongProperty medicationId;
     private SimpleStringProperty medicationName;
     private SimpleStringProperty description;
+
     private SimpleObjectProperty<EnumMedType> typeOfMedication;
     private Set<Treatment> treatments;
 
@@ -27,7 +32,7 @@ public class Medication implements Serializable {
     }
 
     public Medication(Long medicationId, String medicationName, String description, EnumMedType typeOfMedication, Set<Treatment> treatments) {
-       // this.medicationId = medicationId;
+        this.medicationId =  new SimpleLongProperty(medicationId);
         this.medicationName = new SimpleStringProperty(medicationName);
         this.description = new SimpleStringProperty(description);
         this.typeOfMedication = new SimpleObjectProperty(typeOfMedication);
@@ -54,9 +59,9 @@ public class Medication implements Serializable {
     public void setDescription(String description) {
         this.description = new SimpleStringProperty(description);
     }
-
-    public EnumMedType getTypeOfMedication() {
-        return typeOfMedication.get();
+    @XmlElement(name="typeOfMedication")
+    public String getTypeOfMedication() {
+        return typeOfMedication.toString();
     }
 
     public void setTypeOfMedication(EnumMedType typeOfMedication) {
@@ -72,4 +77,21 @@ public class Medication implements Serializable {
         this.treatments = treatments;
     }
 
+    /**
+     * 
+     * @return @Override
+    }
+     */
+    
+    /**
+     * 
+     *   @Override
+    public String toString() {
+        return this.getMedicationName();
+    }
+ 
+     */
+  
+    
+    
 }
