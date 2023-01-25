@@ -83,25 +83,25 @@
                         <Font size="13.0" />
                     </font>
                 </Text>
-                <ComboBox fx:id="comboSearchMethod" layoutX="67.0" layoutY="95.0" prefHeight="25.0" prefWidth="174.0" promptText="findAllNotes" />
+                <ComboBox fx:id="comboSearchMethod" layoutX="67.0" layoutY="95.0" prefHeight="25.0" prefWidth="194.0" promptText="findAllNotes" />
                 <Text layoutX="67.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Patient dni" wrappingWidth="174.15625">
                     <font>
                         <Font size="13.0" />
                     </font>
                 </Text>
-                <TextField fx:id="tfPatientDni" layoutX="68.0" layoutY="180.0" prefHeight="25.0" prefWidth="174.0" promptText="Patient dni" />
+                <TextField fx:id="tfPatientDni" layoutX="68.0" layoutY="180.0" prefHeight="25.0" prefWidth="194.0" promptText="Patient dni" />
                 <Text layoutX="362.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Day score bottom" wrappingWidth="174.15625">
                     <font>
                         <Font size="13.0" />
                     </font>
                 </Text>
-            <Spinner fx:id="spinnerScoreBottom" layoutX="362.0" layoutY="120.0" prefHeight="25.0" prefWidth="194.0" />
+                <Spinner fx:id="spinnerScoreBottom" layoutX="362.0" layoutY="120.0" prefHeight="25.0" prefWidth="194.0" />
                 <Text layoutX="579.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Day score top" wrappingWidth="174.15625">
                     <font>
                         <Font size="13.0" />
                     </font>
                 </Text>
-            <Spinner fx:id="spinnerScoreTop" layoutX="579.0" layoutY="120.0" prefHeight="25.0" prefWidth="194.0" />
+                <Spinner fx:id="spinnerScoreTop" layoutX="579.0" layoutY="120.0" prefHeight="25.0" prefWidth="194.0" />
                 <Text layoutX="362.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date start" wrappingWidth="174.15625">
                     <font>
                         <Font size="13.0" />
@@ -116,12 +116,12 @@
                 <DatePicker fx:id="dpEnd" layoutX="579.0" layoutY="180.0" prefHeight="25.0" prefWidth="194.0" promptText="Date end" />
                 <Button fx:id="btnSearch" layoutX="1014.0" layoutY="116.0" mnemonicParsing="false" onAction="#handleSearchButtonAction" prefHeight="34.0" prefWidth="119.0" text="Search" />
                 <Button fx:id="btnPrint" layoutX="1014.0" layoutY="176.0" mnemonicParsing="false" onAction="#handlePrintButtonAction" prefHeight="34.0" prefWidth="119.0" text="Print" />
-                <TableView fx:id="table" layoutX="362.0" layoutY="226.0" prefHeight="283.0" prefWidth="771.0">
+                <TableView fx:id="tb" layoutX="362.0" layoutY="226.0" prefHeight="283.0" prefWidth="771.0">
                     <columns>
-                        <TableColumn fx:id="tableColDate" prefWidth="130.0" text="Date" />
-                        <TableColumn fx:id="tableColNote" prefWidth="440.0" text="Note" />
-                        <TableColumn fx:id="tableColScore" prefWidth="110.0" text="Day score" />
-                        <TableColumn fx:id="tableColReadable" prefWidth="90.0" text="Readable" />
+                        <TableColumn fx:id="tbcDate" prefWidth="130.0" text="Date" />
+                        <TableColumn fx:id="tbcNote" prefWidth="440.0" text="Note" />
+                        <TableColumn fx:id="tbcScore" prefWidth="110.0" text="Day score" />
+                        <TableColumn fx:id="tbcReadable" prefWidth="90.0" text="Readable" />
                     </columns>
                     <contextMenu>
                         <ContextMenu fx:id="tableContextMenu">
@@ -150,7 +150,7 @@
                         <Font size="13.0" />
                     </font>
                 </Text>
-                <CheckBox fx:id="checkboxReadable" layoutX="68.0" layoutY="737.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="208.0" text="Readable by psychologist">
+                <CheckBox fx:id="ckbxReadable" layoutX="68.0" layoutY="737.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="208.0" text="Readable by psychologist">
                     <font>
                         <Font size="13.0" />
                     </font>
@@ -160,13 +160,13 @@
                         <Font size="13.0" />
                     </font>
                 </Text>
-                <TextArea fx:id="txtareaNote" layoutX="362.0" layoutY="563.0" prefHeight="228.0" prefWidth="362.0" promptText="Writte a description of your day" />
+                <TextArea fx:id="txtaNote" layoutX="362.0" layoutY="563.0" prefHeight="228.0" prefWidth="362.0" promptText="Writte a description of your day" />
                 <Text layoutX="769.0" layoutY="550.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Comment of psychologist" wrappingWidth="312.15625">
                     <font>
                         <Font size="13.0" />
                     </font>
                 </Text>
-                <TextArea fx:id="txtareaComment" layoutX="769.0" layoutY="564.0" prefHeight="228.0" prefWidth="362.0" promptText="Respond of the psychologist" />
+                <TextArea fx:id="txtaComment" layoutX="769.0" layoutY="564.0" prefHeight="228.0" prefWidth="362.0" promptText="Respond of the psychologist" />
                 <Button fx:id="btnAdd" layoutX="762.0" layoutY="812.0" mnemonicParsing="false" onAction="#handleAddButtonAction" prefHeight="34.0" prefWidth="119.0" text="Add" />
                 <Button fx:id="btnModify" layoutX="888.0" layoutY="812.0" mnemonicParsing="false" onAction="#handleModifyButtonAction" prefHeight="34.0" prefWidth="119.0" text="Modify" />
                 <Button fx:id="btnDelete" layoutX="1014.0" layoutY="812.0" mnemonicParsing="false" onAction="#handleDeleteButtonAction" prefHeight="34.0" prefWidth="119.0" text="Delete" />

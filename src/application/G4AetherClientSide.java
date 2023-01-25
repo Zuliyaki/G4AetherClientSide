@@ -28,32 +28,24 @@ public class G4AetherClientSide extends Application {
 
     @Override
     public void start(Stage stage) {
-        //System.out.println(getClass().getResource("/view/viewDiagnosis/Diagnosis.fxml"));
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dailyNote/patientView/DailyNoteWindowPatientController.fxml"));
-
-        Parent root = null;
         try {
-            root = (Parent) loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dailyNote/patientView/DailyNoteWindowPatient.fxml"));
+            //FXMLLoader loader = new FXMLLoader(getClass().getResource("view/dailyNote/patientView/DailyNoteWindowPatient.fxml"));
+
+            System.out.println(getClass().getResource("/view/dailyNote/patientView/DailyNoteWindowPatient.fxml"));
+            Parent root = (Parent) loader.load();
+            DailyNoteWindowPatientController controller = (DailyNoteWindowPatientController) loader.getController();
+            controller.setStage(stage);
+            controller.initialize(root);
+
+            Scene scene = new Scene(root);
+            //stage.getIcons().add(new Image("/resources/icon.png"));
+            stage.setScene(scene);
+            stage.show();
+
         } catch (IOException ex) {
             Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        DailyNoteWindowPatientController controller = (DailyNoteWindowPatientController) loader.getController();
-
-        controller.setStage(stage);
-
-        controller.initialize(root);
-
-        Scene scene = new Scene(root);
-
-        stage.setResizable(false);
-        stage.setTitle("Diagnosis");
-        //stage.getIcons().add(new Image("/resources/icon.png"));
-
-        stage.setScene(scene);
-        stage.show();
-
     }
 
     /**
