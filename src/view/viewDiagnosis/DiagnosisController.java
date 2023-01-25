@@ -129,14 +129,8 @@ public class DiagnosisController {
     private TableColumn tbcDay;
 
     @FXML
-    private TableColumn tbcDayTime;
-
-    @FXML
     private TableColumn tbcMedication;
-
-    @FXML
-    private TableColumn tbcTypeOfMedication;
-
+    
     @FXML
     private Text txtMentalDisease;
 
@@ -178,13 +172,11 @@ public class DiagnosisController {
         tbcDg.setCellValueFactory(
                 new PropertyValueFactory<>("diagnosisId"));
         diagnosises = loadAllDiagnosises();
-
+        
         tbTreatment.setEditable(true);
         tbTreatment.getSelectionModel().selectedItemProperty().addListener(this::handleTreatmentTableSelectionChanged);
-        tbcDay.setCellValueFactory(new PropertyValueFactory<>("day"));
-        tbcDayTime.setCellValueFactory( new PropertyValueFactory<>("dayTime"));
+        tbcDay.setCellValueFactory(new PropertyValueFactory<Treatment , Enum>("treatmentId"));
         tbcMedication.setCellValueFactory( new PropertyValueFactory<>("medication"));
-        tbcTypeOfMedication.setCellValueFactory( new PropertyValueFactory<>("medicationType"));
         
         stage.show();
     }

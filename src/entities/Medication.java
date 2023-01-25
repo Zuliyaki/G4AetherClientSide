@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author zuli
  */
 
-
+@XmlRootElement(name = "medication")
 public class Medication implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -20,7 +20,6 @@ public class Medication implements Serializable {
     private SimpleLongProperty medicationId;
     private SimpleStringProperty medicationName;
     private SimpleStringProperty description;
-
     private SimpleObjectProperty<EnumMedType> typeOfMedication;
     private Set<Treatment> treatments;
 
@@ -28,7 +27,11 @@ public class Medication implements Serializable {
      * Empty constructor
      */
     public Medication() {
-        super();
+       this.medicationId =  new SimpleLongProperty();
+        this.medicationName = new SimpleStringProperty();
+        this.description = new SimpleStringProperty();
+        this.typeOfMedication = new SimpleObjectProperty();
+        this.treatments = treatments;
     }
 
     public Medication(Long medicationId, String medicationName, String description, EnumMedType typeOfMedication, Set<Treatment> treatments) {
@@ -60,8 +63,8 @@ public class Medication implements Serializable {
         this.description = new SimpleStringProperty(description);
     }
     @XmlElement(name="typeOfMedication")
-    public String getTypeOfMedication() {
-        return typeOfMedication.toString();
+    public EnumMedType getTypeOfMedication() {
+        return typeOfMedication.getValue();
     }
 
     public void setTypeOfMedication(EnumMedType typeOfMedication) {
@@ -82,16 +85,10 @@ public class Medication implements Serializable {
      * @return @Override
     }
      */
-    
-    /**
-     * 
-     *   @Override
+     @Override
     public String toString() {
         return this.getMedicationName();
     }
- 
-     */
-  
-    
+
     
 }
