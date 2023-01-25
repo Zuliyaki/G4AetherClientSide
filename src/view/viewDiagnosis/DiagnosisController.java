@@ -181,11 +181,10 @@ public class DiagnosisController {
 
         tbTreatment.setEditable(true);
         tbTreatment.getSelectionModel().selectedItemProperty().addListener(this::handleTreatmentTableSelectionChanged);
-        tbcDay.setCellValueFactory(
-                new PropertyValueFactory<>("treatmentId"));
-        tbcDayTime.setCellValueFactory( new PropertyValueFactory<>("treatmentId"));
+        tbcDay.setCellValueFactory(new PropertyValueFactory<>("day"));
+        tbcDayTime.setCellValueFactory( new PropertyValueFactory<>("dayTime"));
         tbcMedication.setCellValueFactory( new PropertyValueFactory<>("medication"));
-        tbcTypeOfMedication.setCellValueFactory( new PropertyValueFactory<>("medication"));
+        tbcTypeOfMedication.setCellValueFactory( new PropertyValueFactory<>("medicationType"));
         
         stage.show();
     }

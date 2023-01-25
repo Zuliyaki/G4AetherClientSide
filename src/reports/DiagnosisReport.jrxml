@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bac0e7d2-b9d1-40b9-85cf-4bbedf27445b">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0FFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="2d7e3ce4-bffb-4b7f-b4fc-1bc76d5961a8"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="79" uuid="5fcb5e7d-c62f-4481-a955-51e0875c5e93"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="26" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DIAGNOSIS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="66" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="111" height="62" uuid="ed73ceb1-4db1-41a3-b2a3-9ab4eacb6dcc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Patient]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="444" y="0" width="111" height="62" uuid="32a521f0-7a98-4b26-a8a0-9eb9caf7f86b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Treatment Modification]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="111" y="0" width="111" height="62" uuid="508fdef9-104d-4393-ad0a-ab5c23d8033e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Pyschologist]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="222" y="0" width="111" height="62" uuid="1fbbdd8a-a5ad-4a05-a74a-1d0d2c301c6a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Date of Creation]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="333" y="0" width="111" height="62" uuid="8800616e-ed61-406c-887e-1e1d1b0edf75"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Mental Disease]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="62" width="111" height="63" uuid="96cb6b7c-8b12-406d-9095-38134997d218"/>
+				<textFieldExpression><![CDATA[$F{patient}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="111" y="62" width="111" height="63" uuid="16fbea61-ecfc-40bc-9e1d-6cc05f9849da"/>
+				<textFieldExpression><![CDATA[$F{Psychologist}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="222" y="62" width="111" height="63" uuid="509d7cc3-eb69-4f88-9928-8cc5d7871bf6"/>
+				<textFieldExpression><![CDATA[$F{diagnosisDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="333" y="62" width="111" height="63" uuid="18fa484a-ec6e-4991-b403-6a1e1d1c3a94"/>
+				<textFieldExpression><![CDATA[$F{mentalDisease}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="444" y="62" width="111" height="63" uuid="35c39e43-c6a1-4803-8548-9c27b07c9993"/>
+				<textFieldExpression><![CDATA[$F{lastDiagnosisChangeDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
