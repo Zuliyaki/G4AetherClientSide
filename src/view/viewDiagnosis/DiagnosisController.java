@@ -6,10 +6,17 @@
 package view.viewDiagnosis;
 
 import entities.Diagnosis;
+import entities.MentalDisease;
+import entities.Patient;
 import entities.Treatment;
 import exceptions.DiagnosisNotFoundException;
 import interfaces.DiagnosisInterface;
+import interfaces.MentalDiseaseInterface;
 import interfaces.TreatmentInterface;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,19 +34,25 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
+import javafx.util.Callback;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 import restful.DiagnosisResful;
+import restful.MentalDiseaseRestful;
 import restful.TreatmentResful;
 
 public class DiagnosisController {
@@ -48,6 +61,7 @@ public class DiagnosisController {
     private ObservableList<Diagnosis> diagnosises;
     private DiagnosisInterface diagnosisInterface = new DiagnosisResful();
     private TreatmentInterface treatmentInterface = new TreatmentResful();
+    private MentalDiseaseInterface mentalDiseaseInterface = new MentalDiseaseRestful();
     private ObservableList<Treatment> treatments;
 
     @FXML
@@ -114,7 +128,7 @@ public class DiagnosisController {
     private TableColumn tbcOnTherapy;
 
     @FXML
-    private TableColumn tbcMentalDisease;
+    private TableColumn<Diagnosis, ComboBox> tbcMentalDisease;
 
     @FXML
     private TableColumn tbcLastTreatmentChange;
@@ -122,7 +136,7 @@ public class DiagnosisController {
     private TableColumn tbcDg;
     @FXML
     private Text txtTreatments;
-    
+
     @FXML
     private TableView<Treatment> tbTreatment;
     @FXML
@@ -130,7 +144,7 @@ public class DiagnosisController {
 
     @FXML
     private TableColumn tbcMedication;
-    
+
     @FXML
     private Text txtMentalDisease;
 
@@ -142,6 +156,7 @@ public class DiagnosisController {
 
     @FXML
     private Button btnPrint;
+    private Integer posDiag;
 
     public void initialize(Parent root) {
         //Not a resizable window.
@@ -153,8 +168,16 @@ public class DiagnosisController {
         //Add a leaf icon.
         //stage.getIcons().add(new Image("/resources/icon.png"));
         //Add scene 
-        //
-
+        // 
+        //Mental disease combobox for the table
+        List<MentalDisease> allMentalDisease;
+        allMentalDisease = mentalDiseaseInterface.getAllMentalDiseasesOrderByName_XML(new GenericType<List<MentalDisease>>() {
+        });
+        ObservableList<MentalDisease> mentaldisease = FXCollections.observableArrayList(allMentalDisease);
+        ComboBox<MentalDisease> cmbxMd = new ComboBox<>();
+        cmbxMd.setItems(mentaldisease);
+         final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        
         tbDiagnosis.setEditable(true);
         tbDiagnosis.getSelectionModel().selectedItemProperty().addListener(this::handleDiagnosisTableSelectionChanged);
         tbcPatient.setCellValueFactory(
@@ -166,18 +189,26 @@ public class DiagnosisController {
         tbcOnTherapy.setCellValueFactory(
                 new PropertyValueFactory<>("onTherapy"));
         tbcMentalDisease.setCellValueFactory(
-                new PropertyValueFactory<>("mentalDisease"));
+                new PropertyValueFactory<Diagnosis, ComboBox>("mentalDisease"));
+       
         tbcLastTreatmentChange.setCellValueFactory(
                 new PropertyValueFactory<>("lastDiagnosisChangeDate"));
         tbcDg.setCellValueFactory(
                 new PropertyValueFactory<>("diagnosisId"));
         diagnosises = loadAllDiagnosises();
-        
+        Callback<TableColumn<Diagnosis, Date>, TableCell<Diagnosis, Date>> dateCellFactory
+                = (TableColumn<Diagnosis, Date> param) -> new DateEditingCell();
+        tbcLastTreatmentChange.setCellFactory(dateCellFactory);
+        tbcLastTreatmentChange.setOnEditCommit((event) -> {
+           Diagnosis diagnosis =  (Diagnosis) event.getSource();
+           diagnosis.toString(); //MODIFICAR
+        });
+
         tbTreatment.setEditable(true);
         tbTreatment.getSelectionModel().selectedItemProperty().addListener(this::handleTreatmentTableSelectionChanged);
-        tbcDay.setCellValueFactory(new PropertyValueFactory<Treatment , Enum>("treatmentId"));
-        tbcMedication.setCellValueFactory( new PropertyValueFactory<>("medication"));
-        
+        tbcDay.setCellValueFactory(new PropertyValueFactory<>("treatmentId"));
+        tbcMedication.setCellValueFactory(new PropertyValueFactory<>("medication"));
+
         stage.show();
     }
 
@@ -188,16 +219,19 @@ public class DiagnosisController {
     private ObservableList<Diagnosis> loadAllDiagnosises() {
         ObservableList<Diagnosis> diagnosisTableInfo;
         List<Diagnosis> allDiangosis;
-        allDiangosis = diagnosisInterface.findAllDiagnosis_XML(new GenericType<List<Diagnosis>>() {});
+        allDiangosis = diagnosisInterface.findAllDiagnosis_XML(new GenericType<List<Diagnosis>>() {
+        });
         diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
         tbDiagnosis.setItems(diagnosisTableInfo);
         return diagnosisTableInfo;
 
     }
+
     private ObservableList<Treatment> loadAllTreaments(Diagnosis diagnosis) {
         ObservableList<Treatment> treatmentTableInfo;
         List<Treatment> allTreatment;
-        allTreatment = treatmentInterface.findTreatmentsByDiagnosisId_XML(new GenericType<List<Treatment>>() {}, diagnosis.getDiagnosisId());
+        allTreatment = treatmentInterface.findTreatmentsByDiagnosisId_XML(new GenericType<List<Treatment>>() {
+        }, diagnosis.getDiagnosisId());
         treatmentTableInfo = FXCollections.observableArrayList(allTreatment);
         tbTreatment.setItems(treatmentTableInfo);
         return treatmentTableInfo;
@@ -205,10 +239,10 @@ public class DiagnosisController {
 
     private void handleDiagnosisTableSelectionChanged(ObservableValue observableValue, Object oldValue, Object newValue) {
         if (newValue != null) {
-             Diagnosis selectedDiagnosis = (Diagnosis) newValue;
-             
-                    treatments = loadAllTreaments(selectedDiagnosis);
+            final Diagnosis selectedDiagnosis = (Diagnosis) newValue;
 
+            treatments = loadAllTreaments(selectedDiagnosis);
+            System.out.println(selectedDiagnosis.toString());
         } else {
             //If there is not a row selected, clean window fields 
             //and disable create, modify and delete buttons
@@ -228,5 +262,4 @@ public class DiagnosisController {
 
     }
 
-    
 }

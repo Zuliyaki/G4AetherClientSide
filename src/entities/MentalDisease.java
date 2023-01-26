@@ -4,8 +4,9 @@ import java.io.Serializable;
 
 import java.util.Date;
 import java.util.Set;
+import javax.xml.bind.annotation.XmlRootElement;
 
-
+@XmlRootElement(name = "mentalDisease")
 public class MentalDisease implements Serializable {
 
     private static final long serialVersionUID = 1L;
