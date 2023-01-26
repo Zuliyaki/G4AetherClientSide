@@ -5,6 +5,7 @@
  */
 package view.mentalDisease;
 
+import entities.MentalDisease;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -19,6 +20,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import entities.EnumMentalDisease;
 
 /**
  *
@@ -38,7 +40,7 @@ public class MentalDisease2Controller {
     @FXML
     private Pane pnMentalDisease2;
 
-    public void initialize(Parent root) {
+    public void initializeCreate(Parent root) {
         LOGGER.info("Initializing the window");
         Scene scene = new Scene(root);
         
@@ -51,6 +53,43 @@ public class MentalDisease2Controller {
         btnModify.setTooltip(new Tooltip("Modify"));
         btnSignOff.setTooltip(new Tooltip("Sign Off"));
 
+         //Fill the ComboBox
+        this.cmbType.getItems().addAll(EnumMentalDisease.values());
+        
+        //The focus will be on the Search field.
+        this.txtfName.requestFocus();
+
+        // The Create and Modify buttons are disabled.
+        this.btnModify.setDisable(true);
+        this.btnCreate.setDisable(true);
+
+        LOGGER.info("window initialized");
+
+        stage.setScene(scene);
+        stage.show();
+    }
+    
+    public void initializeModify(Parent root, MentalDisease selectedMentalDisease) {
+        LOGGER.info("Initializing the window");
+        Scene scene = new Scene(root);
+        
+        stage.setTitle("Mental Disease 2");
+        
+        //Tooltips
+        btnCreate.setTooltip(new Tooltip("Create"));
+        btnGoBack.setTooltip(new Tooltip("Go Back"));
+        btnHome.setTooltip(new Tooltip("Home"));
+        btnModify.setTooltip(new Tooltip("Modify"));
+        btnSignOff.setTooltip(new Tooltip("Sign Off"));
+        
+        //Fill the ComboBox
+        this.cmbType.getItems().addAll(EnumMentalDisease.values());
+        
+        //Fill in the text fields
+        this.txtfName.setText(selectedMentalDisease.getMdName());
+        this.txtfDescription.setText(selectedMentalDisease.getMdDescription());
+        this.txtfSymptons.setText(selectedMentalDisease.getMdSympton());
+        this.cmbType.getSelectionModel().select(selectedMentalDisease.getMdType());
         //The focus will be on the Search field.
         this.txtfName.requestFocus();
 
