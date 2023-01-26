@@ -43,9 +43,8 @@ public class MentalDisease implements Serializable {
      * @param mdDescription
      * @param mdSympton
      * @param mdAddDate
-     * @param diagnosis
      */
-    public MentalDisease(Long idMentalDisease, Admin mdadmin, EnumMentalDisease mdType, String mdName, String mdDescription, String mdSympton, Date mdAddDate, Set<Diagnosis> diagnosis) {
+    public MentalDisease(Long idMentalDisease, Admin mdadmin, EnumMentalDisease mdType, String mdName, String mdDescription, String mdSympton, Date mdAddDate) {
         this.idMentalDisease = idMentalDisease;
         this.mdadmin = mdadmin;
         this.mdType = mdType;
@@ -53,7 +52,6 @@ public class MentalDisease implements Serializable {
         this.mdDescription = mdDescription;
         this.mdSympton = mdSympton;
         this.mdAddDate = mdAddDate;
-        this.diagnosis = diagnosis;
     }
 
     //Getters & Setters

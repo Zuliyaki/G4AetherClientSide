@@ -89,6 +89,11 @@ public class MentalDisease1Controller {
         btnSearch.setTooltip(new Tooltip("Search"));
         btnSignOff.setTooltip(new Tooltip("Sign Off"));
 
+        //
+        this.cmbSearch.getItems().addAll("by ID", "by name");
+        //
+        this.cmbSearch.setValue("by ID");
+
         //The focus will be on the Search field.
         this.txtfSearch.requestFocus();
 
@@ -133,7 +138,7 @@ public class MentalDisease1Controller {
                 .addListener(this::handleMentalDiseaseTableSelectionChanged);
     }
 
-       private void textChange(EventType<KeyEvent> KEY_TYPED) {
+    private void textChange(EventType<KeyEvent> KEY_TYPED) {
         if (!this.txtfSearch.getText().trim().isEmpty()) {
             this.btnSearch.setDisable(false);
         }
@@ -288,6 +293,12 @@ public class MentalDisease1Controller {
             }
         }
     }
+    /*
+    
+    */
+    @FXML
+    private void handlePrintButtonAction(javafx.event.ActionEvent event) {
+    }
 
     /**
      * Show error alert
@@ -308,4 +319,6 @@ public class MentalDisease1Controller {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+
+    
 }

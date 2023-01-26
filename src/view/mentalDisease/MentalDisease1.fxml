@@ -43,15 +43,15 @@
                 <TableColumn fx:id="tcDate" editable="false" prefWidth="92.0" text="Date" />
             </columns>
         </TableView>
-        <Button fx:id="btnModify" onAction="#handleModifyButtonAction" layoutX="465.0" layoutY="550.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Modify" />
+        <Button fx:id="btnModify" layoutX="443.0" layoutY="550.0" mnemonicParsing="false" onAction="#handleModifyButtonAction" prefHeight="25.0" prefWidth="87.0" text="Modify" />
         <RadioButton fx:id="rdbtnOrder" layoutX="749.0" layoutY="90.0" mnemonicParsing="false" text="Order" />
-        <TextField fx:id="txtfSearch" layoutX="173.0" layoutY="87.0" prefHeight="25.0" prefWidth="382.0" />
-        <Button fx:id="btnSearch" layoutX="563.0" layoutY="87.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Search" />
-        <Button fx:id="btnSignOff" onAction="#handleSignOffButtonAction" layoutX="28.0" layoutY="550.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="87.0" text="Sign off" />
-        <Button fx:id="btnDelete" onAction="#handleDeleteButtonAction" layoutX="545.0" layoutY="550.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Delete" />
-        <Button fx:id="btnCreate" onAction="#handleCreateButtonAction" layoutX="385.0" layoutY="550.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Create" />
-        <ComboBox fx:id="cmbSearch" onAction="#handleSearchButtonAction" layoutX="639.0" layoutY="87.0" prefHeight="25.0" prefWidth="94.0" promptText="by ID" />
-        <Button fx:id="btnHome" onAction="#handleHomeButtonAction" layoutX="41.0" layoutY="74.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Home" />
-        <Button fx:id="btnPrint" layoutX="743.0" layoutY="550.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Print" />
+        <TextField fx:id="txtfSearch" layoutX="173.0" layoutY="87.0" prefHeight="25.0" prefWidth="362.0" />
+        <Button fx:id="btnSearch" layoutX="541.0" layoutY="87.0" mnemonicParsing="false" onAction="#handleSearchButtonAction" prefHeight="25.0" prefWidth="87.0" text="Search" />
+        <Button fx:id="btnSignOff" layoutX="28.0" layoutY="550.0" mnemonicParsing="false" onAction="#handleSignOffButtonAction" prefHeight="25.0" prefWidth="87.0" text="Sign off" />
+        <Button fx:id="btnDelete" layoutX="545.0" layoutY="550.0" mnemonicParsing="false" onAction="#handleDeleteButtonAction" prefHeight="25.0" prefWidth="87.0" text="Delete" />
+        <Button fx:id="btnCreate" layoutX="332.0" layoutY="550.0" mnemonicParsing="false" onAction="#handleCreateButtonAction" prefHeight="25.0" prefWidth="87.0" text="Create" />
+        <ComboBox fx:id="cmbSearch" layoutX="639.0" layoutY="87.0" onAction="#handleSearchButtonAction" prefHeight="25.0" prefWidth="94.0" promptText="by ID" />
+        <Button fx:id="btnHome" layoutX="28.0" layoutY="86.0" mnemonicParsing="false" onAction="#handleHomeButtonAction" prefHeight="25.0" prefWidth="87.0" text="Home" />
+        <Button fx:id="btnPrint" layoutX="721.0" layoutY="550.0" mnemonicParsing="false" onAction="#handlePrintButtonAction" prefHeight="25.0" prefWidth="87.0" text="Print" />
     </children>
 </Pane>

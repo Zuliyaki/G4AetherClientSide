@@ -5,6 +5,7 @@
  */
 package view.mentalDisease;
 
+import entities.Admin;
 import entities.MentalDisease;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
@@ -18,9 +19,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import entities.EnumMentalDisease;
+import factories.MentalDiseaseFactory;
+import interfaces.MentalDiseaseInterface;
+import java.io.IOException;
+import java.util.Date;
+import java.util.logging.Level;
+import javafx.event.ActionEvent;
 
 /**
  *
@@ -30,6 +36,10 @@ public class MentalDisease2Controller {
 
     private Stage stage;
     private static final Logger LOGGER = Logger.getLogger("view");
+    //iniciar factoria
+    MentalDiseaseFactory mentalFactory = new MentalDiseaseFactory();
+    //obtener mediante la factoria la interface
+    MentalDiseaseInterface mentalDiseaseInterface = mentalFactory.getMentalDisease();
 
     @FXML
     private TextField txtfName, txtfSymptons, txtfDescription;
@@ -38,14 +48,22 @@ public class MentalDisease2Controller {
     @FXML
     private ComboBox cmbType;
     @FXML
-    private Pane pnMentalDisease2;
+    private Pane pnMentalDisease1;
+    @FXML
+    private Text txtName;
+    @FXML
+    private Text txtType;
+    @FXML
+    private Text txtSymptons;
+    @FXML
+    private Text txtDescription;
 
     public void initializeCreate(Parent root) {
         LOGGER.info("Initializing the window");
         Scene scene = new Scene(root);
-        
+
         stage.setTitle("Mental Disease 2");
-        
+
         //Tooltips
         btnCreate.setTooltip(new Tooltip("Create"));
         btnGoBack.setTooltip(new Tooltip("Go Back"));
@@ -53,9 +71,11 @@ public class MentalDisease2Controller {
         btnModify.setTooltip(new Tooltip("Modify"));
         btnSignOff.setTooltip(new Tooltip("Sign Off"));
 
-         //Fill the ComboBox
+        //Fill the ComboBox
         this.cmbType.getItems().addAll(EnumMentalDisease.values());
-        
+        //
+        this.cmbType.setValue(EnumMentalDisease.MENTALILLNESS);
+
         //The focus will be on the Search field.
         this.txtfName.requestFocus();
 
@@ -68,23 +88,23 @@ public class MentalDisease2Controller {
         stage.setScene(scene);
         stage.show();
     }
-    
+
     public void initializeModify(Parent root, MentalDisease selectedMentalDisease) {
         LOGGER.info("Initializing the window");
         Scene scene = new Scene(root);
-        
+
         stage.setTitle("Mental Disease 2");
-        
+
         //Tooltips
         btnCreate.setTooltip(new Tooltip("Create"));
         btnGoBack.setTooltip(new Tooltip("Go Back"));
         btnHome.setTooltip(new Tooltip("Home"));
         btnModify.setTooltip(new Tooltip("Modify"));
         btnSignOff.setTooltip(new Tooltip("Sign Off"));
-        
+
         //Fill the ComboBox
         this.cmbType.getItems().addAll(EnumMentalDisease.values());
-        
+
         //Fill in the text fields
         this.txtfName.setText(selectedMentalDisease.getMdName());
         this.txtfDescription.setText(selectedMentalDisease.getMdDescription());
@@ -103,57 +123,71 @@ public class MentalDisease2Controller {
         stage.show();
     }
 
-    /**
-     * Action event handler for create button. It validates new user data, send
-     * it to the business logic tier and updates user table view with new user
-     * data.
-     *
-     * @param event The ActionEvent object for the event.
-     */
     /*
+    
+    */
+    //TODO
     @FXML
-    private void handleCrearAction(ActionEvent event){
+    private void handleCreateButtonAction(ActionEvent event) throws Exception {
+        try {
+            MentalDisease newMentalDisease = new MentalDisease(newMentalDisease.getIdMentalDisease(), Admin, this.cmbType.getSelectionModel().getSelectedItem(), this.txtName.getText().trim(), this.txtDescription.getText().trim(), this.txtSymptons.getText().trim(), Date);//tfLogin.getText().trim(),tfNombre.getText().trim(),perfil, (DepartmentBean) cbDepartamentos.getSelectionModel().getSelectedItem()
+            //Send user data to business logic tier
+            mentalDiseaseInterface.create_XML(newMentalDisease);
+            //Clean fields
+            this.txtName.setText("");
+            this.txtDescription.setText("");
+            this.txtSymptons.setText("");
+        } catch (Exception ex) {
+            showErrorAlert("No se ha podido abrir la ventana");
+            LOGGER.log(Level.SEVERE,
+                    ex.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleModifyButtonAction(ActionEvent event, MentalDisease selectedMentalDisease) throws Exception{
         try{
-            //Check if the is already a user with the login value defined in 
-            //the window
-            usersManager.isLoginExisting(tfLogin.getText().trim());
-            //If the login does not exist, add new user data to a new UserBean
+            //update selected row data in table view 
+            selectedMentalDisease. //setNombre(tfNombre.getText().trim());
             Profile perfil=Profile.USER;
             if(rbAdmin.isSelected())perfil=Profile.ADMIN;
-            UserBean user=new UserBean(tfLogin.getText().trim(),
-                                 tfNombre.getText().trim(),
-                                 perfil,
-                                 (DepartmentBean)cbDepartamentos.getSelectionModel().getSelectedItem());
-            //Send user data to business logic tier
-            this.usersManager.createUser(user);
-            //Add to user data to TableView model
-            tbUsers.getItems().add(user);
-            //Clean fields
-            tfLogin.setText("");
-            tfNombre.setText("");
+            selectedUser.setPerfil(perfil);
+            selectedUser.setDepartamento((DepartmentBean)cbDepartamentos.getSelectionModel()
+                                                                    .getSelectedItem());
+            //If login value does not exist: 
+            //send data to modify user data in business tier
+            mentalDiseaseInterface.edit_XML(event);
+            //Clean entry text fields
+            this.txtName.setText("");
+            this.txtDescription.setText("");
+            this.txtSymptons.setText("");
             //cbDepartamentos.getSelectionModel().clearSelection();
             tgPerfil.selectToggle(rbUsuario);
             btCrear.setDisable(true);
             btModificar.setDisable(true);
-        }catch(LoginExistsException e){
-            //If Login exist show error message, focus login field and set its text 
-            //color to red.
-            showErrorAlert("El login de usuario ya existe.\n"+
-                           "Debe teclear un login que no exista.");
-            tfLogin.requestFocus();
-            tfLogin.setStyle("-fx-text-inner-color: red;");
-            LOGGER.severe("El login de usuario ya existe.");
-        }catch(BusinessLogicException e){
-            //If there is an error in the business logic tier show message and
-            //log it.
-            showErrorAlert("Error al crear usuario:\n"+
-                            e.getMessage());
+            //Deseleccionamos la fila seleccionada en la tabla
+            tbUsers.getSelectionModel().clearSelection();
+            //Refrescamos la tabla para que muestre los nuevos datos
+            tbUsers.refresh();
+        }catch (Exception ex) {
+            showErrorAlert("No se ha podido abrir la ventana");
             LOGGER.log(Level.SEVERE,
-                        "UI GestionUsuariosController: Error creating user: {0}",
-                        e.getMessage());
+                    ex.getMessage());
         }
     }
-     */
+
+    @FXML
+    private void handleHomeButtonAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void handleBackButtonAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void handleSignOffButtonAction(ActionEvent event) {
+    }
+
     protected void showErrorAlert(String errorMsg) {
         //Shows error dialog.
         Alert alert = new Alert(Alert.AlertType.ERROR, errorMsg, ButtonType.OK);
