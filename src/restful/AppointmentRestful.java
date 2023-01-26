@@ -5,9 +5,11 @@
  */
 package restful;
 
+import interfaces.AppointmentInterface;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 
 /**
  * Jersey REST client generated for REST resource:AppointmentFacadeREST
@@ -22,10 +24,10 @@ import javax.ws.rs.client.WebTarget;
  *
  * @author Janam
  */
-public class AppointmentRestful {
+public class AppointmentRestful implements AppointmentInterface {
 
-    private WebTarget webTarget;
-    private Client client;
+    private final WebTarget webTarget;
+    private final Client client;
     private static final String BASE_URI = "http://localhost:8080/G4Aether/webresources";
 
     public AppointmentRestful() {
@@ -33,66 +35,79 @@ public class AppointmentRestful {
         webTarget = client.target(BASE_URI).path("entities.appointment");
     }
 
-    public <T> T getAllAppointments_XML(Class<T> responseType) throws ClientErrorException {
+    @Override
+    public <T> T getAllAppointments_XML(GenericType<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
+    @Override
     public <T> T getAllAppointments_JSON(Class<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
+    @Override
     public void edit_XML(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
+    @Override
     public void edit_JSON(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
+    @Override
     public <T> T getAppointmentByChange_XML(Class<T> responseType, String appointmentchange) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("getAppointmentByChange/{0}", new Object[]{appointmentchange}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
+    @Override
     public <T> T getAppointmentByChange_JSON(Class<T> responseType, String appointmentchange) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("getAppointmentByChange/{0}", new Object[]{appointmentchange}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
+    @Override
     public void create_XML(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
+    @Override
     public void create_JSON(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
+    @Override
     public <T> T getAppointmentById_XML(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
+    @Override
     public <T> T getAppointmentById_JSON(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
+    @Override
     public void remove(String id) throws ClientErrorException {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
     }
 
+    @Override
     public <T> T getAppointmentByDate_XML(Class<T> responseType, String appointmentDate) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("getAppointmentByDate/{0}", new Object[]{appointmentDate}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
+    @Override
     public <T> T getAppointmentByDate_JSON(Class<T> responseType, String appointmentDate) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("getAppointmentByDate/{0}", new Object[]{appointmentDate}));

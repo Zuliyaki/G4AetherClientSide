@@ -2,11 +2,13 @@ package entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Janam
  */
+@XmlRootElement(name = "appointment")
 public class Appointment implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -37,7 +39,7 @@ public class Appointment implements Serializable {
      * @param patient
      * @param psychologist
      */
-    public Appointment(Long idAppointmet, Date appointmentDate, Boolean appointmentChange, Patient patient, Psychologist psychologist) {
+    public Appointment(Long idAppointment, Date appointmentDate, Boolean appointmentChange, Patient patient, Psychologist psychologist) {
         this.idAppointment = idAppointment;
         this.appointmentDate = appointmentDate;
         this.appointmentChange = appointmentChange;
@@ -126,40 +128,6 @@ public class Appointment implements Serializable {
         return psychologist;
     }
 
-    /**
-     * HasCode
-     *
-     * @return
-     */
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idAppointment != null ? idAppointment.hashCode() : 0);
-        return hash;
-    }
-
-    /**
-     *
-     * @param object
-     * @return
-     */
-    @Override
-    public boolean equals(Object object) {
-
-        if (!(object instanceof Appointment)) {
-            return false;
-        }
-        Appointment other = (Appointment) object;
-        if ((this.idAppointment == null && other.idAppointment != null) || (this.idAppointment != null && !this.idAppointment.equals(other.idAppointment))) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     *
-     * @return
-     */
     @Override
     public String toString() {
         return "Appointment{" + "idAppointment=" + idAppointment + ", appointmentChange=" + appointmentChange + ", appointmentDate=" + appointmentDate + ", patient=" + patient + ", psychologist=" + psychologist + '}';

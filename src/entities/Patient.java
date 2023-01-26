@@ -2,8 +2,6 @@ package entities;
 
 import java.util.Date;
 import java.util.Set;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -11,33 +9,17 @@ import javax.xml.bind.annotation.XmlTransient;
  * 
  * @author unaibAndLeire
  */
-@Entity
-@DiscriminatorValue("patient")
-@NamedQueries({
-    @NamedQuery(
-            name = "findAllPatients", query = "SELECT u FROM User u, Patient p WHERE u.dni=p.dni"
-    ),
-    @NamedQuery(
-            name = "findAllPatientsByPsychologist", query = "SELECT u FROM User u, Patient pa WHERE u.dni=pa.dni AND pa.psychologist.dni=:dniPsychologist"
-    )
-})
 @XmlRootElement
 public class Patient extends User {
 
-    @Column(name = "mbti")
     private String mbti;
 
-    @OneToMany(mappedBy = "dnPatient")
     private Set<DailyNote> dailyNotes;
-    
-    @OneToMany(mappedBy = "patient")
+
     private Set<Diagnosis> diagnosises;
 
-    @NotNull
-    @ManyToOne
     private Psychologist psychologist;
 
-    @OneToMany(mappedBy = "patient")
     private Set<Appointment> appointments;
 
     public Patient() {
@@ -102,5 +84,10 @@ public class Patient extends User {
 
     public void setAppointments(Set<Appointment> appointments) {
         this.appointments = appointments;
+    }
+    
+    @Override
+    public String toString() {
+        return super.getDni();
     }
 }

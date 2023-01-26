@@ -1,12 +1,9 @@
 package application;
 
-import static javafx.application.Application.launch;
-import javafx.fxml.FXMLLoader;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.stage.Stage;
-import view.Appointment.AppointmentPatientController;
 
 /**
  *
@@ -14,35 +11,36 @@ import view.Appointment.AppointmentPatientController;
  */
 public class G4AetherClientSide extends javafx.application.Application {
 
-    /**
-     * Open the Appointment window
-     *
-     * @param stage Stage where the scene will be projected
-     * @throws Exception
-     */
-    public void start(Stage stage) throws Exception {
+    @Override
+    public void start(javafx.stage.Stage primaryStage) {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Appointment/AppointmentPatient.fxml"));
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/Appointment/Psychologist/AppointmentPsychologist.fxml"));
 
-        Parent root = (Parent) loader.load();
+            Parent root = (Parent) loader.load();
 
-        AppointmentPatientController controller = (AppointmentPatientController) loader.getController();
+            // get controller
+            view.Appointment.Psychologist.AppointmentPsychologistController controller = loader.getController();
 
-        controller.initialize(root);
+            //set stage in controller
+            controller.setStage(primaryStage);
 
-        controller.initialize(root);
+            controller.initStage(root);
 
-        Scene scene = new Scene(root);
+            // not resizable
+            primaryStage.setResizable(false);
 
-        stage.setResizable(false);
-        
-        stage.setTitle("Appointment");
-        
-        stage.getIcons().add(new Image("/resources/icon.png"));
+            // set stage
+            javafx.scene.Scene scene = new javafx.scene.Scene(root);
 
-        stage.setScene(scene);
-        
-        stage.show();
+            primaryStage.setScene(scene);
+
+            primaryStage.show();
+            
+        } catch (IOException ex) {
+            
+            Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
