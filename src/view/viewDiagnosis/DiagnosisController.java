@@ -5,6 +5,7 @@
  */
 package view.viewDiagnosis;
 
+
 import entities.Diagnosis;
 import entities.MentalDisease;
 import entities.Patient;
@@ -22,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javafx.application.Application.launch;
@@ -44,6 +46,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
@@ -132,14 +135,14 @@ public class DiagnosisController {
     @FXML
     private TableView<Diagnosis> tbDiagnosis;
     @FXML
-    private TableColumn<Diagnosis,Patient> tbcPatient;
+    private TableColumn<Diagnosis, Patient> tbcPatient;
 
     @FXML
-    private TableColumn<Diagnosis,Psychologist> tbcPsychologist;
+    private TableColumn<Diagnosis, Psychologist> tbcPsychologist;
     @FXML
-    private TableColumn<Diagnosis,Date> tbcDateOfCreation;
+    private TableColumn<Diagnosis, Date> tbcDateOfCreation;
     @FXML
-    private TableColumn tbcOnTherapy;
+    private TableColumn<Diagnosis,Boolean> tbcOnTherapy;
 
     @FXML
     private TableColumn<Diagnosis, MentalDisease> tbcMentalDisease;
@@ -171,9 +174,10 @@ public class DiagnosisController {
     @FXML
     private Button btnPrint;
     private Integer posDiag;
+final Logger LOGGER = Logger.getLogger("paquete.NombreClase");
 
     public void initialize(Parent root) {
-          final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         //Not a resizable window.
         stage.setResizable(false);
         //Modal window of LogIn.
@@ -183,29 +187,27 @@ public class DiagnosisController {
         //Add a leaf icon.
         //stage.getIcons().add(new Image("/resources/icon.png"));
         //Add scene 
-        // 
-         //Mental disease combobox for the table
-            List<MentalDisease> allMentalDisease;
-            allMentalDisease = mentalDiseaseInterface.getAllMentalDiseasesOrderByName_XML(new GenericType<List<MentalDisease>>() {
-            });
-            ObservableList<MentalDisease> mentaldisease = FXCollections.observableArrayList(allMentalDisease);
-         //////////
-         //Patients combobox for the table
-             Psychologist pshychologist = new Psychologist();
-             pshychologist.setDni("45949977w");
-         List<Patient> allPatients;
-            allPatients = patientInterface.findAllPatientsByPsychologist_XML(new GenericType<List<Patient>>() {
-        }, pshychologist.getDni());
-            ObservableList<Patient> patients = FXCollections.observableArrayList(allPatients);
-         
-         
-         
-         ////////////
-       
-         //the date editing cell factory
+        // LOAD ALL Diagnosises
+        diagnosises = loadAllDiagnosises();
+        //Mental disease combobox for the table
+        List<MentalDisease> allMentalDisease;
+        allMentalDisease = mentalDiseaseInterface.getAllMentalDiseasesOrderByName_XML(new GenericType<List<MentalDisease>>() {
+        });
+        ObservableList<MentalDisease> mentaldisease = FXCollections.observableArrayList(allMentalDisease);
+        //////////
+        //Patients combobox for the table
+        Psychologist currentPshychologist = new Psychologist();
+        currentPshychologist.setDni("45949977w");
+        List<Patient> allPatients;
+        allPatients = patientInterface.findAllPatientsByPsychologist_XML(new GenericType<List<Patient>>() {
+        }, currentPshychologist.getDni());
+        ObservableList<Patient> patients = FXCollections.observableArrayList(allPatients);
+
+        ////////////
+        //the date editing cell factory
         final Callback<TableColumn<Diagnosis, Date>, TableCell<Diagnosis, Date>> dateCellFactory
                 = (TableColumn<Diagnosis, Date> param) -> new DateEditingCell();
-  
+
         tbDiagnosis.setEditable(true);
         tbDiagnosis.getSelectionModel().selectedItemProperty().addListener(this::handleDiagnosisTableSelectionChanged);
         ////////////
@@ -213,36 +215,46 @@ public class DiagnosisController {
                 new PropertyValueFactory<>("patient"));
         tbcPatient.setCellFactory(ComboBoxTableCell.forTableColumn(patients));
         tbcPatient.setOnEditCommit(
-              (TableColumn.CellEditEvent<Diagnosis, Patient> t) -> {
+                (TableColumn.CellEditEvent<Diagnosis, Patient> t) -> {
                     ((Diagnosis) t.getTableView().getItems()
-                    .get(t.getTablePosition().getRow()))
-                    .setPatient(t.getNewValue());
-                 diagnosisInterface.updateDiagnosis_XML(tbDiagnosis.getSelectionModel().getSelectedItem());
+                            .get(t.getTablePosition().getRow()))
+                            .setPatient(t.getNewValue());
+                    diagnosisInterface.updateDiagnosis_XML(tbDiagnosis.getSelectionModel().getSelectedItem());
                 });
         //////////////////
         tbcPsychologist.setCellValueFactory(
                 new PropertyValueFactory<>("psychologist"));
         ////////////////
-        
+
         tbcDateOfCreation.setCellValueFactory(
                 new PropertyValueFactory<>("diagnosisDate"));
         tbcDateOfCreation.setCellFactory(dateCellFactory);
         ///////////////
-        tbcOnTherapy.setCellValueFactory(
-                new PropertyValueFactory<>("onTherapy"));
-        tbcOnTherapy.setCellFactory(
-                    CheckBoxTableCell.<Diagnosis>forTableColumn(tbcOnTherapy));
         
+        tbcOnTherapy.setCellFactory(
+                CheckBoxTableCell.<Diagnosis>forTableColumn(tbcOnTherapy));
+        
+        tbcOnTherapy.setCellValueFactory(
+                (CellDataFeatures<Diagnosis, Boolean> param) ->  param.getValue().onTherapyProperty());
+        
+        diagnosises.forEach(
+                diagnosis -> diagnosis.onTherapyProperty().addListener((observable, oldValue, newValue) -> {
+                    diagnosisInterface.updateDiagnosis_XML(diagnosis);
+                })
+            );
+        //////////////
+       
+
         ////////////////
         tbcMentalDisease.setCellValueFactory(
                 new PropertyValueFactory<>("mentalDisease"));
         tbcMentalDisease.setCellFactory(ComboBoxTableCell.forTableColumn(mentaldisease));
         tbcMentalDisease.setOnEditCommit(
-              (TableColumn.CellEditEvent<Diagnosis, MentalDisease> t) -> {
+                (TableColumn.CellEditEvent<Diagnosis, MentalDisease> t) -> {
                     ((Diagnosis) t.getTableView().getItems()
-                    .get(t.getTablePosition().getRow()))
-                    .setMentalDisease(t.getNewValue());
-                 diagnosisInterface.updateDiagnosis_XML(tbDiagnosis.getSelectionModel().getSelectedItem());
+                            .get(t.getTablePosition().getRow()))
+                            .setMentalDisease(t.getNewValue());
+                    diagnosisInterface.updateDiagnosis_XML(tbDiagnosis.getSelectionModel().getSelectedItem());
                 });
         /////////////////
         ///////////////
@@ -250,19 +262,17 @@ public class DiagnosisController {
                 new PropertyValueFactory<>("lastDiagnosisChangeDate"));
         tbcDg.setCellValueFactory(
                 new PropertyValueFactory<>("diagnosisId"));
-              tbcLastTreatmentChange.setCellFactory(dateCellFactory);
+        tbcLastTreatmentChange.setCellFactory(dateCellFactory);
         tbcLastTreatmentChange.setOnEditCommit(
-              (TableColumn.CellEditEvent<Diagnosis, Date> t) -> {
+                (TableColumn.CellEditEvent<Diagnosis, Date> t) -> {
                     ((Diagnosis) t.getTableView().getItems()
-                    .get(t.getTablePosition().getRow()))
-                    .setLastDiagnosisChangeDate(t.getNewValue());
-                 diagnosisInterface.updateDiagnosis_XML(tbDiagnosis.getSelectionModel().getSelectedItem());
+                            .get(t.getTablePosition().getRow()))
+                            .setLastDiagnosisChangeDate(t.getNewValue());
+                    diagnosisInterface.updateDiagnosis_XML(tbDiagnosis.getSelectionModel().getSelectedItem());
                 });
-       //////// 
-        diagnosises = loadAllDiagnosises();
-        
-        
-         //Context Menu
+        //////// 
+
+        //Context Menu
         final ContextMenu contextMenu = new ContextMenu();
         MenuItem createNewDiagnosisMenuIt = new MenuItem("Create new Diagnosis");
         createNewDiagnosisMenuIt.setOnAction((ActionEvent e) -> {
@@ -272,23 +282,18 @@ public class DiagnosisController {
             Diagnosis newDiagnosis = new Diagnosis();
             newDiagnosis.setDiagnosisDate(date);
             newDiagnosis.setLastDiagnosisChangeDate(date);
+            newDiagnosis.setPsychologist(currentPshychologist);
             newDiagnosis.setOnTherapy(true);
             diagnosisInterface.updateDiagnosis_XML(newDiagnosis);
             diagnosises.add(newDiagnosis);
-            
-            diagnosises = loadAllDiagnosises();
-            
+
+          //  diagnosises = loadAllDiagnosises();
+
         });
         //SET THE CONTEXT MENU
-         contextMenu.getItems().add(createNewDiagnosisMenuIt);
+        contextMenu.getItems().add(createNewDiagnosisMenuIt);
         tbDiagnosis.setContextMenu(contextMenu);
 
-
-         
-        
-      
-  
-        
         tbTreatment.setEditable(true);
         tbTreatment.getSelectionModel().selectedItemProperty().addListener(this::handleTreatmentTableSelectionChanged);
         tbcDay.setCellValueFactory(new PropertyValueFactory<>("treatmentId"));
@@ -328,6 +333,19 @@ public class DiagnosisController {
 
             treatments = loadAllTreaments(selectedDiagnosis);
             System.out.println(selectedDiagnosis.toString());
+            //Context Menu
+            final ContextMenu contextMenu = new ContextMenu();
+            MenuItem DeleteDiagnosisMenuIt = new MenuItem("Delete Diagnosis");
+            DeleteDiagnosisMenuIt.setOnAction((ActionEvent e) -> {
+                diagnosisInterface.deleteDiagnosis(selectedDiagnosis.getDiagnosisId().toString());
+                diagnosises.remove(selectedDiagnosis);
+                diagnosises = loadAllDiagnosises();
+
+            });
+            //SET THE CONTEXT MENU
+            contextMenu.getItems().add(DeleteDiagnosisMenuIt);
+            tbDiagnosis.setContextMenu(contextMenu);
+
         } else {
             //If there is not a row selected, clean window fields 
             //and disable create, modify and delete buttons
@@ -347,4 +365,5 @@ public class DiagnosisController {
 
     }
 
+    
 }

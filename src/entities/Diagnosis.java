@@ -120,7 +120,10 @@ public class Diagnosis implements Serializable {
     }
 
     public void setOnTherapy(Boolean onTherapy) {
-        this.onTherapy.set(true);
+        this.onTherapy.set(onTherapy);
+    }
+       public SimpleBooleanProperty onTherapyProperty(){
+        return this.onTherapy;
     }
 
     @Override
