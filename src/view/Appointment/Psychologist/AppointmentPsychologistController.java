@@ -1,5 +1,6 @@
 package view.Appointment.Psychologist;
 
+import static com.sun.javafx.application.PlatformImpl.addListener;
 import entities.Appointment;
 import java.util.List;
 import javafx.collections.FXCollections;
@@ -127,6 +128,8 @@ public class AppointmentPsychologistController {
 
     private static final Logger LOGGER = Logger.getLogger("view");
 
+    private static final String ID_REGEX = "^[0-9]";
+
     private static final String DNI_REGEX = "^[0-9]{8,8}[A-Za-z]$";
 
     private static final String DATE_REGEX = "^(([0-9])|([0-2][0-9])|([3][0-1]))\\/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\/\\d{4}$";
@@ -212,6 +215,12 @@ public class AppointmentPsychologistController {
             this.patienttf.textProperty().addListener(this::handleFieldsTextChange);
 
             this.psychologisttf.textProperty().addListener(this::handleFieldsTextChange);
+
+            // checkbox is checked
+            this.checkbox.textProperty().addListener(this::handleFieldsTextChange);
+
+            // tableview selectedItemProperty
+            this.tableview.getSelectionModel().selectedItemProperty().addListener(this::handleAppointmentTableSelectionChanged);
 
             // tableview not editable
             tableview.setEditable(false);
@@ -312,7 +321,7 @@ public class AppointmentPsychologistController {
 
         } catch (Exception e) {
 
-            showErrorAlert("No se ha podido abrir la ventana.\n" + e.getMessage());
+            showErrorAlert("Appointment cannot be started.\n" + e.getMessage());
 
         }
 
@@ -329,12 +338,11 @@ public class AppointmentPsychologistController {
     private void handleAppointmentTableSelectionChanged(ObservableValue observable, Object oldValue, Object newValue) {
 
         //If there is a row selected, move row data to corresponding fields in the window and enable create, modify and delete buttons
-        //Appointment selectedAppointment = ((Appointment) this.tableview.getSelectionModel().getSelectedItem());
-        if (newValue != null) {
+        Appointment selectedAppointment = ((Appointment) this.tableview.getSelectionModel().getSelectedItem());
 
-            Appointment appointmentSelected = (Appointment) newValue;
+        if (selectedAppointment != null) {
 
-            //idtf.setText(appointmentSelected.getidAppointment());
+            //idtf.setText(selectedAppointment.getidAppointment());
             //datetf.setText(appointmentSelected.getAppointmentDate());
             //patienttf.setText(appointmentSelected.getPatient());
             //psychologisttf.setText(appointmentSelected.getPsychologist());
@@ -497,9 +505,17 @@ public class AppointmentPsychologistController {
     }
 
     @FXML
+    @SuppressWarnings("empty-statement")
     private void handleCreateButtonAction(ActionEvent event) {
 
+        LOGGER.info("Creating appointment...");
+
         try {
+
+            //Idtf text field will be validated with an Numbers Only.
+            if (!this.datetf.getText().matches(ID_REGEX)) {
+                throw new Exception("Please Enter ID In Numbers Only.");
+            }
 
             //Datetf text field will be validated with an DNI pattern.
             if (!this.datetf.getText().matches(DATE_REGEX)) {
@@ -515,22 +531,25 @@ public class AppointmentPsychologistController {
                 throw new Exception("Please Enter Psychologist DNI Format:11111111W");
             }
 
-            //The information of all text fields will be collected, validated, and stored in an tableview in its respective tablecolumn.
-            /**
-             *
-             *
-             *
-             *
-             *
-             *
-             *
-             *
-             *
-             *
-             *
-             *
-             *
-             */
+            try {
+
+                //The information of all text fields will be collected, validated, and stored in an tableview in its respective tablecolumn.
+                //Appointment selectedAppointment = ((Appointment) this.tableview.getSelectionModel().getSelectedItem());
+                
+                
+                
+                
+                
+                
+                
+                
+            } catch (ClientErrorException ex) {
+
+                showErrorAlert("TableView Cannot be deleted !!");
+
+                LOGGER.log(Level.SEVERE, ex.getMessage());
+            }
+
             //It will show an alert that the user signed up correctly. We will close this window and open the login window.
             new Alert(Alert.AlertType.INFORMATION, "Appointment created correctly", ButtonType.OK).showAndWait();;
 
@@ -550,6 +569,10 @@ public class AppointmentPsychologistController {
     private void handleUpdateButtonAction(ActionEvent event) {
         try {
 
+            //Idtf text field will be validated with an Numbers Only.
+            if (!this.datetf.getText().matches(ID_REGEX)) {
+                throw new Exception("Please Enter ID In Numbers Only.");
+            }
             //Datetf text field will be validated with an DNI pattern.
             if (!this.datetf.getText().matches(DATE_REGEX)) {
                 throw new Exception("Please Enter Date In Format: 22/Feb/2006");
@@ -601,8 +624,6 @@ public class AppointmentPsychologistController {
         LOGGER.info("Deleting appointment...");
 
         try {
-            // Enable deletebtn
-            deletebtn.setDisable(false);
 
             //Get selected appointment data from table view model
             Appointment selectedAppointment = ((Appointment) this.tableview.getSelectionModel().getSelectedItem());
@@ -632,67 +653,68 @@ public class AppointmentPsychologistController {
 
         } catch (ClientErrorException ex) {
 
-            showErrorAlert("No se ha podido abrir la ventana");
+            showErrorAlert("TableView Cannot be deleted !!");
 
             LOGGER.log(Level.SEVERE, ex.getMessage());
         }
+        
+        LOGGER.info("Deleted the selected appointment column.");
 
     }
 
     @FXML
     private void handleAcceptButtonAction(ActionEvent event) {
-        
-        
-        /**
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         */
 
+        /**
+         * if CheckBox is checked then accept button will be enabled and the
+         * data gets in the change TableView
+         *
+         *
+         *
+         *
+         *
+         *
+         *
+         *
+         *
+         *
+         *
+         *
+         */
     }
 
     @FXML
     private void handleHelpButtonAction(ActionEvent event) {
-        
-        
-        /**
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         */
 
+        /**
+         * opens a window with the detail information to use the appointment
+         * window
+         *
+         *
+         *
+         *
+         *
+         *
+         *
+         */
     }
 
     @FXML
     private void handleSearchButtonAction(ActionEvent event) {
         /**
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
+         *
+         * when the ComboBox has a value in the respected TextField the search
+         * button will be enabled and search all the appointments of that day
+         *
+         *
+         *
+         *
+         *
+         *
+         *
+         *
+         *
+         *
          */
 
     }
