@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import javafx.event.EventHandler;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 
@@ -22,6 +23,8 @@ import javafx.scene.control.TableCell;
         private DatePicker datePicker;
 
         DateEditingCell() {
+                          
+                    
         }
 
         @Override
@@ -59,6 +62,7 @@ import javafx.scene.control.TableCell;
                 } else {
                     final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                     setText(getDate().format(dateFormat));
+                    
                     setGraphic(null);
                     
                 }
@@ -71,7 +75,10 @@ import javafx.scene.control.TableCell;
             datePicker.setOnAction((e) -> {
                 System.out.println("Committed: " + datePicker.getValue().toString());
                 commitEdit(Date.from(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                
             });   
+            
+  
         
 
         }

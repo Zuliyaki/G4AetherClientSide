@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * 
  * @author unaibAndLeire
  */
-
+@XmlRootElement(name = "patient")
 public class Patient extends User {
 
     private String mbti;
