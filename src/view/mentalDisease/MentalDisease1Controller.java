@@ -125,6 +125,8 @@ public class MentalDisease1Controller {
         );
         this.tcDate.setCellValueFactory(
                 new PropertyValueFactory<>("mdAddDate")
+        //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        //return sdf.format(fecha);
         );
 
         mentalDiseaseData = FXCollections.observableArrayList(mentalDiseaseInterface.getAllMentalDiseases_XML(new GenericType<List<MentalDisease>>() {
@@ -138,6 +140,10 @@ public class MentalDisease1Controller {
                 .addListener(this::handleMentalDiseaseTableSelectionChanged);
     }
 
+    /**
+     *
+     * @param KEY_TYPED
+     */
     private void textChange(EventType<KeyEvent> KEY_TYPED) {
         if (!this.txtfSearch.getText().trim().isEmpty()) {
             this.btnSearch.setDisable(false);
@@ -293,9 +299,10 @@ public class MentalDisease1Controller {
             }
         }
     }
+
     /*
     
-    */
+     */
     @FXML
     private void handlePrintButtonAction(javafx.event.ActionEvent event) {
     }
@@ -320,5 +327,4 @@ public class MentalDisease1Controller {
         this.stage = stage;
     }
 
-    
 }

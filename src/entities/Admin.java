@@ -1,11 +1,14 @@
 package entities;
 
 import java.util.Set;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Leire
  */
+
+@XmlRootElement(name="admin")
 public class Admin extends User {
 
     private Set<MentalDisease> mentalDisease;

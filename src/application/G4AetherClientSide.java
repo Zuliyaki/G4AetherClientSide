@@ -24,7 +24,7 @@ public class G4AetherClientSide extends Application {
     @Override
     public void start(Stage stage) {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/mentalDisease/MentalDisease1.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mentalDisease/MentalDisease1.fxml"));
 
         Parent root = null;
         try {
