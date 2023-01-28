@@ -15,12 +15,12 @@ public class G4AetherClientSide extends javafx.application.Application {
     public void start(javafx.stage.Stage primaryStage) {
 
         try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/Appointment/Appointment.fxml"));
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/Appointment/Psychologist/AppointmentPsychologist.fxml"));
 
             Parent root = (Parent) loader.load();
 
             // get controller
-            view.Appointment.AppointmentController controller = loader.getController();
+            view.Appointment.Psychologist.AppointmentPsychologistController controller = loader.getController();
 
             //set stage in controller
             controller.setStage(primaryStage);

@@ -1,4 +1,4 @@
-package view.Appointment;
+package view.Appointment.Psychologist;
 
 import entities.Appointment;
 import java.util.List;
@@ -43,7 +43,7 @@ import javax.ws.rs.ClientErrorException;
  *
  * @author Janam
  */
-public class AppointmentController {
+public class AppointmentPsychologistController {
 
     @FXML
     private VBox vbox;
