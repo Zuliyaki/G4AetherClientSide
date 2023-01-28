@@ -1,4 +1,4 @@
-package view.Appointment.Psychologist;
+package view.Appointment;
 
 import entities.Appointment;
 import java.util.List;
@@ -43,7 +43,7 @@ import javax.ws.rs.ClientErrorException;
  *
  * @author Janam
  */
-public class AppointmentPsychologistController {
+public class AppointmentController {
 
     @FXML
     private VBox vbox;
@@ -616,9 +616,11 @@ public class AppointmentPsychologistController {
             }
 
             try {
-                //Get selected Appointment data from table view.
-                Appointment selectedAppointment = ((Appointment) tableview.getSelectionModel().getSelectedItem());
+                LOGGER.info("Updating appointment...");
 
+                //Get selected appointment data from table view model
+                Appointment selectedAppointment = ((Appointment) this.tableview.getSelectionModel().getSelectedItem());
+       
                 //Check if id value for selected row in table is equal to id field content.
                 if (!selectedAppointment.getidAppointment().equals(idtf.getText())) {
 
@@ -629,13 +631,16 @@ public class AppointmentPsychologistController {
 
                 //update selectedAppointment row data in table view
                 //selectedAppointment.setidAppointment(idtf.getText() + "");
-
                 //selectedAppointment.setAppointmentDate(datetf.getText());
-
                 //selectedAppointment.setPatient(patienttf.getText());
-
                 //selectedAppointment.setPsychologist(psychologisttf.getText());
-
+                /**
+                 * 
+                 * 
+                 * 
+                 * 
+                 * 
+                 */
                 //Clean entry text fields
                 idtf.setText("");
 
@@ -733,42 +738,9 @@ public class AppointmentPsychologistController {
 
         LOGGER.info("Printing appointment...");
 
-        try {
 
-            //Get selected appointment data from table view model
-            Appointment selectedAppointment = ((Appointment) this.tableview.getSelectionModel().getSelectedItem());
 
-            //Ask user for confirmation on delete
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This operation cannot be recovered.", ButtonType.OK, ButtonType.CANCEL);
-
-            Optional<ButtonType> result = alert.showAndWait();
-
-            //If OK to deletion
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-
-                //delete mental disease from server side
-                this.appointmentInterface.remove(selectedAppointment.getidAppointment().toString());
-
-                //removes selected item from table
-                this.tableview.getItems().remove(selectedAppointment);
-
-                this.tableview.refresh();
-
-                //Clear selection and refresh table view
-                this.tableview.getSelectionModel().clearSelection();
-
-                this.tableview.refresh();
-
-            }
-
-        } catch (ClientErrorException ex) {
-
-            showErrorAlert("TableView Cannot be printed !!");
-
-            LOGGER.log(Level.SEVERE, ex.getMessage());
-        }
-
-        LOGGER.info("Printed selected appointment column.");
+           
     }
 
     @FXML
@@ -785,9 +757,8 @@ public class AppointmentPsychologistController {
 
             //Initializes and shows help stage
             //helpController.initAndShowStage(root);
-
         } catch (Exception ex) {
-            
+
             //If there is an error show message andlog it.
             showErrorAlert("Error loading help window: " + ex.getMessage());
 
