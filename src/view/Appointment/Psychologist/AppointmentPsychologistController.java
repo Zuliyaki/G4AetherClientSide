@@ -365,10 +365,14 @@ public class AppointmentPsychologistController {
             updatebtn.setDisable(true);
 
             deletebtn.setDisable(true);
-        }
 
-        //Focus id Textfield 
-        idtf.requestFocus();
+            reset();
+        }
+    }
+
+    // reset all the textfield empty after n
+    private void reset() {
+       
     }
 
     /**
@@ -484,14 +488,7 @@ public class AppointmentPsychologistController {
 
             case "Find all Appointment":
                 searchbtn.setDisable(false);
-                idtf.setEditable(true);
-                datetf.setEditable(true);
-                patienttf.setEditable(true);
-                psychologisttf.setEditable(true);
-                
-                //Focus id Textfield 
-                idtf.requestFocus();
-
+                loadAllAppointments();
                 break;
 
             case "Find Appointment by ID":
@@ -500,6 +497,9 @@ public class AppointmentPsychologistController {
                 datetf.setEditable(false);
                 patienttf.setEditable(false);
                 psychologisttf.setEditable(false);
+
+                //Focus id Textfield 
+                idtf.requestFocus();
                 break;
 
             case "Find Appointment by Date":
@@ -508,6 +508,9 @@ public class AppointmentPsychologistController {
                 datetf.setEditable(true);
                 patienttf.setEditable(false);
                 psychologisttf.setEditable(false);
+
+                //Focus id Textfield 
+                datetf.requestFocus();
                 break;
         }
 
