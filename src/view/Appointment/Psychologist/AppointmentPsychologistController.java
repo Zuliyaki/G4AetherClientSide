@@ -17,13 +17,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javax.ws.rs.core.GenericType;
 import restful.AppointmentRestful;
 import interfaces.AppointmentInterface;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -368,11 +369,13 @@ public class AppointmentPsychologistController {
 
             reset();
         }
+
+        //
     }
 
     // reset all the textfield empty after n
     private void reset() {
-       
+
     }
 
     /**
@@ -546,7 +549,11 @@ public class AppointmentPsychologistController {
             try {
 
                 //The information of all text fields will be collected, validated, and stored in an tableview in its respective tablecolumn.
-                //Appointment selectedAppointment = ((Appointment) this.tableview.getSelectionModel().getSelectedItem());
+                Appointment selectedAppointment = ((Appointment) this.tableview.getSelectionModel().getSelectedItem());
+
+                //Check if there is idAppointment value in the ID Tablecolumn in the window
+                //AppointmentManager.isLoginExisting(idtf.getText().trim());
+                //If the ID does not exist, add new appointmentdata to a new Appointment
                 /**
                  *
                  *
@@ -609,22 +616,49 @@ public class AppointmentPsychologistController {
                 throw new Exception("Please Enter Psychologist DNI Format:11111111W");
             }
 
-            //The information of all text fields will be collected, validated, and stored in an tableview in its respective tablecolumn.
-            /**
-             *
-             *
-             *
-             *
-             *
-             *
-             *
-             *
-             *
-             *
-             *
-             *
-             *
-             */
+            try {
+                //Get selected Appointment data from table view.
+                Appointment selectedAppointment = ((Appointment) tableview.getSelectionModel().getSelectedItem());
+
+                //Check if id value for selected row in table is equal to id field content.
+                if (!selectedAppointment.getidAppointment().equals(idtf.getText())) {
+
+                    //If not,validate id existence.
+                    //appointmentInterface.(idtf.getText().trim());
+                    //selectedAppointment.setidAppointment(idtf.getText().trim());
+                }
+
+                //update selectedAppointment row data in table view
+                // idAppointment
+                // Date 
+                // change
+                // patient
+                //psychologist
+                //If ID value does not exist: send data to update Appointment data in AppointmentInterface
+                //this.usersManager.updateUser(selectedAppointment);
+
+                //Clean entry text fields
+                idtf.setText("");
+                datetf.setText("");
+                patienttf.setText("");
+                psychologisttf.setText("");
+                checkbox.setSelected(false);
+
+                createbtn.setDisable(true);
+                updatebtn.setDisable(true);
+
+                //Deseleccionamos la fila seleccionada en la tabla
+                tableview.getSelectionModel().clearSelection();
+
+                //Refrescamos la tabla para que muestre los nuevos datos
+                tableview.refresh();
+
+            } catch (Exception e) {
+                //If there is an error in the business logic tier show message and log it.
+                showErrorAlert("Error While Updating Appointment" + e.getMessage());
+                LOGGER.log(Level.SEVERE, "Error While Updating Appointment", e.getMessage());
+            }
+
             //It will show an alert that the Appointment is updated Successfully.
             new Alert(Alert.AlertType.INFORMATION, "Appointment Updated Successfully", ButtonType.OK).showAndWait();;
 
