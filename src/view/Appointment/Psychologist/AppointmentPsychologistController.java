@@ -22,15 +22,14 @@ import javafx.stage.Stage;
 import javax.ws.rs.core.GenericType;
 import restful.AppointmentRestful;
 import interfaces.AppointmentInterface;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -629,22 +628,27 @@ public class AppointmentPsychologistController {
                 }
 
                 //update selectedAppointment row data in table view
-                // idAppointment
-                // Date 
-                // change
-                // patient
-                //psychologist
-                //If ID value does not exist: send data to update Appointment data in AppointmentInterface
-                //this.usersManager.updateUser(selectedAppointment);
+                //selectedAppointment.setidAppointment(idtf.getText() + "");
+
+                //selectedAppointment.setAppointmentDate(datetf.getText());
+
+                //selectedAppointment.setPatient(patienttf.getText());
+
+                //selectedAppointment.setPsychologist(psychologisttf.getText());
 
                 //Clean entry text fields
                 idtf.setText("");
+
                 datetf.setText("");
+
                 patienttf.setText("");
+
                 psychologisttf.setText("");
+
                 checkbox.setSelected(false);
 
                 createbtn.setDisable(true);
+
                 updatebtn.setDisable(true);
 
                 //Deseleccionamos la fila seleccionada en la tabla
@@ -654,8 +658,10 @@ public class AppointmentPsychologistController {
                 tableview.refresh();
 
             } catch (Exception e) {
+
                 //If there is an error in the business logic tier show message and log it.
                 showErrorAlert("Error While Updating Appointment" + e.getMessage());
+
                 LOGGER.log(Level.SEVERE, "Error While Updating Appointment", e.getMessage());
             }
 
@@ -725,57 +731,81 @@ public class AppointmentPsychologistController {
     @FXML
     private void handlePrintButtonAction(ActionEvent event) {
 
-        /**
-         * if CheckBox is checked then accept button will be enabled and the
-         * data gets in the change TableView
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         */
+        LOGGER.info("Printing appointment...");
+
+        try {
+
+            //Get selected appointment data from table view model
+            Appointment selectedAppointment = ((Appointment) this.tableview.getSelectionModel().getSelectedItem());
+
+            //Ask user for confirmation on delete
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This operation cannot be recovered.", ButtonType.OK, ButtonType.CANCEL);
+
+            Optional<ButtonType> result = alert.showAndWait();
+
+            //If OK to deletion
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+
+                //delete mental disease from server side
+                this.appointmentInterface.remove(selectedAppointment.getidAppointment().toString());
+
+                //removes selected item from table
+                this.tableview.getItems().remove(selectedAppointment);
+
+                this.tableview.refresh();
+
+                //Clear selection and refresh table view
+                this.tableview.getSelectionModel().clearSelection();
+
+                this.tableview.refresh();
+
+            }
+
+        } catch (ClientErrorException ex) {
+
+            showErrorAlert("TableView Cannot be printed !!");
+
+            LOGGER.log(Level.SEVERE, ex.getMessage());
+        }
+
+        LOGGER.info("Printed selected appointment column.");
     }
 
     @FXML
     private void handleHelpButtonAction(ActionEvent event) {
 
-        /**
-         * opens a window with the detail information to use the appointment
-         * window
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         */
+        try {
+
+            LOGGER.info("Loading help view ...");
+
+            //Load node graph from fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Appointment/Help.fxml"));
+            Parent root = (Parent) loader.load();
+            //HelpController helpController = ((HelpController) loader.getController());
+
+            //Initializes and shows help stage
+            //helpController.initAndShowStage(root);
+
+        } catch (Exception ex) {
+            
+            //If there is an error show message andlog it.
+            showErrorAlert("Error loading help window: " + ex.getMessage());
+
+            LOGGER.log(Level.SEVERE, "Error loading help window", ex.getMessage());
+        }
     }
 
     @FXML
     private void handleSearchButtonAction(ActionEvent event) {
-        /**
-         *
-         * when the ComboBox has a value in the respected TextField the search
-         * button will be enabled and search all the appointments of that day
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         *
-         */
+
+        if (this.combobox.getValue() != null) {
+
+            this.searchbtn.setDisable(false);
+
+        } else {
+
+            this.searchbtn.setDisable(true);
+        }
 
     }
 
