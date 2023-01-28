@@ -569,7 +569,7 @@ public class AppointmentPsychologistController {
     private void handleUpdateButtonAction(ActionEvent event) {
 
         LOGGER.info("Updating appointment...");
-        
+
         try {
 
             //Idtf text field will be validated with an Numbers Only.
@@ -606,13 +606,16 @@ public class AppointmentPsychologistController {
              *
              *
              */
-            //It will show an alert that the user signed up correctly. We will close this window and open the login window.
-            new Alert(Alert.AlertType.INFORMATION, "Appointment created correctly", ButtonType.OK).showAndWait();;
+            //It will show an alert that the Appointment is Created Successfully.
+            new Alert(Alert.AlertType.INFORMATION, "Appointment created Successfully", ButtonType.OK).showAndWait();;
 
         } catch (Exception e) {
+
             //If there is any error,errors will be received and shows in this alert.
             new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
         }
+
+        LOGGER.info("Appointment Updated !!");
     }
 
     /**
