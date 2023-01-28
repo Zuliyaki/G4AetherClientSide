@@ -349,7 +349,7 @@ public class AppointmentPsychologistController {
 
         } else {
 
-            //If there is not a row selected, clean window fields and disable create, modify and delete buttons
+            //If there is not a row selected, clean window fields and disable create, update and delete buttons
             idtf.setText("");
 
             datetf.setText("");
@@ -484,14 +484,30 @@ public class AppointmentPsychologistController {
 
             case "Find all Appointment":
                 searchbtn.setDisable(false);
+                idtf.setEditable(true);
+                datetf.setEditable(true);
+                patienttf.setEditable(true);
+                psychologisttf.setEditable(true);
+                
+                //Focus id Textfield 
+                idtf.requestFocus();
+
                 break;
 
             case "Find Appointment by ID":
                 searchbtn.setDisable(false);
+                idtf.setEditable(true);
+                datetf.setEditable(false);
+                patienttf.setEditable(false);
+                psychologisttf.setEditable(false);
                 break;
 
             case "Find Appointment by Date":
                 searchbtn.setDisable(false);
+                idtf.setEditable(false);
+                datetf.setEditable(true);
+                patienttf.setEditable(false);
+                psychologisttf.setEditable(false);
                 break;
         }
 
@@ -550,7 +566,7 @@ public class AppointmentPsychologistController {
                 LOGGER.log(Level.SEVERE, ex.getMessage());
             }
 
-             //It will show an alert that the Appointment is Created Successfully.
+            //It will show an alert that the Appointment is Created Successfully.
             new Alert(Alert.AlertType.INFORMATION, "Appointment created Successfully", ButtonType.OK).showAndWait();;
 
         } catch (Exception e) {
@@ -608,8 +624,8 @@ public class AppointmentPsychologistController {
              */
             //It will show an alert that the Appointment is updated Successfully.
             new Alert(Alert.AlertType.INFORMATION, "Appointment Updated Successfully", ButtonType.OK).showAndWait();;
-            
-             LOGGER.info("Appointment Updated !!");
+
+            LOGGER.info("Appointment Updated !!");
 
         } catch (Exception e) {
 
@@ -617,7 +633,6 @@ public class AppointmentPsychologistController {
             new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
         }
 
-       
     }
 
     /**
