@@ -47,76 +47,88 @@ public class AppointmentPsychologistController {
 
     @FXML
     private VBox vbox;
+
     @FXML
     private MenuBar menubar;
-    @FXML
-    private Menu diagnosis;
-    @FXML
-    private Menu dailynotes;
+
     @FXML
     private Menu appointments;
+
     @FXML
     private MenuItem findbyid;
+
     @FXML
     private MenuItem findbydate;
+
     @FXML
     private MenuItem findallappointments;
-    @FXML
-    private MenuItem findbychange;
-    @FXML
-    private Menu mentaldisease;
-    @FXML
-    private Menu users;
-    @FXML
-    private Pane pane;
+
     @FXML
     private Label idlbl;
-    @FXML
-    private TextField idtf;
+
     @FXML
     private Label datelbl;
-    @FXML
-    private Label psychologistlbl;
-    @FXML
-    private TextField psychologisttf;
+
     @FXML
     private Label patientlbl;
+
     @FXML
-    private ComboBox combobox;
+    private Label psychologistlbl;
+
     @FXML
-    private Label appointmentsearchlbl;
+    private TextField idtf;
+
     @FXML
-    private Button searchbtn;
+    private TextField psychologisttf;
+
     @FXML
     private TextField datetf;
+
     @FXML
     private TextField patienttf;
+
+    @FXML
+    private ComboBox combobox;
+
+    @FXML
+    private Button searchbtn;
+
     @FXML
     private CheckBox checkbox;
-    @FXML
-    private Pane panetable;
+
     @FXML
     private TableView tableview;
+
     @FXML
     private TableColumn idtc;
+
     @FXML
     private TableColumn datetc;
+
     @FXML
     private TableColumn changetc;
+
     @FXML
     private TableColumn patienttc;
+
     @FXML
     private TableColumn psychologisttc;
+
     @FXML
     private Button deletebtn;
+
     @FXML
     private Button updatebtn;
+
     @FXML
     private Button createbtn;
+
     @FXML
     private Button printbtn;
+
     @FXML
     private Button helpbtn;
+
     @FXML
     private Button leavebtn;
 
@@ -157,6 +169,11 @@ public class AppointmentPsychologistController {
             //Set the cell value factory of the tableview.
             idtc.setCellValueFactory(new PropertyValueFactory<>("idAppointment"));
 
+            /**
+             *
+             *
+             *
+             */
             datetc.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
 
             changetc.setCellValueFactory(new PropertyValueFactory<>("appointmentChange"));
@@ -315,10 +332,16 @@ public class AppointmentPsychologistController {
             Appointment selectedAppointment = (Appointment) newValue;
 
             idtf.setText(selectedAppointment.getidAppointment() + "");
+
             datetf.setText(selectedAppointment.getAppointmentDate() + "");
+
             patienttf.setText(selectedAppointment.getPatient() + "");
+
             psychologisttf.setText(selectedAppointment.getPsychologist() + "");
+
             checkbox.setSelected(selectedAppointment.getAppointmentChange());
+
+            createbtn.setDisable(false);
 
             updatebtn.setDisable(false);
 
@@ -336,6 +359,8 @@ public class AppointmentPsychologistController {
             psychologisttf.setText("");
 
             checkbox.setSelected(false);
+
+            createbtn.setDisable(true);
 
             updatebtn.setDisable(true);
 
@@ -481,7 +506,7 @@ public class AppointmentPsychologistController {
         try {
 
             //Idtf text field will be validated with an Numbers Only.
-            if (!this.datetf.getText().matches(ID_REGEX)) {
+            if (!this.idtf.getText().matches(ID_REGEX)) {
                 throw new Exception("Please Enter ID In Numbers Only.");
             }
 
@@ -542,10 +567,13 @@ public class AppointmentPsychologistController {
      */
     @FXML
     private void handleUpdateButtonAction(ActionEvent event) {
+
+        LOGGER.info("Updating appointment...");
+        
         try {
 
             //Idtf text field will be validated with an Numbers Only.
-            if (!this.datetf.getText().matches(ID_REGEX)) {
+            if (!this.idtf.getText().matches(ID_REGEX)) {
                 throw new Exception("Please Enter ID In Numbers Only.");
             }
             //Datetf text field will be validated with an DNI pattern.
