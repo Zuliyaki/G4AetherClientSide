@@ -550,8 +550,8 @@ public class AppointmentPsychologistController {
                 LOGGER.log(Level.SEVERE, ex.getMessage());
             }
 
-            //It will show an alert that the user signed up correctly. We will close this window and open the login window.
-            new Alert(Alert.AlertType.INFORMATION, "Appointment created correctly", ButtonType.OK).showAndWait();;
+             //It will show an alert that the Appointment is Created Successfully.
+            new Alert(Alert.AlertType.INFORMATION, "Appointment created Successfully", ButtonType.OK).showAndWait();;
 
         } catch (Exception e) {
             //If there is any error,errors will be received and shows in this alert.
@@ -606,8 +606,10 @@ public class AppointmentPsychologistController {
              *
              *
              */
-            //It will show an alert that the Appointment is Created Successfully.
-            new Alert(Alert.AlertType.INFORMATION, "Appointment created Successfully", ButtonType.OK).showAndWait();;
+            //It will show an alert that the Appointment is updated Successfully.
+            new Alert(Alert.AlertType.INFORMATION, "Appointment Updated Successfully", ButtonType.OK).showAndWait();;
+            
+             LOGGER.info("Appointment Updated !!");
 
         } catch (Exception e) {
 
@@ -615,7 +617,7 @@ public class AppointmentPsychologistController {
             new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
         }
 
-        LOGGER.info("Appointment Updated !!");
+       
     }
 
     /**
@@ -635,7 +637,7 @@ public class AppointmentPsychologistController {
             Appointment selectedAppointment = ((Appointment) this.tableview.getSelectionModel().getSelectedItem());
 
             //Ask user for confirmation on delete
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete selected row?\n" + "This operation cannot be recovered.", ButtonType.OK, ButtonType.CANCEL);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This operation cannot be recovered.", ButtonType.OK, ButtonType.CANCEL);
 
             Optional<ButtonType> result = alert.showAndWait();
 
@@ -664,7 +666,7 @@ public class AppointmentPsychologistController {
             LOGGER.log(Level.SEVERE, ex.getMessage());
         }
 
-        LOGGER.info("Deleted the selected appointment column.");
+        LOGGER.info("Deleted selected appointment column.");
 
     }
 
