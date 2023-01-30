@@ -127,14 +127,15 @@ public class AppointmentPsychologistController {
     private Button printbtn;
 
     @FXML
-    private Button helpbtn;
-
-    @FXML
     private Button leavebtn;
 
     public Stage stage;
 
     private ObservableList<Appointment> appointment;
+
+    private List<Appointment> appointmentbyID;
+
+    private List<Appointment> appointmentbyDate;
 
     private final AppointmentInterface appointmentInterface = new AppointmentRestful();
 
@@ -150,6 +151,8 @@ public class AppointmentPsychologistController {
 
     /**
      * Initializes the controller class.
+     *
+     * @param root
      */
     public void initStage(Parent root) {
 
@@ -171,8 +174,6 @@ public class AppointmentPsychologistController {
 
             /**
              *
-             *
-             *
              */
             datetc.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
 
@@ -192,6 +193,11 @@ public class AppointmentPsychologistController {
             //Load all appointments from the restful data.
             appointment = loadAllAppointments();
 
+            //Load appointment by ID from the restful data.
+            appointmentbyID = (ObservableList<Appointment>) loadAppointmentByID();
+
+            //Load appointment by Date from the restful data.
+            // appointmentbyDate = (ObservableList<Appointment>) loadAppointmentBYDate();
             //For each Textfield add tooltips with the same name as the prompt text.
             idtf.setTooltip(new Tooltip("ID"));
 
@@ -217,9 +223,6 @@ public class AppointmentPsychologistController {
 
             // acceptbtn setOnAction event Handlers
             this.printbtn.setOnAction(this::handlePrintButtonAction);
-
-            // helpbtn setOnAction event Handlers
-            this.helpbtn.setOnAction(this::handleHelpButtonAction);
 
             // searchbtn setOnAction event Handlers
             this.searchbtn.setOnAction(this::handleSearchButtonAction);
@@ -248,9 +251,6 @@ public class AppointmentPsychologistController {
 
             // Disable search button
             this.searchbtn.setDisable(true);
-
-            // Enable help button
-            this.helpbtn.setDisable(false);
 
             // Disable search button
             this.printbtn.setDisable(true);
@@ -299,9 +299,6 @@ public class AppointmentPsychologistController {
 
             //Set hand cursor on leave button
             leavebtn.setCursor(Cursor.HAND);
-
-            //Set hand cursor on leave button
-            helpbtn.setCursor(Cursor.HAND);
 
             //Show the window.
             stage.show();
@@ -365,16 +362,9 @@ public class AppointmentPsychologistController {
             updatebtn.setDisable(true);
 
             deletebtn.setDisable(true);
-
-            reset();
         }
 
         //
-    }
-
-    // reset all the textfield empty after n
-    private void reset() {
-
     }
 
     /**
@@ -472,6 +462,52 @@ public class AppointmentPsychologistController {
         return appointmentInfo;
     }
 
+    private List<Appointment> loadAppointmentByID() {
+
+        ObservableList<Appointment> appointmentID = null;
+
+        try {
+
+            appointmentbyID = appointmentInterface.getAppointmentById_XML(new GenericType<List<Appointment>>() {
+            }, this.idtf.getText());
+
+            appointmentID = FXCollections.observableArrayList(appointmentbyID);
+
+            tableview.setItems(appointmentID);
+
+            tableview.refresh();
+
+        } catch (ClientErrorException ex) {
+
+            Logger.getLogger(AppointmentPsychologistController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return appointmentID;
+
+    }
+
+    private List<Appointment> loadAppointmentBYDate() {
+
+        ObservableList<Appointment> appointmentDate = null;
+
+        try {
+
+            appointmentbyDate = appointmentInterface.getAppointmentByDate_XML(new GenericType<List<Appointment>>() {
+
+            }, this.datetf.getText());
+
+            appointmentDate = FXCollections.observableArrayList(appointmentbyDate);
+
+            tableview.setItems(appointmentDate);
+
+            tableview.refresh();
+
+        } catch (ClientErrorException ex) {
+
+            Logger.getLogger(AppointmentPsychologistController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return appointmentDate;
+    }
+
     /**
      * If the fields are empty the search button will be disabled
      */
@@ -490,7 +526,6 @@ public class AppointmentPsychologistController {
 
             case "Find all Appointment":
                 searchbtn.setDisable(false);
-                loadAllAppointments();
                 break;
 
             case "Find Appointment by ID":
@@ -620,7 +655,7 @@ public class AppointmentPsychologistController {
 
                 //Get selected appointment data from table view model
                 Appointment selectedAppointment = ((Appointment) this.tableview.getSelectionModel().getSelectedItem());
-       
+
                 //Check if id value for selected row in table is equal to id field content.
                 if (!selectedAppointment.getidAppointment().equals(idtf.getText())) {
 
@@ -635,11 +670,11 @@ public class AppointmentPsychologistController {
                 //selectedAppointment.setPatient(patienttf.getText());
                 //selectedAppointment.setPsychologist(psychologisttf.getText());
                 /**
-                 * 
-                 * 
-                 * 
-                 * 
-                 * 
+                 *
+                 *
+                 *
+                 *
+                 *
                  */
                 //Clean entry text fields
                 idtf.setText("");
@@ -738,44 +773,21 @@ public class AppointmentPsychologistController {
 
         LOGGER.info("Printing appointment...");
 
-
-
-           
-    }
-
-    @FXML
-    private void handleHelpButtonAction(ActionEvent event) {
-
-        try {
-
-            LOGGER.info("Loading help view ...");
-
-            //Load node graph from fxml file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Appointment/Help.fxml"));
-            Parent root = (Parent) loader.load();
-            //HelpController helpController = ((HelpController) loader.getController());
-
-            //Initializes and shows help stage
-            //helpController.initAndShowStage(root);
-        } catch (Exception ex) {
-
-            //If there is an error show message andlog it.
-            showErrorAlert("Error loading help window: " + ex.getMessage());
-
-            LOGGER.log(Level.SEVERE, "Error loading help window", ex.getMessage());
-        }
     }
 
     @FXML
     private void handleSearchButtonAction(ActionEvent event) {
 
-        if (this.combobox.getValue() != null) {
-
-            this.searchbtn.setDisable(false);
-
-        } else {
-
-            this.searchbtn.setDisable(true);
+        switch (combobox.getValue().toString()) {
+            case "Find all Appointment":
+                loadAllAppointments();
+                break;
+            case "Find Appointment by ID":
+                loadAppointmentByID();
+                break;
+            case "Find Appointment by Date":
+                loadAppointmentBYDate();
+                break;
         }
 
     }

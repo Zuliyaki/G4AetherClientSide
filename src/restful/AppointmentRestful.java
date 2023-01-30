@@ -82,7 +82,7 @@ public class AppointmentRestful implements AppointmentInterface {
     }
 
     @Override
-    public <T> T getAppointmentById_XML(Class<T> responseType, String id) throws ClientErrorException {
+    public <T> T getAppointmentById_XML(GenericType<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -101,7 +101,7 @@ public class AppointmentRestful implements AppointmentInterface {
     }
 
     @Override
-    public <T> T getAppointmentByDate_XML(Class<T> responseType, String appointmentDate) throws ClientErrorException {
+    public <T> T getAppointmentByDate_XML(GenericType<T> responseType, String appointmentDate) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("getAppointmentByDate/{0}", new Object[]{appointmentDate}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);

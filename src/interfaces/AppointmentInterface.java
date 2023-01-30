@@ -25,13 +25,13 @@ public interface AppointmentInterface {
 
     public void create_JSON(Object requestEntity) throws ClientErrorException;
 
-    public <T> T getAppointmentById_XML(Class<T> responseType, String id) throws ClientErrorException;
+    public <T> T getAppointmentById_XML(GenericType<T> responseType, String id) throws ClientErrorException;
 
     public <T> T getAppointmentById_JSON(Class<T> responseType, String id) throws ClientErrorException;
 
     public void remove(String id) throws ClientErrorException;
 
-    public <T> T getAppointmentByDate_XML(Class<T> responseType, String appointmentDate) throws ClientErrorException;
+    public <T> T getAppointmentByDate_XML(GenericType<T> responseType, String appointmentDate) throws ClientErrorException;
 
     public <T> T getAppointmentByDate_JSON(Class<T> responseType, String appointmentDate) throws ClientErrorException;
 }

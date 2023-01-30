@@ -74,12 +74,11 @@
             <Label layoutX="212.0" layoutY="117.0" prefHeight="17.0" prefWidth="80.0" text="Psychologist" />
             <TextField fx:id="psychologisttf" layoutX="212.0" layoutY="143.0" promptText="Psychologist DNI" />
             <Label layoutX="212.0" layoutY="52.0" prefHeight="17.0" prefWidth="80.0" text="Patient" />
-            <ComboBox fx:id="combobox" layoutX="388.0" layoutY="145.0" prefHeight="25.0" prefWidth="188.0" promptText="Find All Appintment" />
+            <ComboBox fx:id="combobox" layoutX="388.0" layoutY="145.0" prefHeight="25.0" prefWidth="188.0" />
             <Label fx:id="appointmentsearchlbl" layoutX="388.0" layoutY="117.0" prefHeight="17.0" prefWidth="149.0" text="Appointment Search " />
             <Button fx:id="searchbtn" layoutX="492.0" layoutY="68.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Search" />
             <TextField fx:id="patienttf" layoutX="212.0" layoutY="69.0" promptText="Patient DNI" />
             <CheckBox fx:id="checkbox" layoutX="26.0" layoutY="21.0" mnemonicParsing="false" text="Appointment Change" />
-            <Button fx:id="helpbtn" layoutX="492.0" layoutY="17.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Help" />
             <Button fx:id="printbtn" layoutX="388.0" layoutY="68.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Print" />
             <Label fx:id="idlbl" layoutX="24.0" layoutY="94.0" prefHeight="17.0" prefWidth="149.0" />
             <Label fx:id="datelbl" layoutX="29.0" layoutY="170.0" prefHeight="17.0" prefWidth="149.0" />
