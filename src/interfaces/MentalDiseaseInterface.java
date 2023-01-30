@@ -22,7 +22,7 @@ public interface MentalDiseaseInterface {
 
     public <T> T getAllMentalDiseases_XML(GenericType<T> responseType) throws ClientErrorException;
 
-    public <T> T getMentalDiseasesById_XML(GenericType<T> responseType, String id) throws ClientErrorException;
+    public <T> T getMentalDiseasesById_XML(GenericType<T> responseType, Long id) throws ClientErrorException;
 
     public <T> T getMentalDiseasesByName_XML(GenericType<T> responseType, String name) throws ClientErrorException;
 

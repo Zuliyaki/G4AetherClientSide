@@ -5,6 +5,7 @@
  */
 package view.mentalDisease;
 
+import application.G4AetherClientSide;
 import entities.Admin;
 import entities.MentalDisease;
 import java.util.logging.Logger;
@@ -23,6 +24,7 @@ import javafx.stage.Stage;
 import entities.EnumMentalDisease;
 import factories.MentalDiseaseFactory;
 import interfaces.MentalDiseaseInterface;
+import java.io.IOException;
 import java.util.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -31,8 +33,11 @@ import java.util.logging.Level;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventType;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Modality;
+import javax.ws.rs.ClientErrorException;
 
 /**
  *
@@ -41,13 +46,13 @@ import javafx.scene.input.KeyEvent;
 public class MentalDisease2Controller {
 
     private Stage stage;
-    private Admin admin = new Admin();
+    private Admin admin = new Admin("44444444Z", "A", Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()), "a", 1234, "le@gmail.com");
     private MentalDisease mentalDisease;
     private static final Logger LOGGER = Logger.getLogger("view");
     //iniciar factoria
     MentalDiseaseFactory mentalFactory = new MentalDiseaseFactory();
     //obtener mediante la factoria la interface
-    MentalDiseaseInterface mentalDiseaseInterface = mentalFactory.getMentalDisease();
+    MentalDiseaseInterface mentalDiseaseInterface = mentalFactory.getModel();
 
     @FXML
     private TextField txtfName, txtfSymptons, txtfDescription;
@@ -69,6 +74,7 @@ public class MentalDisease2Controller {
     public void initializeCreate(Parent root) {
         LOGGER.info("Initializing the window");
         Scene scene = new Scene(root);
+        //stage.initModality(Modality.APPLICATION_MODAL);
 
         //Not a resizable window.
         stage.setResizable(false);
@@ -95,9 +101,9 @@ public class MentalDisease2Controller {
         this.btnCreate.setDisable(true);
 
         //
-        this.txtfName.textProperty().addListener((event) -> this.textChange(KeyEvent.KEY_TYPED));
-        this.txtfDescription.textProperty().addListener((event) -> this.textChange(KeyEvent.KEY_TYPED));
-        this.txtfSymptons.textProperty().addListener((event) -> this.textChange(KeyEvent.KEY_TYPED));
+        this.txtfName.textProperty().addListener((event) -> this.textChangeCreate(KeyEvent.KEY_TYPED));
+        this.txtfDescription.textProperty().addListener((event) -> this.textChangeCreate(KeyEvent.KEY_TYPED));
+        this.txtfSymptons.textProperty().addListener((event) -> this.textChangeCreate(KeyEvent.KEY_TYPED));
 
         LOGGER.info("window initialized");
 
@@ -109,6 +115,7 @@ public class MentalDisease2Controller {
         LOGGER.info("Initializing the window");
         Scene scene = new Scene(root);
         this.mentalDisease = selectedMentalDisease;
+        //stage.initModality(Modality.APPLICATION_MODAL);
 
         //Not a resizable window.
         stage.setResizable(false);
@@ -138,30 +145,63 @@ public class MentalDisease2Controller {
         this.btnModify.setDisable(true);
         this.btnCreate.setDisable(true);
 
+        //
+        this.txtfName.textProperty().addListener((event) -> this.textChangeModify(KeyEvent.KEY_TYPED));
+        this.txtfDescription.textProperty().addListener((event) -> this.textChangeModify(KeyEvent.KEY_TYPED));
+        this.txtfSymptons.textProperty().addListener((event) -> this.textChangeModify(KeyEvent.KEY_TYPED));
+
         LOGGER.info("window initialized");
 
         stage.setScene(scene);
         stage.show();
     }
 
-    /*
-    
+    /**
+     *
+     * @param KEY_TYPED
      */
-    private void textChange(EventType<KeyEvent> KEY_TYPED) {
+    private void textChangeCreate(EventType<KeyEvent> KEY_TYPED) {
         if (!this.txtfName.getText().trim().isEmpty() && !this.txtfDescription.getText().trim().isEmpty() && !this.txtfSymptons.getText().trim().isEmpty()) {
             this.btnCreate.setDisable(false);
         }
         if (this.txtfName.getText().trim().isEmpty() || this.txtfDescription.getText().trim().isEmpty() || this.txtfSymptons.getText().trim().isEmpty()) {
             this.btnCreate.setDisable(true);
         }
+        if (!mentalDisease.getMdName().equals(this.txtfName.toString()) || !mentalDisease.getMdDescription().equals(this.txtfDescription.toString()) || !mentalDisease.getDiagnosis().equals(this.txtfSymptons.toString())) {
+            this.btnModify.setDisable(false);
+        }
+        /* if (!this.txtfName.getText().trim().equals(mentalDisease.getMdName())) {
+            this.btnModify.setDisable(false);
+        }*/
     }
 
-    /*
-    
+    /**
+     *
+     * @param KEY_TYPED
+     */
+    private void textChangeModify(EventType<KeyEvent> KEY_TYPED) {
+        /*if (!this.txtfName.getText().trim().isEmpty() && !this.txtfDescription.getText().trim().isEmpty() && !this.txtfSymptons.getText().trim().isEmpty()) {
+            this.btnModify.setDisable(false);
+        }
+        if (this.txtfName.getText().trim().isEmpty() || this.txtfDescription.getText().trim().isEmpty() || this.txtfSymptons.getText().trim().isEmpty()) {
+            this.btnModify.setDisable(true);
+        }*/
+        if (!mentalDisease.getMdName().equals(this.txtfName.toString()) || !mentalDisease.getMdDescription().equals(this.txtfDescription.toString()) || !mentalDisease.getDiagnosis().equals(this.txtfSymptons.toString())) {
+            this.btnModify.setDisable(false);
+        }
+        /* if (!this.txtfName.getText().trim().equals(mentalDisease.getMdName())) {
+            this.btnModify.setDisable(false);
+        }*/
+    }
+
+    /**
+     *
+     * @param event
+     * @throws ClientErrorException
      */
     //TODO
     @FXML
-    private void handleCreateButtonAction(ActionEvent event) throws Exception {
+    private void handleCreateButtonAction(ActionEvent event) throws ClientErrorException {
         try {
             MentalDisease newMentalDisease = new MentalDisease(); //admin, (EnumMentalDisease) this.cmbType.getSelectionModel().getSelectedItem(), this.txtfName.getText().trim(), this.txtfDescription.getText().trim(), this.txtfSymptons.getText().trim(), Date.valueOf(LocalDate.now())
 
@@ -173,19 +213,19 @@ public class MentalDisease2Controller {
             newMentalDisease.setMdAddDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
             try {
-                mentalFactory.getMentalDisease().create_XML(newMentalDisease);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Creado correctamente", ButtonType.OK);
+                mentalDiseaseInterface.create_XML(newMentalDisease);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Created successfully", ButtonType.OK);
                 alert.showAndWait();
 
                 //Clean fields
                 this.txtfName.setText("");
                 this.txtfDescription.setText("");
                 this.txtfSymptons.setText("");
-            } catch (Exception e) {
-                new Alert(Alert.AlertType.ERROR, "No se ha podido crear.", ButtonType.OK).showAndWait();
+            } catch (ClientErrorException e) {
+                new Alert(Alert.AlertType.ERROR, "Failed to create", ButtonType.OK).showAndWait();
             }
 
-        } catch (Exception ex) {
+        } catch (ClientErrorException ex) {
             showErrorAlert("Error create");
             LOGGER.log(Level.SEVERE,
                     ex.getMessage());
@@ -193,32 +233,29 @@ public class MentalDisease2Controller {
     }
 
     @FXML
-    private void handleModifyButtonAction(ActionEvent event) throws Exception {
+    private void handleModifyButtonAction(ActionEvent event) throws ClientErrorException {
         try {
             mentalDisease.setMdName(this.txtfName.getText().trim());
             mentalDisease.setMdDescription(this.txtfDescription.getText().trim());
             mentalDisease.setMdSympton(this.txtfSymptons.getText().trim());
             mentalDisease.setMdType((EnumMentalDisease) this.cmbType.getSelectionModel().getSelectedItem());
 
-            if (!mentalDisease.getMdName().equals(this.txtfName.toString()) && !mentalDisease.getMdDescription().equals(this.txtfDescription.toString()) && !mentalDisease.getDiagnosis().equals(this.txtfSymptons.toString())) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to modify this mental disease?", ButtonType.OK, ButtonType.CANCEL);
-                Optional<ButtonType> result = alert.showAndWait();
-                //If OK to modify
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    //modify mental disease from server side
-                    mentalFactory.getMentalDisease().edit_XML(mentalDisease);
-                    Alert alert2 = new Alert(Alert.AlertType.INFORMATION, "Successfully modified", ButtonType.OK);
-                    alert2.showAndWait();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to modify this mental disease?", ButtonType.OK, ButtonType.CANCEL);
+            Optional<ButtonType> result = alert.showAndWait();
+            //If OK to modify
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                //modify mental disease from server side
+                mentalDiseaseInterface.edit_XML(mentalDisease);
+                Alert alert2 = new Alert(Alert.AlertType.INFORMATION, "Successfully modified", ButtonType.OK);
+                alert2.showAndWait();
 
-                    //Clean fields
-                    this.txtName.setText("");
-                    this.txtDescription.setText("");
-                    this.txtSymptons.setText("");
-                }
-            } else {
-                new Alert(Alert.AlertType.ERROR, "It cannot be modified without any changes.", ButtonType.OK).showAndWait();
+                //Clean fields
+                this.txtfName.setText("");
+                this.txtfDescription.setText("");
+                this.txtfSymptons.setText("");
             }
-        } catch (Exception ex) {
+
+        } catch (ClientErrorException ex) {
             showErrorAlert("Error modify");
             LOGGER.log(Level.SEVERE,
                     ex.getMessage());
@@ -231,8 +268,30 @@ public class MentalDisease2Controller {
     }
 
     @FXML
-    private void handleBackButtonAction(ActionEvent event
-    ) {
+    private void handleBackButtonAction(ActionEvent event) throws IOException {
+        LOGGER.info("Trying to open mental window disease 1");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mentalDisease/MentalDisease1.fxml"));
+
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(MentalDisease2Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        MentalDisease1Controller controller = (MentalDisease1Controller) loader.getController();
+
+        controller.setStage(stage);
+
+        controller.initialize(root);
+
+        Scene scene = new Scene(root);
+
+        stage.setResizable(false);
+        //stage.getIcons().add(new Image("/resources/icon.png"));
+
+        stage.setScene(scene);
+        stage.show();
     }
 
     @FXML

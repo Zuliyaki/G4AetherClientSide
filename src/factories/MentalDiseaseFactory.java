@@ -19,18 +19,15 @@ public class MentalDiseaseFactory {
      */
     public MentalDiseaseInterface data;
 
-    public MentalDiseaseFactory() {
-    }
-
     /**
      * Load the data variable, if it is not previously loaded
      *
      * @return data MentalDisease
      */
-    public MentalDiseaseInterface getMentalDisease() {
-
-        data = new MentalDiseaseRestful();
-
+    public MentalDiseaseInterface getModel() {
+        if (data == null) {
+            data = new MentalDiseaseRestful();
+        }
         return data;
     }
 

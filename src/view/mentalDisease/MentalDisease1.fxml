@@ -2,6 +2,9 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -31,15 +34,15 @@
                 <Image url="@../../resources/mentalDisease/Captura%20de%20pantalla%202023-01-13%20000202.png" />
             </image>
         </ImageView>
-        <TableView fx:id="tbvMentalDiseases" layoutX="173.0" layoutY="120.0" prefHeight="411.0" prefWidth="635.0">
+        <TableView fx:id="tbvMentalDiseases" layoutX="173.0" layoutY="120.0" prefHeight="411.0" prefWidth="665.0">
             <columns>
                 <TableColumn fx:id="tcID" editable="false" minWidth="6.4000244140625" prefWidth="52.0" text="ID" />
                 <TableColumn fx:id="tcAdmin" editable="false" prefWidth="86.39994812011719" text="Admin" />
                 <TableColumn fx:id="tcName" editable="false" prefWidth="88.00006103515625" text="Name" />
                 <TableColumn fx:id="tcType" editable="false" prefWidth="75.0" text="Type" />
-                <TableColumn fx:id="tcDescription" editable="false" prefWidth="113.60003662109375" text="Description" />
-                <TableColumn fx:id="tcSymptoms" editable="false" prefWidth="128.7999267578125" text="Symptoms" />
-                <TableColumn fx:id="tcDate" editable="false" prefWidth="92.0" text="Date" />
+                <TableColumn fx:id="tcDescription" editable="false" prefWidth="137.60006713867188" text="Description" />
+                <TableColumn fx:id="tcSymptoms" editable="false" prefWidth="144.7999267578125" text="Symptoms" />
+                <TableColumn fx:id="tcDate" editable="false" prefWidth="79.99993896484375" text="Date" />
             </columns>
         </TableView>
         <Button fx:id="btnModify" layoutX="443.0" layoutY="550.0" mnemonicParsing="false" onAction="#handleModifyButtonAction" prefHeight="25.0" prefWidth="87.0" text="Modify" />
@@ -48,8 +51,29 @@
         <Button fx:id="btnSignOff" layoutX="28.0" layoutY="550.0" mnemonicParsing="false" onAction="#handleSignOffButtonAction" prefHeight="25.0" prefWidth="87.0" text="Sign off" />
         <Button fx:id="btnDelete" layoutX="545.0" layoutY="550.0" mnemonicParsing="false" onAction="#handleDeleteButtonAction" prefHeight="25.0" prefWidth="87.0" text="Delete" />
         <Button fx:id="btnCreate" layoutX="332.0" layoutY="550.0" mnemonicParsing="false" onAction="#handleCreateButtonAction" prefHeight="25.0" prefWidth="87.0" text="Create" />
-        <ComboBox fx:id="cmbSearch" layoutX="723.0" layoutY="86.0" onAction="#handleSearchButtonAction" prefHeight="25.0" prefWidth="94.0" />
+        <ComboBox fx:id="cmbSearch" layoutX="723.0" layoutY="86.0" onAction="#handleSearchButtonAction" prefHeight="25.0" prefWidth="116.0" />
         <Button fx:id="btnHome" layoutX="28.0" layoutY="86.0" mnemonicParsing="false" onAction="#handleHomeButtonAction" prefHeight="25.0" prefWidth="87.0" text="Home" />
         <Button fx:id="btnPrint" layoutX="721.0" layoutY="550.0" mnemonicParsing="false" onAction="#handlePrintButtonAction" prefHeight="25.0" prefWidth="87.0" text="Print" />
+      <MenuBar layoutY="-3.0" prefHeight="25.0" prefWidth="860.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Mental diseases">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Find all diseases" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="User">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Find all users" />
+                  <MenuItem mnemonicParsing="false" text="Register a psychologist" />
+                  <MenuItem mnemonicParsing="false" text="Log out" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="User Manual" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
     </children>
 </Pane>

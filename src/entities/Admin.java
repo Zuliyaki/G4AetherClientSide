@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.Date;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -18,6 +19,10 @@ public class Admin extends User {
      */
     public Admin() {
         super();
+    }
+
+    public Admin(String dni, String fullName, Date birthDate, String password, Integer phoneNumber, String email) {
+        super(dni, fullName, birthDate, password, phoneNumber, email);
     }
 
     /**

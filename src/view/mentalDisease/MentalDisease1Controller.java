@@ -8,8 +8,10 @@ package view.mentalDisease;
 import entities.MentalDisease;
 import factories.MentalDiseaseFactory;
 import interfaces.MentalDiseaseInterface;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -27,7 +29,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -35,8 +37,8 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 
 /**
@@ -48,10 +50,12 @@ public class MentalDisease1Controller {
     private static final Logger LOGGER = Logger.getLogger("view");
     private Stage stage;
     private ObservableList<MentalDisease> mentalDiseaseData;
+    private List<MentalDisease> byID = new ArrayList<>();
+    private List<MentalDisease> byName = new ArrayList<>();
     //iniciar factoria
     MentalDiseaseFactory mentalFactory = new MentalDiseaseFactory();
     //obtener mediante la factoria la interface
-    MentalDiseaseInterface mentalDiseaseInterface = mentalFactory.getMentalDisease();
+    MentalDiseaseInterface mentalDiseaseInterface = mentalFactory.getModel();
 
     @FXML
     private TableView tbvMentalDiseases;
@@ -125,9 +129,24 @@ public class MentalDisease1Controller {
         );
         this.tcDate.setCellValueFactory(
                 new PropertyValueFactory<>("mdAddDate")
-        //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        //return sdf.format(fecha);
         );
+        this.tcDate.setCellFactory(column -> {
+            TableCell<MentalDisease, Date> cell = new TableCell<MentalDisease, Date>() {
+                private SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+
+                @Override
+                protected void updateItem(Date item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setText(null);
+                    } else {
+                        this.setText(format.format(item));
+                    }
+                }
+            };
+
+            return cell;
+        });
 
         mentalDiseaseData = FXCollections.observableArrayList(mentalDiseaseInterface.getAllMentalDiseases_XML(new GenericType<List<MentalDisease>>() {
         }));
@@ -178,12 +197,34 @@ public class MentalDisease1Controller {
         this.txtfSearch.requestFocus();
     }
 
-    /*
-    
+    /**
+     *
+     * @param event
+     * @return
+     * @throws Exception
      */
     @FXML
-    private void handleSearchButtonAction(javafx.event.ActionEvent event) {
+    private ObservableList<MentalDisease> handleSearchButtonAction(javafx.event.ActionEvent event) throws ClientErrorException {
+        ObservableList<MentalDisease> mentalDisease = null;
+        try {
+            if (this.cmbSearch.getSelectionModel().getSelectedItem().equals(cmbSearch.getItems().get(0))) {
+                byID = mentalDiseaseInterface.getMentalDiseasesById_XML(new GenericType<List<MentalDisease>>() {}, Long.parseLong(this.txtfSearch.getText()));
 
+                mentalDisease = FXCollections.observableArrayList(byID);
+            } else if (this.cmbSearch.getSelectionModel().getSelectedItem().equals(cmbSearch.getItems().get(1))) {
+                byName = mentalDiseaseInterface.getMentalDiseasesByName_XML(new GenericType<List<MentalDisease>>() {
+                }, this.txtfSearch.getText());
+
+                mentalDisease = FXCollections.observableArrayList(byName);
+            }
+            this.tbvMentalDiseases.setItems(mentalDisease);
+            tbvMentalDiseases.refresh();
+        } catch (ClientErrorException ex) {
+            showErrorAlert("Error, not found.");
+            LOGGER.log(Level.SEVERE,
+                    ex.getMessage());
+        }
+        return mentalDisease;
     }
 
     /**
@@ -193,8 +234,8 @@ public class MentalDisease1Controller {
      * @param event The Action event object
      */
     @FXML
-    private void handleCreateButtonAction(javafx.event.ActionEvent event) throws IOException, Exception {
-        LOGGER.info("Probando a abrir ventana mental disease 2");
+    private void handleCreateButtonAction(javafx.event.ActionEvent event) throws ClientErrorException, IOException {
+        LOGGER.info("Trying to open mental window disease 2");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mentalDisease/MentalDisease2.fxml"));
             Parent root = (Parent) loader.load();
@@ -202,8 +243,8 @@ public class MentalDisease1Controller {
             controller.setStage(stage);
             controller.initializeCreate(root);
 
-        } catch (IOException ex) {
-            showErrorAlert("No se ha podido abrir la ventana");
+        } catch (ClientErrorException ex) {
+            showErrorAlert("The window could not be opened");
             LOGGER.log(Level.SEVERE,
                     ex.getMessage());
         }
@@ -216,8 +257,8 @@ public class MentalDisease1Controller {
      * @param event The Action event object
      */
     @FXML
-    private void handleModifyButtonAction(javafx.event.ActionEvent event) {
-        LOGGER.info("Probando a abrir ventana mental disease 2");
+    private void handleModifyButtonAction(javafx.event.ActionEvent event) throws ClientErrorException, IOException {
+        LOGGER.info("Trying to open mental window disease 2");
         try {
             //Get selected user data from table view model
             MentalDisease selectedMentalDisease = ((MentalDisease) this.tbvMentalDiseases.getSelectionModel().getSelectedItem());
@@ -229,8 +270,8 @@ public class MentalDisease1Controller {
             controller.setStage(stage);
             controller.initializeModify(root, selectedMentalDisease);
 
-        } catch (IOException ex) {
-            showErrorAlert("No se ha podido abrir la ventana");
+        } catch (ClientErrorException ex) {
+            showErrorAlert("The window could not be opened");
             LOGGER.log(Level.SEVERE,
                     ex.getMessage());
         }
@@ -243,7 +284,7 @@ public class MentalDisease1Controller {
      * @param event The ActionEvent object for the event.
      */
     @FXML
-    private void handleDeleteButtonAction(javafx.event.ActionEvent event) throws Exception {
+    private void handleDeleteButtonAction(javafx.event.ActionEvent event) throws ClientErrorException {
         LOGGER.info("Deleting user...");
         try {
             //Get selected user data from table view model
@@ -254,7 +295,7 @@ public class MentalDisease1Controller {
             //If OK to deletion
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 //delete mental disease from server side
-                mentalFactory.getMentalDisease().remove(selectedMentalDisease.getIdMentalDisease().toString());
+                mentalDiseaseInterface.remove(selectedMentalDisease.getIdMentalDisease().toString());
                 //this.mentalDiseaseInterface.remove(selectedMentalDisease.getIdMentalDisease().toString());
                 //removes selected item from table
                 this.tbvMentalDiseases.getItems().remove(selectedMentalDisease);
@@ -263,26 +304,29 @@ public class MentalDisease1Controller {
                 this.tbvMentalDiseases.getSelectionModel().clearSelection();
                 this.tbvMentalDiseases.refresh();
             }
-        } catch (Exception ex) {
-            showErrorAlert("No se ha podido abrir la ventana");
+        } catch (ClientErrorException ex) {
+            showErrorAlert("Error delete");
             LOGGER.log(Level.SEVERE,
                     ex.getMessage());
         }
     }
 
-    /*
-    
+    /**
+     *
+     * @param event
      */
     @FXML
-    private void handleHomeButtonAction(javafx.event.ActionEvent event) {
+    private void handleHomeButtonAction(javafx.event.ActionEvent event
+    ) {
     }
 
-
-    /*
-    
+    /**
+     *
+     * @param event
      */
     @FXML
-    private void handleSignOffButtonAction(javafx.event.ActionEvent event) {
+    private void handleSignOffButtonAction(javafx.event.ActionEvent event
+    ) {
         Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to sign off?", ButtonType.OK, ButtonType.CANCEL);
         Optional<ButtonType> result1 = alert1.showAndWait();
 
@@ -301,11 +345,13 @@ public class MentalDisease1Controller {
         }
     }
 
-    /*
-    
+    /**
+     *
+     * @param event
      */
     @FXML
-    private void handlePrintButtonAction(javafx.event.ActionEvent event) {
+    private void handlePrintButtonAction(javafx.event.ActionEvent event
+    ) {
     }
 
     /**
