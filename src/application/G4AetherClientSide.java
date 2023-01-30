@@ -42,7 +42,6 @@ public class G4AetherClientSide extends Application {
         Scene scene = new Scene(root);
 
         stage.setResizable(false);
-        stage.setTitle("Mental Disease");
         //stage.getIcons().add(new Image("/resources/icon.png"));
 
         stage.setScene(scene);

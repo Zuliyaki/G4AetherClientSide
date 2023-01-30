@@ -60,8 +60,6 @@ public class MentalDisease1Controller {
     @FXML
     private Button btnModify, btnSearch, btnSignOff, btnDelete, btnCreate, btnHome, btnPrint;
     @FXML
-    private RadioButton rdbtnOrder;
-    @FXML
     private ComboBox cmbSearch;
     @FXML
     private TextField txtfSearch;
@@ -76,6 +74,8 @@ public class MentalDisease1Controller {
     public void initialize(Parent root) {
         LOGGER.info("Initializing the window");
 
+        //Not a resizable window.
+        stage.setResizable(false);
         // The window will be modal.
         //stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Mental Disease 1");
@@ -254,7 +254,8 @@ public class MentalDisease1Controller {
             //If OK to deletion
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 //delete mental disease from server side
-                this.mentalDiseaseInterface.remove(selectedMentalDisease.getIdMentalDisease().toString());
+                mentalFactory.getMentalDisease().remove(selectedMentalDisease.getIdMentalDisease().toString());
+                //this.mentalDiseaseInterface.remove(selectedMentalDisease.getIdMentalDisease().toString());
                 //removes selected item from table
                 this.tbvMentalDiseases.getItems().remove(selectedMentalDisease);
                 this.tbvMentalDiseases.refresh();

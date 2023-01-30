@@ -56,7 +56,7 @@ public class MentalDisease2Controller {
     @FXML
     private ComboBox cmbType;
     @FXML
-    private Pane pnMentalDisease1;
+    private Pane pnMentalDisease2;
     @FXML
     private Text txtName;
     @FXML
@@ -69,6 +69,9 @@ public class MentalDisease2Controller {
     public void initializeCreate(Parent root) {
         LOGGER.info("Initializing the window");
         Scene scene = new Scene(root);
+
+        //Not a resizable window.
+        stage.setResizable(false);
 
         stage.setTitle("Mental Disease 2");
 
@@ -106,6 +109,9 @@ public class MentalDisease2Controller {
         LOGGER.info("Initializing the window");
         Scene scene = new Scene(root);
         this.mentalDisease = selectedMentalDisease;
+
+        //Not a resizable window.
+        stage.setResizable(false);
 
         stage.setTitle("Mental Disease 2");
 
@@ -160,78 +166,78 @@ public class MentalDisease2Controller {
             MentalDisease newMentalDisease = new MentalDisease(); //admin, (EnumMentalDisease) this.cmbType.getSelectionModel().getSelectedItem(), this.txtfName.getText().trim(), this.txtfDescription.getText().trim(), this.txtfSymptons.getText().trim(), Date.valueOf(LocalDate.now())
 
             newMentalDisease.setAdmin(admin);
-            newMentalDisease.setMdName(this.txtfName.getText());
-            newMentalDisease.setMdDescription(this.txtfDescription.getText());
-            newMentalDisease.setMdSympton(this.txtfSymptons.getText());
+            newMentalDisease.setMdName(this.txtfName.getText().trim());
+            newMentalDisease.setMdDescription(this.txtfDescription.getText().trim());
+            newMentalDisease.setMdSympton(this.txtfSymptons.getText().trim());
             newMentalDisease.setMdType((EnumMentalDisease) this.cmbType.getSelectionModel().getSelectedItem());
             newMentalDisease.setMdAddDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
- 
-            //Send user data to business logic tier
+
             try {
                 mentalFactory.getMentalDisease().create_XML(newMentalDisease);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Creado correctamente", ButtonType.OK);
+                alert.showAndWait();
+
+                //Clean fields
+                this.txtfName.setText("");
+                this.txtfDescription.setText("");
+                this.txtfSymptons.setText("");
             } catch (Exception e) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "mal", ButtonType.CANCEL);
+                new Alert(Alert.AlertType.ERROR, "No se ha podido crear.", ButtonType.OK).showAndWait();
             }
-            
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Creado correctamente", ButtonType.OK);
-            alert.showAndWait();
-            //Clean fields
-            this.txtfName.setText("");
-            this.txtfDescription.setText("");
-            this.txtfSymptons.setText(""); 
+
         } catch (Exception ex) {
-            showErrorAlert("No se ha podido abrir la ventana");
+            showErrorAlert("Error create");
             LOGGER.log(Level.SEVERE,
                     ex.getMessage());
         }
     }
 
-    /*
     @FXML
     private void handleModifyButtonAction(ActionEvent event) throws Exception {
         try {
-            //update selected row data in table view 
-            mentalDisease //setNombre(tfNombre.getText().trim());
-                    
-            if (mentalDisease.getMdName().equals(this.txtfName.toString()) && mentalDisease.getMdName().equals(this.txtfDescription.toString() && mentalDisease.getMdName().equals(this.txtfSymptons.toString()) {
+            mentalDisease.setMdName(this.txtfName.getText().trim());
+            mentalDisease.setMdDescription(this.txtfDescription.getText().trim());
+            mentalDisease.setMdSympton(this.txtfSymptons.getText().trim());
+            mentalDisease.setMdType((EnumMentalDisease) this.cmbType.getSelectionModel().getSelectedItem());
 
+            if (!mentalDisease.getMdName().equals(this.txtfName.toString()) && !mentalDisease.getMdDescription().equals(this.txtfDescription.toString()) && !mentalDisease.getDiagnosis().equals(this.txtfSymptons.toString())) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to modify this mental disease?", ButtonType.OK, ButtonType.CANCEL);
+                Optional<ButtonType> result = alert.showAndWait();
+                //If OK to modify
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    //modify mental disease from server side
+                    mentalFactory.getMentalDisease().edit_XML(mentalDisease);
+                    Alert alert2 = new Alert(Alert.AlertType.INFORMATION, "Successfully modified", ButtonType.OK);
+                    alert2.showAndWait();
+
+                    //Clean fields
+                    this.txtName.setText("");
+                    this.txtDescription.setText("");
+                    this.txtSymptons.setText("");
+                }
+            } else {
+                new Alert(Alert.AlertType.ERROR, "It cannot be modified without any changes.", ButtonType.OK).showAndWait();
             }
-            Profile perfil = Profile.USER;
-            if (rbAdmin.isSelected()) {
-                perfil = Profile.ADMIN;
-            }
-            selectedUser.setPerfil(perfil);
-            selectedUser.setDepartamento((DepartmentBean) cbDepartamentos.getSelectionModel()
-                    .getSelectedItem());
-            //If login value does not exist: 
-            //send data to modify user data in business tier
-            mentalDiseaseInterface.edit_XML(event);
-            //Clean entry text fields
-            this.txtName.setText("");
-            this.txtDescription.setText("");
-            this.txtSymptons.setText("");
-            //cbDepartamentos.getSelectionModel().clearSelection();
-            tgPerfil.selectToggle(rbUsuario);
-            btCrear.setDisable(true);
-            btModificar.setDisable(true);
-            //Deseleccionamos la fila seleccionada en la tabla
-            tbUsers.getSelectionModel().clearSelection();
         } catch (Exception ex) {
-            showErrorAlert("No se ha podido abrir la ventana");
+            showErrorAlert("Error modify");
             LOGGER.log(Level.SEVERE,
                     ex.getMessage());
         }
-    }*/
-    @FXML
-    private void handleHomeButtonAction(ActionEvent event) {
     }
 
     @FXML
-    private void handleBackButtonAction(ActionEvent event) {
+    private void handleHomeButtonAction(ActionEvent event
+    ) {
     }
 
     @FXML
-    private void handleSignOffButtonAction(ActionEvent event) {
+    private void handleBackButtonAction(ActionEvent event
+    ) {
+    }
+
+    @FXML
+    private void handleSignOffButtonAction(ActionEvent event
+    ) {
         Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to sign off?", ButtonType.OK, ButtonType.CANCEL);
         Optional<ButtonType> result1 = alert1.showAndWait();
 
