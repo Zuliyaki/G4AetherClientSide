@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author unaibAndLeire
  */
-
+@XmlRootElement(name="psychologist")
 public class Psychologist extends User {
 
     private String titulation;

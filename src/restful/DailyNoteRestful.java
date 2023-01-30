@@ -24,7 +24,7 @@ import javax.ws.rs.core.GenericType;
  *
  * @author unaib
  */
-public class DailyNoteRestful implements DailyNotesInterface {
+public class DailyNoteRestful implements DailyNotesInterface{
 
     private WebTarget webTarget;
     private Client client;
@@ -35,13 +35,13 @@ public class DailyNoteRestful implements DailyNotesInterface {
         webTarget = client.target(BASE_URI).path("entities.dailynote");
     }
 
-    public <T> T findPatientNotesBetweenDayScores_XML(Class<T> responseType, String patientId, String dayScoreLow, String dayScoreGreat) throws ClientErrorException {
+    public <T> T findPatientNotesBetweenDayScores_XML(GenericType<T> responseType, String patientId, Double dayScoreLow, Double dayScoreGreat) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findBetweenScores/{0}/{1}/{2}", new Object[]{patientId, dayScoreLow, dayScoreGreat}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findPatientNotesBetweenDayScores_JSON(Class<T> responseType, String patientId, String dayScoreLow, String dayScoreGreat) throws ClientErrorException {
+    public <T> T findPatientNotesBetweenDayScores_JSON(Class<T> responseType, String patientId, Double dayScoreLow, Double dayScoreGreat) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findBetweenScores/{0}/{1}/{2}", new Object[]{patientId, dayScoreLow, dayScoreGreat}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
@@ -65,7 +65,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
-    public <T> T findPatientEditedDailyNotes_XML(Class<T> responseType, String patientId) throws ClientErrorException {
+    public <T> T findPatientEditedDailyNotes_XML(GenericType<T> responseType, String patientId) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findEditedNotes/{0}", new Object[]{patientId}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -77,7 +77,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
-    public <T> T findPatientDailyNotesByNotReadable_XML(Class<T> responseType, String patientId) throws ClientErrorException {
+    public <T> T findPatientDailyNotesByNotReadable_XML(GenericType<T> responseType, String patientId) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findNotReadableNotes/{0}", new Object[]{patientId}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -89,7 +89,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
-    public <T> T findDailyNoteById_XML(Class<T> responseType, String id) throws ClientErrorException {
+    public <T> T findDailyNoteById_XML(GenericType<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -109,7 +109,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
-    public <T> T findPatientDailyNotesBetweenDates_XML(Class<T> responseType, String patientId, String dateLow, String dateGreat) throws ClientErrorException {
+    public <T> T findPatientDailyNotesBetweenDates_XML(GenericType<T> responseType, String patientId, String dateLow, String dateGreat) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findBetweenDates/{0}/{1}/{2}", new Object[]{patientId, dateLow, dateGreat}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -121,7 +121,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
-    public <T> T findPatientDailyNoteByDate_XML(Class<T> responseType, String patientId, String date) throws ClientErrorException {
+    public <T> T findPatientDailyNoteByDate_XML(GenericType<T> responseType, String patientId, String date) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findByDate/{0}/{1}", new Object[]{patientId, date}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -137,7 +137,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
     }
 
-    public <T> T findAllDailyNotesByPatientId_XML(Class<T> responseType, String patientId) throws ClientErrorException {
+    public <T> T findAllDailyNotesByPatientId_XML(GenericType<T> responseType, String patientId) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findByPatient/{0}", new Object[]{patientId}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -152,5 +152,5 @@ public class DailyNoteRestful implements DailyNotesInterface {
     public void close() {
         client.close();
     }
-
+    
 }

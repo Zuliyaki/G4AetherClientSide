@@ -7,19 +7,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * 
+ *
  * @author unaibAndLeire
  */
-
+@XmlRootElement(name="patient")
 public class Patient extends User {
 
     private String mbti;
 
     private Set<DailyNote> dailyNotes;
-    
+
     private Set<Diagnosis> diagnosises;
 
-   
     private Psychologist psychologist;
 
     private Set<Appointment> appointments;

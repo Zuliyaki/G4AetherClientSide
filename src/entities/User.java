@@ -4,15 +4,13 @@ import java.io.Serializable;
 
 import java.util.Date;
 
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author unaibAndLeire
  */
-
-@XmlRootElement
+@XmlRootElement(name="user")
 public class User implements Serializable {
 
     private String dni;

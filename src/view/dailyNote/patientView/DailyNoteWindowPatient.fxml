@@ -83,7 +83,7 @@
                         <Font size="13.0" />
                     </font>
                 </Text>
-                <ComboBox fx:id="comboSearchMethod" layoutX="67.0" layoutY="95.0" prefHeight="25.0" prefWidth="194.0" promptText="findAllNotes" />
+                <ComboBox fx:id="comboSearchMethod" layoutX="67.0" layoutY="95.0" prefHeight="25.0" prefWidth="194.0" />
                 <Text layoutX="67.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Patient dni" wrappingWidth="174.15625">
                     <font>
                         <Font size="13.0" />
@@ -95,13 +95,13 @@
                         <Font size="13.0" />
                     </font>
                 </Text>
-                <Spinner fx:id="spinnerScoreBottom" layoutX="362.0" layoutY="120.0" prefHeight="25.0" prefWidth="194.0" />
+                <Spinner fx:id="spinnerScoreBottom" editable="true" layoutX="362.0" layoutY="120.0" prefHeight="25.0" prefWidth="194.0" />
                 <Text layoutX="579.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Day score top" wrappingWidth="174.15625">
                     <font>
                         <Font size="13.0" />
                     </font>
                 </Text>
-                <Spinner fx:id="spinnerScoreTop" layoutX="579.0" layoutY="120.0" prefHeight="25.0" prefWidth="194.0" />
+                <Spinner fx:id="spinnerScoreTop" editable="true" layoutX="579.0" layoutY="120.0" prefHeight="25.0" prefWidth="194.0" />
                 <Text layoutX="362.0" layoutY="170.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date start" wrappingWidth="174.15625">
                     <font>
                         <Font size="13.0" />
@@ -144,7 +144,7 @@
                     </font>
                 </Text>
                 <DatePicker fx:id="dpNoteDate" layoutX="68.0" layoutY="626.0" prefHeight="25.0" prefWidth="194.0" promptText="Note date" />
-                <Spinner fx:id="spinnerDayScore" layoutX="68.0" layoutY="696.0" prefHeight="25.0" prefWidth="194.0" />
+                <Spinner fx:id="spinnerDayScore" editable="true" layoutX="68.0" layoutY="696.0" prefHeight="25.0" prefWidth="194.0" />
                 <Text layoutX="68.0" layoutY="683.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Day score" wrappingWidth="174.15625">
                     <font>
                         <Font size="13.0" />
