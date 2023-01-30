@@ -87,21 +87,21 @@
             <TextField fx:id="datetf" layoutX="28.0" layoutY="143.0" promptText="dd/mm/yy" />
          </children>
       </Pane>
-      <Pane fx:id="panetable" prefHeight="348.0" prefWidth="604.0">
+      <Pane fx:id="panetable" prefHeight="366.0" prefWidth="604.0">
          <children>
-            <TableView fx:id="tableview" layoutX="27.0" prefHeight="283.0" prefWidth="548.0">
+            <TableView fx:id="tableview" layoutX="57.0" prefHeight="283.0" prefWidth="489.0">
                <columns>
                   <TableColumn fx:id="idtc" prefWidth="40.0" resizable="false" text="Id" />
-                  <TableColumn fx:id="datetc" prefWidth="180.0" resizable="false" text="Date" />
-                  <TableColumn fx:id="changetc" minWidth="0.0" prefWidth="86.0" resizable="false" text="Change" />
+                  <TableColumn fx:id="datetc" prefWidth="120.0" resizable="false" text="Date" />
+                  <TableColumn fx:id="changetc" minWidth="0.0" prefWidth="90.0" resizable="false" text="Change" />
                   <TableColumn fx:id="patienttc" minWidth="0.0" prefWidth="120.0" resizable="false" text="Patient" />
                   <TableColumn fx:id="psychologisttc" minWidth="0.0" prefWidth="120.0" resizable="false" text="Psychologist" />
                </columns>
             </TableView>
-            <Button fx:id="deletebtn" layoutX="275.0" layoutY="300.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Delete" />
-            <Button fx:id="updatebtn" layoutX="150.0" layoutY="300.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Update" />
-            <Button fx:id="createbtn" layoutX="25.0" layoutY="300.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Create" />
-            <Button fx:id="leavebtn" layoutX="496.0" layoutY="300.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Leave" />
+            <Button fx:id="deletebtn" layoutX="276.0" layoutY="310.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Delete" />
+            <Button fx:id="updatebtn" layoutX="151.0" layoutY="310.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Update" />
+            <Button fx:id="createbtn" layoutX="26.0" layoutY="310.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Create" />
+            <Button fx:id="leavebtn" layoutX="497.0" layoutY="310.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Leave" />
          </children>
       </Pane>
   </children>

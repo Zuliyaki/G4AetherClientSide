@@ -22,6 +22,11 @@ import javafx.stage.Stage;
 import javax.ws.rs.core.GenericType;
 import restful.AppointmentRestful;
 import interfaces.AppointmentInterface;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,10 +34,10 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
@@ -133,6 +138,8 @@ public class AppointmentPsychologistController {
 
     private ObservableList<Appointment> appointment;
 
+    private Appointment updateAppointments;
+
     private List<Appointment> appointmentbyID;
 
     private List<Appointment> appointmentbyDate;
@@ -141,11 +148,11 @@ public class AppointmentPsychologistController {
 
     private static final Logger LOGGER = Logger.getLogger("view");
 
-    private static final String ID_REGEX = "^[0-9]";
+    private static final String ID_REGEX = "\\d+";
 
     private static final String DNI_REGEX = "^[0-9]{8,8}[A-Za-z]$";
 
-    private static final String DATE_REGEX = "^(([0-9])|([0-2][0-9])|([3][0-1]))\\/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\/\\d{4}$";
+    private static final String DATE_REGEX = "^(0?[1-9]|[12][0-9]|3[01])[\\-\\-](0?[1-9]|1[012])[\\-\\-]\\d{4}$";
 
     private boolean allFieldsFill = false;
 
@@ -171,11 +178,42 @@ public class AppointmentPsychologistController {
 
             //Set the cell value factory of the tableview.
             idtc.setCellValueFactory(new PropertyValueFactory<>("idAppointment"));
-
             /**
-             *
+             * 
+             * 
+             * 
+             * 
+             * 
+             * 
              */
+
             datetc.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
+
+            datetc.setCellFactory(column -> {
+
+                TableCell<Appointment, Date> cell = new TableCell<Appointment, Date>() {
+
+                    private SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+
+                    @Override
+                    protected void updateItem(Date item, boolean empty) {
+
+                        super.updateItem(item, empty);
+
+                        if (empty) {
+
+                            setText(null);
+
+                        } else {
+
+                            this.setText(format.format(item));
+
+                        }
+                    }
+                };
+
+                return cell;
+            });
 
             changetc.setCellValueFactory(new PropertyValueFactory<>("appointmentChange"));
 
@@ -193,11 +231,19 @@ public class AppointmentPsychologistController {
             //Load all appointments from the restful data.
             appointment = loadAllAppointments();
 
+            /**
+             * 
+             * 
+             * 
+             * 
+             * 
+             */
             //Load appointment by ID from the restful data.
             appointmentbyID = (ObservableList<Appointment>) loadAppointmentByID();
 
             //Load appointment by Date from the restful data.
-            // appointmentbyDate = (ObservableList<Appointment>) loadAppointmentBYDate();
+            appointmentbyDate = (ObservableList<Appointment>) loadAppointmentBYDate();
+
             //For each Textfield add tooltips with the same name as the prompt text.
             idtf.setTooltip(new Tooltip("ID"));
 
@@ -272,12 +318,6 @@ public class AppointmentPsychologistController {
              * appear below the text field with a “Space Not Allowed." when
              * another letter is written the text will disappear.
              */
-            idtf.addEventFilter(KeyEvent.KEY_TYPED, evt -> {
-                if (" ".equals(evt.getCharacter())) {
-                    evt.consume();
-                    idlbl.setText("Space Not Allowed.");
-                }
-            });
             datetf.addEventFilter(KeyEvent.KEY_TYPED, evt -> {
                 if (" ".equals(evt.getCharacter())) {
                     evt.consume();
@@ -364,7 +404,6 @@ public class AppointmentPsychologistController {
             deletebtn.setDisable(true);
         }
 
-        //
     }
 
     /**
@@ -384,7 +423,6 @@ public class AppointmentPsychologistController {
 
         //Shows error dialog.
         Alert alert;
-
         alert = new Alert(Alert.AlertType.ERROR, errorMsg, ButtonType.OK);
     }
 
@@ -399,28 +437,29 @@ public class AppointmentPsychologistController {
      */
     public void handleFieldsTextChange(ObservableValue observable, String oldValue, String newValue) {
         /**
-         * Maximum digits permitted in id field will be 5, date will be 10
-         * digits, patient and psychologist fields 8 digits with 1 letter
+         * Date will be 10 digits, patient and psychologist fields 8 digits with 1 letter
          */
-        if (idtf.getText().length() > 5) {
-            idtf.setText(idtf.getText().substring(0, 5));
-        }
         if (datetf.getText().length() > 10) {
+            
             datetf.setText(datetf.getText().substring(0, 11));
         }
         if (patienttf.getText().length() > 9) {
+            
             patienttf.setText(patienttf.getText().substring(0, 9));
         }
         if (psychologisttf.getText().length() > 9) {
+            
             psychologisttf.setText(psychologisttf.getText().substring(0, 9));
         }
 
         //Control label texts, when another letter is written the text will disappear.
-        if (!(idtf.getText().equals(oldValue)) || !(datetf.getText().equals(oldValue)) || !(patienttf.getText().equals(oldValue)) || !(psychologisttf.getText().equals(oldValue))) {
-            idlbl.setText("");
+        if (!(datetf.getText().equals(oldValue)) || !(patienttf.getText().equals(oldValue)) || !(psychologisttf.getText().equals(oldValue))) {
             datelbl.setText("");
+            
             patientlbl.setText("");
+            
             psychologistlbl.setText("");
+            
         }
 
         /**
@@ -462,6 +501,11 @@ public class AppointmentPsychologistController {
         return appointmentInfo;
     }
 
+    /**
+     * Loads appointmentByID from the database.
+     *
+     * @return
+     */
     private List<Appointment> loadAppointmentByID() {
 
         ObservableList<Appointment> appointmentID = null;
@@ -485,6 +529,11 @@ public class AppointmentPsychologistController {
 
     }
 
+    /**
+     * Loads appointmentByDate from the database.
+     *
+     * @return
+     */
     private List<Appointment> loadAppointmentBYDate() {
 
         ObservableList<Appointment> appointmentDate = null;
@@ -508,9 +557,6 @@ public class AppointmentPsychologistController {
         return appointmentDate;
     }
 
-    /**
-     * If the fields are empty the search button will be disabled
-     */
     /**
      * Search button will be enabled when a search method has a value and all
      * the fields needed for the search method are filled if the method does not
@@ -554,21 +600,15 @@ public class AppointmentPsychologistController {
     }
 
     @FXML
-    @SuppressWarnings("empty-statement")
     private void handleCreateButtonAction(ActionEvent event) {
 
         LOGGER.info("Creating appointment...");
 
         try {
 
-            //Idtf text field will be validated with an Numbers Only.
-            if (!this.idtf.getText().matches(ID_REGEX)) {
-                throw new Exception("Please Enter ID In Numbers Only.");
-            }
-
             //Datetf text field will be validated with an DNI pattern.
             if (!this.datetf.getText().matches(DATE_REGEX)) {
-                throw new Exception("Please Enter Date In Format: 22/Feb/2006");
+                throw new Exception("Please Enter Date In Format: 22-01-2006");
             }
 
             //patienttf text field will be validated with an DNI pattern.
@@ -582,30 +622,24 @@ public class AppointmentPsychologistController {
 
             try {
 
-                //The information of all text fields will be collected, validated, and stored in an tableview in its respective tablecolumn.
-                Appointment selectedAppointment = ((Appointment) this.tableview.getSelectionModel().getSelectedItem());
+                Appointment appointmentCreate = new Appointment();
 
-                //Check if there is idAppointment value in the ID Tablecolumn in the window
-                //AppointmentManager.isLoginExisting(idtf.getText().trim());
-                //If the ID does not exist, add new appointmentdata to a new Appointment
-                /**
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 */
-            } catch (ClientErrorException ex) {
+                appointmentCreate.setAppointmentDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
-                showErrorAlert("TableView Cannot be deleted !!");
+                appointmentCreate.setAppointmentChange(checkbox.isSelected());
+
+                try {
+
+                    appointmentInterface.create_XML(appointmentCreate);
+
+                    reset();
+
+                } catch (ClientErrorException ex) {
+
+                    Logger.getLogger(AppointmentPsychologistController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            } catch (Exception ex) {
 
                 LOGGER.log(Level.SEVERE, ex.getMessage());
             }
@@ -613,11 +647,12 @@ public class AppointmentPsychologistController {
             //It will show an alert that the Appointment is Created Successfully.
             new Alert(Alert.AlertType.INFORMATION, "Appointment created Successfully", ButtonType.OK).showAndWait();;
 
-        } catch (Exception e) {
-            //If there is any error,errors will be received and shows in this alert.
-            new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
+        } catch (Exception ex) {
+
+            showErrorAlert("Error Creating Appointment !!" + ex.getMessage());
         }
 
+        LOGGER.info("Appointment Created !!");
     }
 
     /**
@@ -632,90 +667,63 @@ public class AppointmentPsychologistController {
 
         try {
 
-            //Idtf text field will be validated with an Numbers Only.
-            if (!this.idtf.getText().matches(ID_REGEX)) {
-                throw new Exception("Please Enter ID In Numbers Only.");
-            }
-            //Datetf text field will be validated with an DNI pattern.
-            if (!this.datetf.getText().matches(DATE_REGEX)) {
-                throw new Exception("Please Enter Date In Format: 22/Feb/2006");
-            }
+            Appointment appointmentUpdate = new Appointment();
 
-            //patienttf text field will be validated with an DNI pattern.
-            if (!this.patienttf.getText().matches(DNI_REGEX)) {
-                throw new Exception("Please Enter Patient DNI Format :11111111Y");
-            }
-            //psychologisttf text field will be validated with an DNI pattern.
-            if (!this.psychologisttf.getText().matches(DNI_REGEX)) {
-                throw new Exception("Please Enter Psychologist DNI Format:11111111W");
-            }
+            appointmentUpdate.setAppointmentDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
+            appointmentUpdate.setAppointmentChange(checkbox.isSelected());
+
+            //appointmentUpdate.setPatient(patienttf.getText());
+            //appointmentUpdate.setPsychologist(psychologisttf.getText());
             try {
-                LOGGER.info("Updating appointment...");
 
-                //Get selected appointment data from table view model
-                Appointment selectedAppointment = ((Appointment) this.tableview.getSelectionModel().getSelectedItem());
+                appointmentInterface.edit_XML(appointmentUpdate);
 
-                //Check if id value for selected row in table is equal to id field content.
-                if (!selectedAppointment.getidAppointment().equals(idtf.getText())) {
+                reset();
 
-                    //If not,validate id existence.
-                    //appointmentInterface.(idtf.getText().trim());
-                    //selectedAppointment.setidAppointment(idtf.getText().trim());
-                }
+            } catch (ClientErrorException ex) {
 
-                //update selectedAppointment row data in table view
-                //selectedAppointment.setidAppointment(idtf.getText() + "");
-                //selectedAppointment.setAppointmentDate(datetf.getText());
-                //selectedAppointment.setPatient(patienttf.getText());
-                //selectedAppointment.setPsychologist(psychologisttf.getText());
-                /**
-                 *
-                 *
-                 *
-                 *
-                 *
-                 */
-                //Clean entry text fields
-                idtf.setText("");
-
-                datetf.setText("");
-
-                patienttf.setText("");
-
-                psychologisttf.setText("");
-
-                checkbox.setSelected(false);
-
-                createbtn.setDisable(true);
-
-                updatebtn.setDisable(true);
-
-                //Deseleccionamos la fila seleccionada en la tabla
-                tableview.getSelectionModel().clearSelection();
-
-                //Refrescamos la tabla para que muestre los nuevos datos
-                tableview.refresh();
-
-            } catch (Exception e) {
-
-                //If there is an error in the business logic tier show message and log it.
-                showErrorAlert("Error While Updating Appointment" + e.getMessage());
-
-                LOGGER.log(Level.SEVERE, "Error While Updating Appointment", e.getMessage());
+                Logger.getLogger(AppointmentPsychologistController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            //It will show an alert that the Appointment is updated Successfully.
-            new Alert(Alert.AlertType.INFORMATION, "Appointment Updated Successfully", ButtonType.OK).showAndWait();;
+            //It will show an alert that the Appointment is Created Successfully.
+            new Alert(Alert.AlertType.INFORMATION, "Appointment Updated Successfully !!", ButtonType.OK).showAndWait();
 
-            LOGGER.info("Appointment Updated !!");
+            LOGGER.info("Appointment Updated Successfully !!");
 
-        } catch (Exception e) {
+        } catch (Exception ex) {
 
-            //If there is any error,errors will be received and shows in this alert.
-            new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
+            showErrorAlert("Error Updating Appointment !!" + ex.getMessage());
+
         }
+        
+        LOGGER.info("Appointment Updated !!");
+    }
 
+    public void reset() {
+
+        //Empty fields
+        idtf.setText("");
+
+        datetf.setText("");
+
+        patienttf.setText("");
+
+        psychologisttf.setText("");
+
+        checkbox.setSelected(false);
+
+        //Disable controll buttons
+        createbtn.setDisable(true);
+
+        updatebtn.setDisable(true);
+
+        deletebtn.setDisable(true);
+
+        //Clear selection and refresh table view
+        this.tableview.getSelectionModel().clearSelection();
+
+        this.tableview.refresh();
     }
 
     /**
@@ -768,13 +776,32 @@ public class AppointmentPsychologistController {
 
     }
 
+    /**
+     *
+     * @param event
+     */
     @FXML
     private void handlePrintButtonAction(ActionEvent event) {
 
-        LOGGER.info("Printing appointment...");
+        try {
+
+            LOGGER.info("Printing appointment...");
+
+        } catch (Exception ex) {
+
+            //If there is an error show message and log it.
+            showErrorAlert("Error Printing !!" + ex.getMessage());
+
+            LOGGER.log(Level.SEVERE, "View Appointment: Error printing report: {0}", ex.getMessage());
+
+        }
 
     }
 
+    /**
+     *
+     * @param event
+     */
     @FXML
     private void handleSearchButtonAction(ActionEvent event) {
 
