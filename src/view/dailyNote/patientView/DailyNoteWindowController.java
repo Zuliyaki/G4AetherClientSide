@@ -41,6 +41,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -64,7 +65,7 @@ import net.sf.jasperreports.view.JasperViewer;
  *
  * @author unaib
  */
-public class DailyNoteWindowPatientController {
+public class DailyNoteWindowController {
 
     private Stage stage;
     private final DailyNotesInterface dnInterface = DailyNoteFactory.getModel();
@@ -75,7 +76,7 @@ public class DailyNoteWindowPatientController {
     private List<DailyNote> allPatientDailyNoteBetweemScores;
     private List<DailyNote> allPatientDailyNoteBetweemDates;
     private Date selectedTableRowDate;
-    private static final Logger LOGGER = Logger.getLogger(DailyNoteWindowPatientController.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DailyNoteWindowController.class.getName());
 
     @FXML
     private VBox box;
@@ -160,14 +161,27 @@ public class DailyNoteWindowPatientController {
 
         //Valores de las columnas de la tabla
         tb.setEditable(false);
-        tbcDate.setCellValueFactory(
-                new PropertyValueFactory<>("noteDate"));
-        tbcNote.setCellValueFactory(
-                new PropertyValueFactory<>("noteText"));
-        tbcScore.setCellValueFactory(
-                new PropertyValueFactory<>("dayScore"));
-        tbcReadable.setCellValueFactory(
-                new PropertyValueFactory<>("noteReadable"));
+        tbcDate.setCellValueFactory(new PropertyValueFactory<>("noteDate"));
+        tbcDate.setCellFactory(column -> {
+            TableCell<DailyNote, Date> cell = new TableCell<DailyNote, Date>() {
+                private SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+
+                @Override
+                protected void updateItem(Date item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setText(null);
+                    } else {
+                        this.setText(format.format(item));
+                    }
+                }
+            };
+
+            return cell;
+        });
+        tbcNote.setCellValueFactory(new PropertyValueFactory<>("noteText"));
+        tbcScore.setCellValueFactory(new PropertyValueFactory<>("dayScore"));
+        tbcReadable.setCellValueFactory(new PropertyValueFactory<>("noteReadable"));
 
         //Cargar combobox con metodos de busqueda
         String[] a = {"Find note by date", "Find all notes by patient", "Find all patient edited notes", "Find all patient notes by not readable", "Find all patient notes between dates", "Find all patient notes between day scores"};
@@ -298,8 +312,7 @@ public class DailyNoteWindowPatientController {
                 spinnerScoreBottom.setDisable(true);
                 spinnerScoreTop.setDisable(true);
                 btnSearch.setDisable(true);
-                showInfoAlert("Not implemented yet"); 
-               break;
+                break;
             case "Find all notes by patient":
                 dpStart.setDisable(true);
                 dpStart.getEditor().clear();
@@ -333,7 +346,6 @@ public class DailyNoteWindowPatientController {
                 spinnerScoreBottom.setDisable(true);
                 spinnerScoreTop.setDisable(true);
                 btnSearch.setDisable(true);
-                showInfoAlert("Not implemented yet");
                 break;
             case "Find all patient notes between day scores":
                 dpStart.setDisable(true);
@@ -366,8 +378,7 @@ public class DailyNoteWindowPatientController {
     private void handleSearchButtonAction(ActionEvent event) {
         switch (comboSearchMethod.getValue().toString()) {
             case "Find note by date":
-                showInfoAlert("Not implemented yet");
-                //loadDailyNoteByDate();
+                loadDailyNoteByDate();
                 break;
             case "Find all notes by patient":
                 loadAllPatientDailyNotes();
@@ -379,8 +390,7 @@ public class DailyNoteWindowPatientController {
                 loadAllPatientNotReadableDailyNotes();
                 break;
             case "Find all patient notes between dates":
-                showInfoAlert("Not implemented yet");
-                //loadAllPatientDailyNotesBetweenDates();
+                loadAllPatientDailyNotesBetweenDates();
                 break;
             case "Find all patient notes between day scores":
                 loadAllPatientDailyNotesBetweenScores();
@@ -392,18 +402,16 @@ public class DailyNoteWindowPatientController {
         ObservableList<DailyNote> olDailyNote = null;
         List<DailyNote> dailyNote;
         try {
-            java.util.Date hola = Date.from(dpNoteDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-            Date date = new Date(hola.getYear(), hola.getMonth(), hola.getDay());
+            Date date = Date.from(dpStart.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             String dateString = formatter.format(date);
-            System.out.println(hola + " // " + dateString + " // " + date);                                                     // NO ENTIENDO NADA XDDDDD
             dailyNote = dnInterface.findPatientDailyNoteByDate_XML(new GenericType<List<DailyNote>>() {
             }, this.tfPatientDni.getText(), dateString);
             olDailyNote = FXCollections.observableArrayList(dailyNote);
             tb.setItems(olDailyNote);
             tb.refresh();
         } catch (Exception ex) {
-            Logger.getLogger(DailyNoteWindowPatientController.class.getName()).log(Level.SEVERE,
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE,
                     null, ex);
         }
         return olDailyNote;
@@ -418,7 +426,7 @@ public class DailyNoteWindowPatientController {
             tb.setItems(olDailyNote);
             tb.refresh();
         } catch (ClientErrorException ex) {
-            Logger.getLogger(DailyNoteWindowPatientController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return olDailyNote;
     }
@@ -432,7 +440,7 @@ public class DailyNoteWindowPatientController {
             tb.setItems(olDailyNote);
             tb.refresh();
         } catch (ClientErrorException ex) {
-            Logger.getLogger(DailyNoteWindowPatientController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return olDailyNote;
     }
@@ -446,7 +454,7 @@ public class DailyNoteWindowPatientController {
             tb.setItems(olDailyNote);
             tb.refresh();
         } catch (ClientErrorException ex) {
-            Logger.getLogger(DailyNoteWindowPatientController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return olDailyNote;
     }
@@ -464,7 +472,7 @@ public class DailyNoteWindowPatientController {
                 showInfoAlert("The bottom score spinner must have a lowe value than the top score spinner");
             }
         } catch (ClientErrorException ex) {
-            Logger.getLogger(DailyNoteWindowPatientController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return olDailyNote;
     }
@@ -473,16 +481,21 @@ public class DailyNoteWindowPatientController {
         ObservableList<DailyNote> olDailyNote = null;
         try {
             if (dpEnd.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant().isAfter(dpStart.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())) {
-                allPatientDailyNoteBetweemDates = dnInterface.findPatientNotesBetweenDayScores_XML(new GenericType<List<DailyNote>>() {
-                }, this.tfPatientDni.getText(), Double.parseDouble(this.spinnerScoreBottom.getValue().toString()), Double.parseDouble(this.spinnerScoreTop.getValue().toString()));
+                Date dateStart = Date.from(dpStart.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                Date dateEnd = Date.from(dpEnd.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                String dateStartString = formatter.format(dateStart);
+                String dateEndString = formatter.format(dateEnd);
+                allPatientDailyNoteBetweemDates = dnInterface.findPatientDailyNotesBetweenDates_XML(new GenericType<List<DailyNote>>() {
+                }, this.tfPatientDni.getText(), dateStartString, dateEndString);
                 olDailyNote = FXCollections.observableArrayList(allPatientDailyNoteBetweemDates);
                 tb.setItems(olDailyNote);
                 tb.refresh();
             } else {
-                showInfoAlert("The bottom score spinner must have a lowe value than the top score spinner");
+                showInfoAlert("The start date must be before the end date field");
             }
         } catch (ClientErrorException ex) {
-            Logger.getLogger(DailyNoteWindowPatientController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return olDailyNote;
     }
@@ -495,33 +508,24 @@ public class DailyNoteWindowPatientController {
     @FXML
     private void handlePrintButtonAction(ActionEvent event) {
         try {
-            LOGGER.info("Empezando a imprimir");
-            JasperReport report
-                    = JasperCompileManager.compileReport(getClass()
-                            .getResourceAsStream("/reports/DailyNoteReport.jrxml"));
-            //Data for the report: a collection of UserBean passed as a JRDataSource 
-            //implementation 
-            JRBeanCollectionDataSource dataItems
-                    = new JRBeanCollectionDataSource((Collection<DailyNote>) this.tb.getItems());
-            //Map of parameter to be passed to the report
+            LOGGER.info("Starting printing");
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/DailyNoteReport.jrxml"));
+            JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<DailyNote>) this.tb.getItems());
 
             Map<String, Object> parameters = new HashMap<>();
-            parameters.put("dniPatient", tfPatientDni.getText());
-            //Fill report with data
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
-            //Create and show the report window. The second parameter false value makes 
-            //report window not to close app.
+
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
             // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         } catch (JRException ex) {
             //If there is an error show message and
             //log it.
-            showErrorAlert("Error al imprimir:\n"
+            showErrorAlert("Error printing:\n"
                     + ex.getMessage());
             LOGGER.log(Level.SEVERE,
-                    "UI GestionUsuariosController: Error printing report: {0}",
-                    ex.getMessage());
+                    "Error printing:\n",
+                    ex);
         }
     }
 
@@ -572,7 +576,7 @@ public class DailyNoteWindowPatientController {
             showInfoAlert("Added successfully");
             LOGGER.info("Added successfully");
         } catch (ClientErrorException ex) {
-            Logger.getLogger(DailyNoteWindowPatientController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
             showErrorAlert(ex.getMessage());
         }
 
@@ -600,8 +604,10 @@ public class DailyNoteWindowPatientController {
             String stringNewDate = sdf.format(newDailyNote.getNoteDate());
             for (DailyNote dn : allPatientDailyNote) {
                 String stringDate = sdf.format(dn.getNoteDate());
-                if (stringDate.equals(stringNewDate)) {
-                    throw new ClientErrorException("There already exists a note on that date");
+                if (!dn.getId().equals(newDailyNote.getId())) {
+                    if (stringDate.equals(stringNewDate)) {
+                        throw new ClientErrorException("There already exists a note on that date");
+                    }
                 }
             }
             if (ckbxReadable.isSelected()) {
@@ -625,7 +631,7 @@ public class DailyNoteWindowPatientController {
             showInfoAlert("Modified successfully");
             LOGGER.info("Modified successfully");
         } catch (ClientErrorException ex) {
-            Logger.getLogger(DailyNoteWindowPatientController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
             showErrorAlert(ex.getMessage());
         }
     }
@@ -659,7 +665,7 @@ public class DailyNoteWindowPatientController {
             }
 
         } catch (ClientErrorException ex) {
-            Logger.getLogger(DailyNoteWindowPatientController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

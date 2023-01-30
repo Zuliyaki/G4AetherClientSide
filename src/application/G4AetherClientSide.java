@@ -18,7 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import view.dailyNote.patientView.DailyNoteWindowPatientController;
+import view.dailyNote.patientView.DailyNoteWindowController;
 
 /**
  *
@@ -34,7 +34,7 @@ public class G4AetherClientSide extends Application {
 
             System.out.println(getClass().getResource("/view/dailyNote/patientView/DailyNoteWindowPatient.fxml"));
             Parent root = (Parent) loader.load();
-            DailyNoteWindowPatientController controller = (DailyNoteWindowPatientController) loader.getController();
+            DailyNoteWindowController controller = (DailyNoteWindowController) loader.getController();
             controller.setStage(stage);
             controller.initialize(root);
 

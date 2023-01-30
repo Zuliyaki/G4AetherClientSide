@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.dailyNote.patientView.DailyNoteWindowController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -81,60 +81,60 @@
                   <Font size="13.0" />
                </font>
             </Text>
-            <ComboBox layoutX="67.0" layoutY="95.0" prefHeight="25.0" prefWidth="174.0" promptText="findAllNotes" />
+            <ComboBox fx:id="comboSearchMethod" layoutX="67.0" layoutY="95.0" prefHeight="25.0" prefWidth="174.0" />
             <Text layoutX="67.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date start" wrappingWidth="174.15625">
                <font>
                   <Font size="13.0" />
                </font>
             </Text>
-            <DatePicker layoutX="67.0" layoutY="215.0" prefHeight="25.0" prefWidth="197.0" />
+            <DatePicker fx:id="dpStart" layoutX="67.0" layoutY="215.0" prefHeight="25.0" prefWidth="197.0" />
             <Text layoutX="67.0" layoutY="265.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date end" wrappingWidth="174.15625">
                <font>
                   <Font size="13.0" />
                </font>
             </Text>
-            <DatePicker layoutX="67.0" layoutY="275.0" prefHeight="25.0" prefWidth="197.0" />
+            <DatePicker fx:id="dpEnd" layoutX="67.0" layoutY="275.0" prefHeight="25.0" prefWidth="197.0" />
             <Text layoutX="67.0" layoutY="325.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Day score bottom" wrappingWidth="174.15625">
                <font>
                   <Font size="13.0" />
                </font>
             </Text>
-            <Spinner layoutX="67.0" layoutY="335.0" prefHeight="25.0" prefWidth="197.0" />
+            <Spinner fx:id="spinnerScoreBottom" layoutX="67.0" layoutY="335.0" prefHeight="25.0" prefWidth="197.0" />
             <Text layoutX="67.0" layoutY="382.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Day score top" wrappingWidth="174.15625">
                <font>
                   <Font size="13.0" />
                </font>
             </Text>
-            <Spinner layoutX="67.0" layoutY="392.0" prefHeight="25.0" prefWidth="197.0" />
-            <Button layoutX="67.0" layoutY="437.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="92.0" text="Search" />
-            <Button layoutX="172.0" layoutY="437.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="92.0" text="Print" />
-            <TableView layoutX="331.0" layoutY="96.0" prefHeight="375.0" prefWidth="802.0">
+            <Spinner fx:id="spinnerScoreTop" layoutX="67.0" layoutY="392.0" prefHeight="25.0" prefWidth="197.0" />
+            <Button fx:id="btnSearch" layoutX="67.0" layoutY="437.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="92.0" text="Search" />
+            <Button fx:id="btnPrint" layoutX="172.0" layoutY="437.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="92.0" text="Print" />
+            <TableView fx:id="tb" layoutX="331.0" layoutY="96.0" prefHeight="375.0" prefWidth="802.0">
               <columns>
-                <TableColumn prefWidth="130.0" text="Date" />
-                  <TableColumn prefWidth="405.0" text="Note" />
-                  <TableColumn prefWidth="96.0" text="Day score" />
-                  <TableColumn prefWidth="139.0" text="Patient" />
+                <TableColumn fx:id="tbcDate" prefWidth="130.0" text="Date" />
+                  <TableColumn fx:id="tbcNote" prefWidth="405.0" text="Note" />
+                  <TableColumn fx:id="tbcScore" prefWidth="109.0" text="Day score" />
+                  <TableColumn fx:id="tbcPatient" prefWidth="157.0" text="Patient" />
               </columns>
             </TableView>
-            <Text layoutX="67.0" layoutY="547.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Note of patient: &lt;patientDni&gt;" wrappingWidth="357.15625">
+            <Text fx:id="txtNoteOfPatient" layoutX="67.0" layoutY="547.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Note of patient: &lt;patientDni&gt;" wrappingWidth="357.15625">
                <font>
                   <Font size="16.0" />
                </font>
             </Text>
-            <TextArea layoutX="67.0" layoutY="568.0" prefHeight="228.0" prefWidth="501.0" />
+            <TextArea fx:id="txtaNote" layoutX="67.0" layoutY="568.0" prefHeight="228.0" prefWidth="501.0" />
             <Text layoutX="632.0" layoutY="547.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Comment of psychologist" wrappingWidth="357.15625">
                <font>
                   <Font size="16.0" />
                </font>
             </Text>
-            <TextArea layoutX="632.0" layoutY="568.0" prefHeight="228.0" prefWidth="501.0" />
-            <Button layoutX="1014.0" layoutY="811.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="119.0" text="Comment" />
+            <TextArea fx:id="txtaComment" layoutX="632.0" layoutY="568.0" prefHeight="228.0" prefWidth="501.0" />
+            <Button fx:id="btnComment" layoutX="1014.0" layoutY="811.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="119.0" text="Comment" />
             <Text layoutX="67.0" layoutY="147.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Patient dni" wrappingWidth="174.15625">
                <font>
                   <Font size="13.0" />
                </font>
             </Text>
-            <TextField layoutX="67.0" layoutY="157.0" prefHeight="25.0" prefWidth="174.0" />
+            <TextField fx:id="tfPatientDni" layoutX="67.0" layoutY="157.0" prefHeight="25.0" prefWidth="174.0" />
       </children>
     </AnchorPane>
   </children>

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e9f981fb-494f-49e0-8358-53dd4729e36b">
-	<property name="ireport.zoom" value="1.3310000000000004"/>
+	<property name="ireport.zoom" value="1.6105100000000014"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<field name="dnNoteDate" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -18,32 +19,33 @@
 		</band>
 	</title>
 	<pageHeader>
-		<band height="35" splitType="Stretch"/>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="202" y="0" width="67" height="35" uuid="c234b1da-3a96-4a52-a081-e22b0020fce8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Patient:]]></text>
+			</staticText>
+		</band>
 	</pageHeader>
 	<columnHeader>
 		<band height="61" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="87" height="61" uuid="c234b1da-3a96-4a52-a081-e22b0020fce8"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<text><![CDATA[Patient]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="87" y="0" width="140" height="61" uuid="dd4bd57e-3048-4a91-8735-be4083a851d5"/>
+				<reportElement x="111" y="0" width="180" height="61" uuid="dd4bd57e-3048-4a91-8735-be4083a851d5"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Note]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="227" y="0" width="140" height="61" uuid="4782dae0-e1bc-4724-9e22-0900b227af7e"/>
+				<reportElement x="291" y="0" width="187" height="61" uuid="4782dae0-e1bc-4724-9e22-0900b227af7e"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Comment]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="367" y="0" width="77" height="61" uuid="fcf95d9f-bf55-401b-8f4b-1d496bf828a5"/>
+				<reportElement x="478" y="0" width="77" height="61" uuid="fcf95d9f-bf55-401b-8f4b-1d496bf828a5"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Score]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="444" y="0" width="111" height="61" uuid="0c2c602d-055c-4527-b1a9-0e46af392fd0"/>
+				<reportElement x="0" y="0" width="111" height="61" uuid="0c2c602d-055c-4527-b1a9-0e46af392fd0"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Date]]></text>
 			</staticText>
@@ -52,29 +54,9 @@
 	<detail>
 		<band height="125" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="87" height="125" uuid="fec43c93-f55e-455c-ad81-c68177fd043b"/>
+				<reportElement x="0" y="0" width="111" height="62" uuid="e4b491d2-83fc-422c-8c16-75808fbf094d"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{dniPatient}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="87" y="0" width="140" height="125" uuid="a8bfcb0f-eae8-4068-adf9-16c12f5fe74e"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{dnNoteText}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="227" y="0" width="140" height="125" uuid="a1002adb-28c4-4240-a4eb-c89b56bfb420"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{dnNoteComment}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="367" y="0" width="77" height="125" uuid="8d3b2288-8ce6-40f8-abbf-24012f5214e7"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{dnDayScore}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="444" y="0" width="111" height="125" uuid="969ff21a-6b89-4fb4-8807-3bf157a556d8"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{dnDate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{dnNoteDate}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
