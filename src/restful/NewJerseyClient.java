@@ -5,20 +5,16 @@
  */
 package restful;
 
-import entities.Diagnosis;
-import interfaces.DiagnosisInterface;
-import java.util.List;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericType;
 
 /**
  * Jersey REST client generated for REST resource:DiagnosisFacadeREST
  * [entities.diagnosis]<br>
  * USAGE:
  * <pre>
- *        DiagnosisResful client = new DiagnosisResful();
+ *        NewJerseyClient client = new NewJerseyClient();
  *        Object response = client.XXX(...);
  *        // do whatever with response
  *        client.close();
@@ -26,13 +22,13 @@ import javax.ws.rs.core.GenericType;
  *
  * @author 2dam
  */
-public class DiagnosisResful implements DiagnosisInterface {
+public class NewJerseyClient {
 
     private WebTarget webTarget;
     private Client client;
     private static final String BASE_URI = "http://localhost:8080/G4Aether/webresources";
 
-    public DiagnosisResful() {
+    public NewJerseyClient() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
         webTarget = client.target(BASE_URI).path("entities.diagnosis");
     }
@@ -45,30 +41,30 @@ public class DiagnosisResful implements DiagnosisInterface {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
-    public <T> T findAllIfPatientOnTeraphy_XML(GenericType<T> responseType, String id) throws ClientErrorException {
+    public <T> T findAllIfPatientOnTeraphy_XML(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("onteraphy/{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findAllIfPatientOnTeraphy_JSON(GenericType<T> responseType, String id) throws ClientErrorException {
+    public <T> T findAllIfPatientOnTeraphy_JSON(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("onteraphy/{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
-   public <T> T findDiagnosisById_XML(GenericType<T>  responseType, String id) throws ClientErrorException {
+    public <T> T findDiagnosisById_XML(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("diagnosisbyID/{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findDiagnosisById_JSON(GenericType<T>  responseType, String id) throws ClientErrorException {
+    public <T> T findDiagnosisById_JSON(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("diagnosisbyID/{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
-    
+
     public void updateDiagnosis_XML(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
@@ -77,24 +73,23 @@ public class DiagnosisResful implements DiagnosisInterface {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
-    public <T> T findAllDiagnosis_XML(GenericType<T> responseType) throws ClientErrorException {
+    public <T> T findAllDiagnosis_XML(Class<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
-
     }
 
-    public <T> T findAllDiagnosis_JSON(GenericType<T> responseType) throws ClientErrorException {
+    public <T> T findAllDiagnosis_JSON(Class<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
     }
 
-    public <T> T findPatientDiagnosisByDate_XML(GenericType<T> responseType, String id, String dateLow, String dateGreat) throws ClientErrorException {
+    public <T> T findPatientDiagnosisByDate_XML(Class<T> responseType, String id, String dateLow, String dateGreat) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findDiagnosisByPatientIdbeetweenDates/{0}/{1}/{2}", new Object[]{id, dateLow, dateGreat}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findPatientDiagnosisByDate_JSON(GenericType<T> responseType, String id, String dateLow, String dateGreat) throws ClientErrorException {
+    public <T> T findPatientDiagnosisByDate_JSON(Class<T> responseType, String id, String dateLow, String dateGreat) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("findDiagnosisByPatientIdbeetweenDates/{0}/{1}/{2}", new Object[]{id, dateLow, dateGreat}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
@@ -104,13 +99,13 @@ public class DiagnosisResful implements DiagnosisInterface {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
     }
 
-    public <T> T findAllDiagnosisByPatient_XML(GenericType<T> responseType, String id) throws ClientErrorException {
+    public <T> T findAllDiagnosisByPatient_XML(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("patients/{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T findAllDiagnosisByPatient_JSON(GenericType<T> responseType, String id) throws ClientErrorException {
+    public <T> T findAllDiagnosisByPatient_JSON(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("patients/{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
@@ -119,5 +114,5 @@ public class DiagnosisResful implements DiagnosisInterface {
     public void close() {
         client.close();
     }
-
+    
 }

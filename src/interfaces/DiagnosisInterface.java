@@ -27,13 +27,13 @@ public interface DiagnosisInterface {
 
     public void createDiagnosis_JSON(Object requestEntity) throws ClientErrorException;
 
-    public <T> T findAllIfPatientOnTeraphy_XML(Class<T> responseType, String id) throws ClientErrorException;
+    public <T> T findAllIfPatientOnTeraphy_XML(GenericType<T> responseType, String id) throws ClientErrorException;
 
-    public <T> T findAllIfPatientOnTeraphy_JSON(Class<T> responseType, String id) throws ClientErrorException;
+    public <T> T findAllIfPatientOnTeraphy_JSON(GenericType<T> responseType, String id) throws ClientErrorException;
 
-    public <T> T findDiagnosisById_XML(Class<T> responseType, String id) throws ClientErrorException;
+    public <T> T findDiagnosisById_XML(GenericType<T> responseType, String id) throws ClientErrorException;
 
-    public <T> T findDiagnosisById_JSON(Class<T> responseType, String id) throws ClientErrorException;
+    public <T> T findDiagnosisById_JSON(GenericType<T> responseType, String id) throws ClientErrorException;
 
     public void updateDiagnosis_XML(Object requestEntity) throws ClientErrorException;
 
@@ -41,16 +41,16 @@ public interface DiagnosisInterface {
 
     public <T> T findAllDiagnosis_XML(GenericType<T> responseType) throws ClientErrorException;
 
-    public <T> T findAllDiagnosis_JSON(Class<T> responseType) throws ClientErrorException;
+    public <T> T findAllDiagnosis_JSON(GenericType<T> responseType) throws ClientErrorException;
 
-    public <T> T findPatientDiagnosisByDate_XML(Class<T> responseType, String id, String dateLow, String dateGreat) throws ClientErrorException;
+    public <T> T findPatientDiagnosisByDate_XML(GenericType<T> responseType, String id, String dateLow, String dateGreat) throws ClientErrorException;
 
-    public <T> T findPatientDiagnosisByDate_JSON(Class<T> responseType, String id, String dateLow, String dateGreat) throws ClientErrorException;
+    public <T> T findPatientDiagnosisByDate_JSON(GenericType<T> responseType, String id, String dateLow, String dateGreat) throws ClientErrorException;
 
     public void deleteDiagnosis(String id) throws ClientErrorException;
 
-    public <T> T findAllDiagnosisByPatient_XML(Class<T> responseType, String id) throws ClientErrorException;
+    public <T> T findAllDiagnosisByPatient_XML(GenericType<T> responseType, String id) throws ClientErrorException;
 
-    public <T> T findAllDiagnosisByPatient_JSON(Class<T> responseType, String id) throws ClientErrorException;
+    public <T> T findAllDiagnosisByPatient_JSON(GenericType<T> responseType, String id) throws ClientErrorException;
 
 }

@@ -5,7 +5,6 @@
  */
 package view.viewDiagnosis;
 
-
 import entities.Diagnosis;
 import entities.MentalDisease;
 import entities.Patient;
@@ -17,6 +16,7 @@ import interfaces.MentalDiseaseInterface;
 import interfaces.PatientInterface;
 import interfaces.TreatmentInterface;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -37,8 +37,10 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
@@ -118,7 +120,7 @@ public class DiagnosisController {
     private CheckBox cbxOnTherapy;
 
     @FXML
-    private ComboBox<?> comboboxSearchByID;
+    private ComboBox comboboxSearchBy;
 
     @FXML
     private Button btnSearch;
@@ -142,7 +144,7 @@ public class DiagnosisController {
     @FXML
     private TableColumn<Diagnosis, Date> tbcDateOfCreation;
     @FXML
-    private TableColumn<Diagnosis,Boolean> tbcOnTherapy;
+    private TableColumn<Diagnosis, Boolean> tbcOnTherapy;
 
     @FXML
     private TableColumn<Diagnosis, MentalDisease> tbcMentalDisease;
@@ -174,7 +176,7 @@ public class DiagnosisController {
     @FXML
     private Button btnPrint;
     private Integer posDiag;
-final Logger LOGGER = Logger.getLogger("paquete.NombreClase");
+    final Logger LOGGER = Logger.getLogger("paquete.NombreClase");
 
     public void initialize(Parent root) {
         final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -187,8 +189,35 @@ final Logger LOGGER = Logger.getLogger("paquete.NombreClase");
         //Add a leaf icon.
         //stage.getIcons().add(new Image("/resources/icon.png"));
         //Add scene 
+
+        //set all disable
+        comboboxSearchBy.setDisable(false);
+        tfPatientDNI.setDisable(true);
+        dpDateLow.setDisable(true);
+        dpDateLow.getEditor().clear();
+        dtDateGreat.setDisable(true);
+        dtDateGreat.getEditor().clear();
+        tfMentalDisease.setDisable(true);
+        cbxOnTherapy.setDisable(true);
+        tfMentalDisease.setDisable(true);
+        btnSearch.setDisable(true);
+        tfDiagnosisID.setDisable(true);
+
         // LOAD ALL Diagnosises
         diagnosises = loadAllDiagnosises();
+        //listeners
+        comboboxSearchBy.valueProperty().addListener(this::handleComboboxChange);
+       dpDateLow.valueProperty().addListener(this::handleDatePickerChange);
+       dtDateGreat.valueProperty().addListener(this::handleDatePickerChange);
+
+
+        // FILTRADO
+        String[] a = {"Find all diagnosis", "Find all diagnosis by patient id", "Find all diangosis if patient on teraphy", "Find diagnosis between dates", "Find diagnosis by id"};
+        ObservableList<String> searchMethods = FXCollections.observableArrayList(a);
+        comboboxSearchBy.setItems(searchMethods);
+        comboboxSearchBy.getSelectionModel().select(-1);
+
+        //
         //Mental disease combobox for the table
         List<MentalDisease> allMentalDisease;
         allMentalDisease = mentalDiseaseInterface.getAllMentalDiseasesOrderByName_XML(new GenericType<List<MentalDisease>>() {
@@ -197,7 +226,7 @@ final Logger LOGGER = Logger.getLogger("paquete.NombreClase");
         //////////
         //Patients combobox for the table
         Psychologist currentPshychologist = new Psychologist();
-        currentPshychologist.setDni("45949977w");
+        currentPshychologist.setDni("45949977w"); //ESTO HAY QUE CAMBIAR
         List<Patient> allPatients;
         allPatients = patientInterface.findAllPatientsByPsychologist_XML(new GenericType<List<Patient>>() {
         }, currentPshychologist.getDni());
@@ -230,20 +259,19 @@ final Logger LOGGER = Logger.getLogger("paquete.NombreClase");
                 new PropertyValueFactory<>("diagnosisDate"));
         tbcDateOfCreation.setCellFactory(dateCellFactory);
         ///////////////
-        
+
         tbcOnTherapy.setCellFactory(
                 CheckBoxTableCell.<Diagnosis>forTableColumn(tbcOnTherapy));
-        
+
         tbcOnTherapy.setCellValueFactory(
-                (CellDataFeatures<Diagnosis, Boolean> param) ->  param.getValue().onTherapyProperty());
-        
+                (CellDataFeatures<Diagnosis, Boolean> param) -> param.getValue().onTherapyProperty());
+
         diagnosises.forEach(
                 diagnosis -> diagnosis.onTherapyProperty().addListener((observable, oldValue, newValue) -> {
                     diagnosisInterface.updateDiagnosis_XML(diagnosis);
                 })
-            );
+        );
         //////////////
-       
 
         ////////////////
         tbcMentalDisease.setCellValueFactory(
@@ -285,15 +313,16 @@ final Logger LOGGER = Logger.getLogger("paquete.NombreClase");
             newDiagnosis.setPsychologist(currentPshychologist);
             newDiagnosis.setOnTherapy(true);
             diagnosisInterface.updateDiagnosis_XML(newDiagnosis);
-            diagnosises.add(newDiagnosis);
-
-          //  diagnosises = loadAllDiagnosises();
-
+            diagnosises = loadAllDiagnosises();
+            //  diagnosises = loadAllDiagnosises();
         });
         //SET THE CONTEXT MENU
         contextMenu.getItems().add(createNewDiagnosisMenuIt);
         tbDiagnosis.setContextMenu(contextMenu);
 
+        //tb treatment
+        tbTreatment.setVisible(false);
+        txtTreatments.setVisible(false);
         tbTreatment.setEditable(true);
         tbTreatment.getSelectionModel().selectedItemProperty().addListener(this::handleTreatmentTableSelectionChanged);
         tbcDay.setCellValueFactory(new PropertyValueFactory<>("treatmentId"));
@@ -306,6 +335,7 @@ final Logger LOGGER = Logger.getLogger("paquete.NombreClase");
         this.stage = stage;
     }
 
+    //ALL SEARCHS
     private ObservableList<Diagnosis> loadAllDiagnosises() {
         ObservableList<Diagnosis> diagnosisTableInfo;
         List<Diagnosis> allDiangosis;
@@ -316,22 +346,72 @@ final Logger LOGGER = Logger.getLogger("paquete.NombreClase");
         return diagnosisTableInfo;
 
     }
-
+ private ObservableList<Diagnosis> loadDiagnosisesBetweenDates() {
+        ObservableList<Diagnosis> diagnosisTableInfo;
+        List<Diagnosis> allDiangosis;
+          Date dateStart = Date.from(dpDateLow.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                Date dateEnd = Date.from(dtDateGreat.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                String dateStartString = formatter.format(dateStart);
+                String dateEndString = formatter.format(dateEnd);
+        
+        allDiangosis = diagnosisInterface.findPatientDiagnosisByDate_XML(new GenericType<List<Diagnosis>>() {
+        }, tfPatientDNI.getText(),dateStartString,dateEndString);
+        diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
+        tbDiagnosis.setItems(diagnosisTableInfo);
+        return diagnosisTableInfo;
+    }
     private ObservableList<Treatment> loadAllTreaments(Diagnosis diagnosis) {
         ObservableList<Treatment> treatmentTableInfo;
         List<Treatment> allTreatment;
         allTreatment = treatmentInterface.findTreatmentsByDiagnosisId_XML(new GenericType<List<Treatment>>() {
         }, diagnosis.getDiagnosisId());
         treatmentTableInfo = FXCollections.observableArrayList(allTreatment);
-        tbTreatment.setItems(treatmentTableInfo);
+        if (allTreatment.isEmpty()) {
+            tbTreatment.setVisible(false);
+            txtTreatments.setVisible(false);
+        } else {
+            tbTreatment.setVisible(true);
+            txtTreatments.setVisible(true);
+
+            tbTreatment.setItems(treatmentTableInfo);
+        }
         return treatmentTableInfo;
     }
 
+    private ObservableList<Diagnosis> loadDiagnosisesByPatientOnTherapy() {
+        ObservableList<Diagnosis> diagnosisTableInfo;
+        List<Diagnosis> allDiangosis;
+        allDiangosis = diagnosisInterface.findAllIfPatientOnTeraphy_XML(new GenericType<List<Diagnosis>>() {
+        }, tfPatientDNI.getText());
+        diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
+        tbDiagnosis.setItems(diagnosisTableInfo);
+        return diagnosisTableInfo;
+    }
+
+    private ObservableList<Diagnosis> loadDiagnosisesByPatient() {
+        ObservableList<Diagnosis> diagnosisTableInfo;
+        List<Diagnosis> allDiangosis;
+        allDiangosis = diagnosisInterface.findAllDiagnosisByPatient_XML(new GenericType<List<Diagnosis>>() {
+        }, tfPatientDNI.getText());
+        diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
+        tbDiagnosis.setItems(diagnosisTableInfo);
+        return diagnosisTableInfo;
+    }
+
+//SELECTION CHANGES
     private void handleDiagnosisTableSelectionChanged(ObservableValue observableValue, Object oldValue, Object newValue) {
         if (newValue != null) {
             final Diagnosis selectedDiagnosis = (Diagnosis) newValue;
+            tfDiagnosisID.setText(selectedDiagnosis.getDiagnosisId().toString());
 
             treatments = loadAllTreaments(selectedDiagnosis);
+
+            if (selectedDiagnosis.getMentalDisease() != null) {
+                tfMentalDisease.setText(selectedDiagnosis.getMentalDisease().getMdDescription());
+            }
+            tfMentalDisease.autosize();
+            tfMentalDisease.alignmentProperty();
             System.out.println(selectedDiagnosis.toString());
             //Context Menu
             final ContextMenu contextMenu = new ContextMenu();
@@ -347,8 +427,28 @@ final Logger LOGGER = Logger.getLogger("paquete.NombreClase");
             tbDiagnosis.setContextMenu(contextMenu);
 
         } else {
-            //If there is not a row selected, clean window fields 
-            //and disable create, modify and delete buttons
+
+            //Context Menu
+            final ContextMenu contextMenu1 = new ContextMenu();
+            MenuItem createNewDiagnosisMenuIt = new MenuItem("Create new Diagnosis");
+            createNewDiagnosisMenuIt.setOnAction((ActionEvent e) -> {
+                ZoneId defaultZoneId = ZoneId.systemDefault();
+                LocalDate localDate = LocalDate.now();
+                Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
+                Diagnosis newDiagnosis = new Diagnosis();
+                newDiagnosis.setDiagnosisDate(date);
+                newDiagnosis.setLastDiagnosisChangeDate(date);
+                Psychologist currentPshychologist = new Psychologist();
+                currentPshychologist.setDni("45949977w"); //ESTO HAY QUE CAMBIAR
+                newDiagnosis.setPsychologist(currentPshychologist);
+                newDiagnosis.setOnTherapy(true);
+                diagnosisInterface.updateDiagnosis_XML(newDiagnosis);
+                diagnosises = loadAllDiagnosises();
+                //  diagnosises = loadAllDiagnosises();
+            });
+            //SET THE CONTEXT MENU
+            contextMenu1.getItems().add(createNewDiagnosisMenuIt);
+            tbDiagnosis.setContextMenu(contextMenu1);
 
         }
 
@@ -358,12 +458,122 @@ final Logger LOGGER = Logger.getLogger("paquete.NombreClase");
         if (newValue != null) {
 
         } else {
-            //If there is not a row selected, clean window fields 
-            //and disable create, modify and delete buttons
+
+        }
+
+    }
+//COMBOBOX CHANGE
+
+    private void handleComboboxChange(ObservableValue observable,
+            Object oldValue,
+            Object newValue) {
+        switch (newValue.toString()) {
+            case "Find diagnosis between dates":
+                dpDateLow.setDisable(false);
+                dpDateLow.getEditor().clear();
+                dtDateGreat.setDisable(false);
+                dtDateGreat.getEditor().clear();
+                tfPatientDNI.setDisable(false);
+                tfMentalDisease.setDisable(true);
+                cbxOnTherapy.setDisable(true);
+                cbxOnTherapy.setSelected(false);
+
+                btnSearch.setDisable(true);
+                tfDiagnosisID.setDisable(true);
+                tfDiagnosisID.clear();
+                showInfoAlert("Not implemented yet");
+                break;
+            case "Find all diangosis if patient on teraphy":
+                tfPatientDNI.setDisable(false);
+                tfPatientDNI.clear();
+                dpDateLow.setDisable(true);
+                dpDateLow.getEditor().clear();
+                dtDateGreat.setDisable(true);
+                dtDateGreat.getEditor().clear();
+                cbxOnTherapy.setDisable(false);
+                cbxOnTherapy.setSelected(true);
+                tfMentalDisease.setDisable(true);
+                tfDiagnosisID.setDisable(true);
+                tfDiagnosisID.clear();
+
+                btnSearch.setDisable(false);
+
+                break;
+            case "Find all diagnosis by patient id":
+                tfPatientDNI.setDisable(false);
+                tfPatientDNI.clear();
+
+                dpDateLow.setDisable(true);
+                dpDateLow.getEditor().clear();
+                dtDateGreat.setDisable(true);
+                dtDateGreat.getEditor().clear();
+                cbxOnTherapy.setDisable(true);
+                cbxOnTherapy.setSelected(false);
+                btnSearch.setDisable(false);
+                tfDiagnosisID.setDisable(true);
+                tfDiagnosisID.clear();
+
+                break;
+            case "Find all diagnosis":
+                tfPatientDNI.setDisable(true);
+                tfPatientDNI.clear();
+                dpDateLow.setDisable(true);
+                dpDateLow.getEditor().clear();
+                dtDateGreat.setDisable(true);
+                dtDateGreat.getEditor().clear();
+                cbxOnTherapy.setDisable(true);
+                cbxOnTherapy.setSelected(false);
+
+                btnSearch.setDisable(false);
+                tfDiagnosisID.setDisable(true);
+                tfDiagnosisID.clear();
+
+                break;
 
         }
 
     }
 
+    //FILTER 
+    @FXML
+    private void handleSearchButtonAction(ActionEvent event) {
+        switch (comboboxSearchBy.getValue().toString()) {
+            case "Find diagnosis between dates":
+                diagnosises = loadDiagnosisesBetweenDates();
+                //loadDailyNoteByDate();
+                break;
+            case "Find all diagnosis by patient id":
+                diagnosises = loadDiagnosisesByPatient();
+                break;
+            case "Find all diangosis if patient on teraphy":
+                diagnosises = loadDiagnosisesByPatientOnTherapy();
+                break;
+            case "Find all diagnosis":
+                diagnosises = loadAllDiagnosises();
+                break;
+        }
+    }
     
+      public void handleDatePickerChange(ObservableValue observable,
+            LocalDate oldValue,
+            LocalDate newValue) {
+        switch (comboboxSearchBy.getSelectionModel().getSelectedItem().toString()) {
+            case "Find diagnosis between dates":
+                if (dpDateLow.getValue() == null || dtDateGreat.getValue() == null || dpDateLow.getValue().isAfter(dtDateGreat.getValue()) || tfPatientDNI.getText().isEmpty()) {
+                    btnSearch.setDisable(true);
+                } else {
+                    btnSearch.setDisable(false);
+                }
+                break;
+        }
+
+    }
+
+    private void showInfoAlert(String infoMsg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, infoMsg, ButtonType.OK);
+        alert.showAndWait();
+    }
+
+   
+
 }

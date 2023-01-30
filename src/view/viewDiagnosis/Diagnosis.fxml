@@ -83,8 +83,8 @@
                   <Text fx:id="txtDateGreat" layoutX="307.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Date Great" />
                   <DatePicker fx:id="dtDateGreat" layoutX="246.0" layoutY="113.0" />
                   <CheckBox fx:id="cbxOnTherapy" layoutX="466.0" layoutY="80.0" mnemonicParsing="false" text="On Therapy" />
-                  <ComboBox fx:id="comboboxSearchByID" layoutX="584.0" layoutY="75.0" prefWidth="150.0" promptText="Search By ID" />
-                  <Button fx:id="btnSearch" layoutX="814.0" layoutY="76.0" mnemonicParsing="false" text="Search" />
+                  <ComboBox fx:id="comboboxSearchBy" layoutX="584.0" layoutY="75.0" prefWidth="150.0" />
+                  <Button fx:id="btnSearch" layoutX="814.0" layoutY="76.0" mnemonicParsing="false" onAction="#handleSearchButtonAction" text="Search" />
                   <Text fx:id="txtSearchMethod" fill="#9a8a8a" layoutX="584.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search method" />
                </children>
             </Pane>
