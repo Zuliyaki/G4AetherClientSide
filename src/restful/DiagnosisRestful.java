@@ -18,21 +18,21 @@ import javax.ws.rs.core.GenericType;
  * [entities.diagnosis]<br>
  * USAGE:
  * <pre>
- *        DiagnosisResful client = new DiagnosisResful();
- *        Object response = client.XXX(...);
- *        // do whatever with response
- *        client.close();
- * </pre>
+        DiagnosisRestful client = new DiagnosisRestful();
+        Object response = client.XXX(...);
+        // do whatever with response
+        client.close();
+ </pre>
  *
  * @author 2dam
  */
-public class DiagnosisResful implements DiagnosisInterface {
+public class DiagnosisRestful implements DiagnosisInterface {
 
     private WebTarget webTarget;
     private Client client;
     private static final String BASE_URI = "http://localhost:8080/G4Aether/webresources";
 
-    public DiagnosisResful() {
+    public DiagnosisRestful() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
         webTarget = client.target(BASE_URI).path("entities.diagnosis");
     }

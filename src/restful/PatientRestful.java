@@ -16,21 +16,21 @@ import javax.ws.rs.core.GenericType;
  * [entities.patient]<br>
  * USAGE:
  * <pre>
- *        PatientResful client = new PatientResful();
- *        Object response = client.XXX(...);
- *        // do whatever with response
- *        client.close();
- * </pre>
+        PatientRestful client = new PatientRestful();
+        Object response = client.XXX(...);
+        // do whatever with response
+        client.close();
+ </pre>
  *
  * @author 2dam
  */
-public class PatientResful implements PatientInterface {
+public class PatientRestful implements PatientInterface {
 
     private WebTarget webTarget;
     private Client client;
     private static final String BASE_URI = "http://localhost:8080/G4Aether/webresources";
 
-    public PatientResful() {
+    public PatientRestful() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
         webTarget = client.target(BASE_URI).path("entities.patient");
     }

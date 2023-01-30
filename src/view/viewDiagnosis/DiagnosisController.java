@@ -11,6 +11,10 @@ import entities.Patient;
 import entities.Psychologist;
 import entities.Treatment;
 import exceptions.DiagnosisNotFoundException;
+import factories.DiagnosisFactory;
+import factories.MentalDiseaseFactory;
+import factories.PatientFactory;
+import factories.TreatmentFactory;
 import interfaces.DiagnosisInterface;
 import interfaces.MentalDiseaseInterface;
 import interfaces.PatientInterface;
@@ -68,19 +72,19 @@ import javafx.stage.Modality;
 import javafx.util.Callback;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
-import restful.DiagnosisResful;
+import restful.DiagnosisRestful;
 import restful.MentalDiseaseRestful;
-import restful.PatientResful;
+import restful.PatientRestful;
 import restful.TreatmentResful;
 
 public class DiagnosisController {
 
     public Stage stage;
     private ObservableList<Diagnosis> diagnosises;
-    private DiagnosisInterface diagnosisInterface = new DiagnosisResful();
-    private TreatmentInterface treatmentInterface = new TreatmentResful();
-    private MentalDiseaseInterface mentalDiseaseInterface = new MentalDiseaseRestful();
-    private PatientInterface patientInterface = new PatientResful();
+    private DiagnosisInterface diagnosisInterface = DiagnosisFactory.getModel();
+    private TreatmentInterface treatmentInterface = TreatmentFactory.getModel();
+    private MentalDiseaseInterface mentalDiseaseInterface = MentalDiseaseFactory.getModel();
+    private PatientInterface patientInterface = PatientFactory.getModel();
     private ObservableList<Treatment> treatments;
 
     @FXML
@@ -202,17 +206,18 @@ public class DiagnosisController {
         tfMentalDisease.setDisable(true);
         btnSearch.setDisable(true);
         tfDiagnosisID.setDisable(true);
+        txtMentalDisease.setVisible(false);
+        tfMentalDisease.setVisible(false);
 
         // LOAD ALL Diagnosises
         diagnosises = loadAllDiagnosises();
         //listeners
         comboboxSearchBy.valueProperty().addListener(this::handleComboboxChange);
-       dpDateLow.valueProperty().addListener(this::handleDatePickerChange);
-       dtDateGreat.valueProperty().addListener(this::handleDatePickerChange);
-
+        dpDateLow.valueProperty().addListener(this::handleDatePickerChange);
+        dtDateGreat.valueProperty().addListener(this::handleDatePickerChange);
 
         // FILTRADO
-        String[] a = {"Find all diagnosis", "Find all diagnosis by patient id", "Find all diangosis if patient on teraphy", "Find diagnosis between dates", "Find diagnosis by id"};
+        String[] a = {"Find all diagnosis", "Find all diagnosis by patient id", "Find all diangosis if patient on teraphy", "Find diagnosis between dates"};
         ObservableList<String> searchMethods = FXCollections.observableArrayList(a);
         comboboxSearchBy.setItems(searchMethods);
         comboboxSearchBy.getSelectionModel().select(-1);
@@ -283,6 +288,8 @@ public class DiagnosisController {
                             .get(t.getTablePosition().getRow()))
                             .setMentalDisease(t.getNewValue());
                     diagnosisInterface.updateDiagnosis_XML(tbDiagnosis.getSelectionModel().getSelectedItem());
+                    txtMentalDisease.setText("Information about: " + tbDiagnosis.getSelectionModel().getSelectedItem().getMentalDisease().getMdName());
+                    tfMentalDisease.setText(tbDiagnosis.getSelectionModel().getSelectedItem().getMentalDisease().getMdDescription());
                 });
         /////////////////
         ///////////////
@@ -346,21 +353,23 @@ public class DiagnosisController {
         return diagnosisTableInfo;
 
     }
- private ObservableList<Diagnosis> loadDiagnosisesBetweenDates() {
+
+    private ObservableList<Diagnosis> loadDiagnosisesBetweenDates() {
         ObservableList<Diagnosis> diagnosisTableInfo;
         List<Diagnosis> allDiangosis;
-          Date dateStart = Date.from(dpDateLow.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-                Date dateEnd = Date.from(dtDateGreat.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-                String dateStartString = formatter.format(dateStart);
-                String dateEndString = formatter.format(dateEnd);
-        
+        Date dateStart = Date.from(dpDateLow.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date dateEnd = Date.from(dtDateGreat.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        String dateStartString = formatter.format(dateStart);
+        String dateEndString = formatter.format(dateEnd);
+
         allDiangosis = diagnosisInterface.findPatientDiagnosisByDate_XML(new GenericType<List<Diagnosis>>() {
-        }, tfPatientDNI.getText(),dateStartString,dateEndString);
+        }, tfPatientDNI.getText(), dateStartString, dateEndString);
         diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
         tbDiagnosis.setItems(diagnosisTableInfo);
         return diagnosisTableInfo;
     }
+
     private ObservableList<Treatment> loadAllTreaments(Diagnosis diagnosis) {
         ObservableList<Treatment> treatmentTableInfo;
         List<Treatment> allTreatment;
@@ -380,22 +389,34 @@ public class DiagnosisController {
     }
 
     private ObservableList<Diagnosis> loadDiagnosisesByPatientOnTherapy() {
-        ObservableList<Diagnosis> diagnosisTableInfo;
-        List<Diagnosis> allDiangosis;
-        allDiangosis = diagnosisInterface.findAllIfPatientOnTeraphy_XML(new GenericType<List<Diagnosis>>() {
-        }, tfPatientDNI.getText());
-        diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
-        tbDiagnosis.setItems(diagnosisTableInfo);
+        ObservableList<Diagnosis> diagnosisTableInfo = null;
+
+        if (tfPatientDNI.getText().isEmpty()) {
+            showInfoAlert("Patient DNI field can not be empty");
+        } else {
+            List<Diagnosis> allDiangosis;
+            allDiangosis = diagnosisInterface.findAllIfPatientOnTeraphy_XML(new GenericType<List<Diagnosis>>() {
+            }, tfPatientDNI.getText());
+            diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
+            tbDiagnosis.setItems(diagnosisTableInfo);
+        }
         return diagnosisTableInfo;
     }
 
     private ObservableList<Diagnosis> loadDiagnosisesByPatient() {
-        ObservableList<Diagnosis> diagnosisTableInfo;
-        List<Diagnosis> allDiangosis;
-        allDiangosis = diagnosisInterface.findAllDiagnosisByPatient_XML(new GenericType<List<Diagnosis>>() {
-        }, tfPatientDNI.getText());
-        diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
-        tbDiagnosis.setItems(diagnosisTableInfo);
+        ObservableList<Diagnosis> diagnosisTableInfo = null;
+
+        if (tfPatientDNI.getText().isEmpty()) {
+            showInfoAlert("Patient DNI field can not be empty");
+
+        } else {
+            List<Diagnosis> allDiangosis;
+            allDiangosis = diagnosisInterface.findAllDiagnosisByPatient_XML(new GenericType<List<Diagnosis>>() {
+            }, tfPatientDNI.getText());
+            diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
+            tbDiagnosis.setItems(diagnosisTableInfo);
+
+        }
         return diagnosisTableInfo;
     }
 
@@ -408,6 +429,9 @@ public class DiagnosisController {
             treatments = loadAllTreaments(selectedDiagnosis);
 
             if (selectedDiagnosis.getMentalDisease() != null) {
+                txtMentalDisease.setVisible(true);
+                tfMentalDisease.setVisible(true);
+                txtMentalDisease.setText("Information about: " + selectedDiagnosis.getMentalDisease().getMdName());
                 tfMentalDisease.setText(selectedDiagnosis.getMentalDisease().getMdDescription());
             }
             tfMentalDisease.autosize();
@@ -467,8 +491,13 @@ public class DiagnosisController {
     private void handleComboboxChange(ObservableValue observable,
             Object oldValue,
             Object newValue) {
+        
+        tbDiagnosis.getItems().clear();
+        tbDiagnosis.refresh();
         switch (newValue.toString()) {
             case "Find diagnosis between dates":
+                 tfPatientDNI.setDisable(false);
+                tfPatientDNI.clear();
                 dpDateLow.setDisable(false);
                 dpDateLow.getEditor().clear();
                 dtDateGreat.setDisable(false);
@@ -481,7 +510,6 @@ public class DiagnosisController {
                 btnSearch.setDisable(true);
                 tfDiagnosisID.setDisable(true);
                 tfDiagnosisID.clear();
-                showInfoAlert("Not implemented yet");
                 break;
             case "Find all diangosis if patient on teraphy":
                 tfPatientDNI.setDisable(false);
@@ -490,28 +518,13 @@ public class DiagnosisController {
                 dpDateLow.getEditor().clear();
                 dtDateGreat.setDisable(true);
                 dtDateGreat.getEditor().clear();
-                cbxOnTherapy.setDisable(false);
+                cbxOnTherapy.setDisable(true);
                 cbxOnTherapy.setSelected(true);
                 tfMentalDisease.setDisable(true);
                 tfDiagnosisID.setDisable(true);
                 tfDiagnosisID.clear();
 
                 btnSearch.setDisable(false);
-
-                break;
-            case "Find all diagnosis by patient id":
-                tfPatientDNI.setDisable(false);
-                tfPatientDNI.clear();
-
-                dpDateLow.setDisable(true);
-                dpDateLow.getEditor().clear();
-                dtDateGreat.setDisable(true);
-                dtDateGreat.getEditor().clear();
-                cbxOnTherapy.setDisable(true);
-                cbxOnTherapy.setSelected(false);
-                btnSearch.setDisable(false);
-                tfDiagnosisID.setDisable(true);
-                tfDiagnosisID.clear();
 
                 break;
             case "Find all diagnosis":
@@ -553,8 +566,8 @@ public class DiagnosisController {
                 break;
         }
     }
-    
-      public void handleDatePickerChange(ObservableValue observable,
+
+    public void handleDatePickerChange(ObservableValue observable,
             LocalDate oldValue,
             LocalDate newValue) {
         switch (comboboxSearchBy.getSelectionModel().getSelectedItem().toString()) {
@@ -573,7 +586,5 @@ public class DiagnosisController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, infoMsg, ButtonType.OK);
         alert.showAndWait();
     }
-
-   
 
 }
