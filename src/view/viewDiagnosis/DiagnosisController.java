@@ -25,8 +25,11 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,6 +75,13 @@ import javafx.stage.Modality;
 import javafx.util.Callback;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 import restful.DiagnosisRestful;
 import restful.MentalDiseaseRestful;
 import restful.PatientRestful;
@@ -566,7 +576,33 @@ public class DiagnosisController {
                 break;
         }
     }
+    @FXML
+    private void handlePrintButtonAction(ActionEvent event){
+         try {
+            LOGGER.info("Starting printing");
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/DiagnosisReport.jrxml"));
+            JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Diagnosis>) this.tbDiagnosis.getItems());
 
+            Map<String, Object> parameters = new HashMap<>();
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
+
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+            jasperViewer.setVisible(true);
+            // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        } catch (JRException ex) {
+            //If there is an error show message and
+            //log it.
+            showErrorAlert("Error printing:\n"
+                    + ex.getMessage());
+            LOGGER.log(Level.SEVERE,
+                    "Error printing:\n",
+                    ex);
+        }
+        
+        
+        
+        
+    }
     public void handleDatePickerChange(ObservableValue observable,
             LocalDate oldValue,
             LocalDate newValue) {
@@ -584,6 +620,11 @@ public class DiagnosisController {
 
     private void showInfoAlert(String infoMsg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, infoMsg, ButtonType.OK);
+        alert.showAndWait();
+    }
+
+    private void showErrorAlert(String errormsg) {
+    Alert alert = new Alert(Alert.AlertType.ERROR, errormsg, ButtonType.OK);
         alert.showAndWait();
     }
 

@@ -113,7 +113,7 @@
                   </TableView>
                   <Text fx:id="txtMentalDisease" fill="#9a8a8a" layoutX="505.0" layoutY="321.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Information about: &lt;MentalDisease&gt;" />
                   <TextField fx:id="tfMentalDisease" editable="false" layoutX="505.0" layoutY="328.0" prefHeight="277.0" prefWidth="333.0" />
-                  <Button fx:id="btnPrint" layoutX="1031.0" layoutY="556.0" mnemonicParsing="false" text="Print" />
+                  <Button fx:id="btnPrint" layoutX="1031.0" layoutY="556.0" mnemonicParsing="false" onAction="#handlePrintButtonAction" text="Print" />
                </children>
             </Pane>
             <Separator layoutX="34.0" layoutY="825.0" prefHeight="0.0" prefWidth="1149.0" />

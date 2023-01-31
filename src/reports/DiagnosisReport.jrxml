@@ -24,6 +24,11 @@
 		</box>
 	</style>
 	<subDataset name="Table Dataset 1" uuid="2d7e3ce4-bffb-4b7f-b4fc-1bc76d5961a8"/>
+	<field name="patient.dni" class="java.lang.String"/>
+	<field name="psychologist.dni" class="java.lang.String"/>
+	<field name="diagnosisDate" class="java.util.Date"/>
+	<field name="mentalDisease.mdName" class="java.lang.String"/>
+	<field name="lastDiagnosisChangeDate" class="java.util.Date"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -74,12 +79,8 @@
 				<text><![CDATA[Mental Disease]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="62" width="111" height="63" uuid="96cb6b7c-8b12-406d-9095-38134997d218"/>
-				<textFieldExpression><![CDATA[$F{patient}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement x="111" y="62" width="111" height="63" uuid="16fbea61-ecfc-40bc-9e1d-6cc05f9849da"/>
-				<textFieldExpression><![CDATA[$F{Psychologist}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{psychologist.dni}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="222" y="62" width="111" height="63" uuid="509d7cc3-eb69-4f88-9928-8cc5d7871bf6"/>
@@ -87,11 +88,15 @@
 			</textField>
 			<textField>
 				<reportElement x="333" y="62" width="111" height="63" uuid="18fa484a-ec6e-4991-b403-6a1e1d1c3a94"/>
-				<textFieldExpression><![CDATA[$F{mentalDisease}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{mentalDisease.mdName}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="444" y="62" width="111" height="63" uuid="35c39e43-c6a1-4803-8548-9c27b07c9993"/>
 				<textFieldExpression><![CDATA[$F{lastDiagnosisChangeDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="62" width="111" height="63" uuid="6e9bba75-9418-4c28-97b2-7ff3a1ab4356"/>
+				<textFieldExpression><![CDATA[$F{patient.dni}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
