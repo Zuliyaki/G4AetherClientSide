@@ -34,7 +34,7 @@
 				<textElement>
 					<font size="24"/>
 				</textElement>
-				<textFieldExpression><![CDATA[Appointment Report Test]]></textFieldExpression>
+				<textFieldExpression><![CDATA[Appointment Report]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

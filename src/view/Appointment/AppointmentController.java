@@ -10,6 +10,7 @@ import interfaces.AppointmentInterface;
 import interfaces.PatientInterface;
 import interfaces.PsychologistInterface;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
@@ -60,9 +61,9 @@ public class AppointmentController {
     private final PatientInterface patientInterface = PatientFactory.getModel();
     private final PsychologistInterface psychologistInterface = PsychologistFactory.getModel();
     private List<Appointment> allAppointments;
+    private List<Appointment> loadAppointmentID;
+    private List<Appointment> loadAppointmentDate;
     private final String DNI_REGEX = "^[0-9]{8,8}[A-Za-z]$";
-    private List<Appointment> appointmentID;
-    private List<Appointment> appointmentDate;
     private static final Logger LOGGER = Logger.getLogger(AppointmentController.class.getName());
 
     // VBox
@@ -88,6 +89,8 @@ public class AppointmentController {
     private TextField psychologisttf;
     @FXML
     private TextField patienttf;
+    @FXML
+    private TextField searchtf;
 
     // Combobox for the search methods
     @FXML
@@ -222,6 +225,8 @@ public class AppointmentController {
             this.searchbtn.setOnAction(this::handleSearchButtonAction);
 
             //Set handleFieldsTextChange event handlers
+            this.idtf.textProperty().addListener(this::handleFieldsTextChange);
+
             this.patienttf.textProperty().addListener(this::handleFieldsTextChange);
 
             this.psychologisttf.textProperty().addListener(this::handleFieldsTextChange);
@@ -233,14 +238,7 @@ public class AppointmentController {
 
             combobox.setItems(searchMethods);
 
-            this.combobox.valueProperty().addListener(new ChangeListener<String>() {
-
-                @Override
-                public void changed(ObservableValue observable, String oldValue, String newValue) {
-
-                    handleComboboxChange(observable, oldValue, newValue);
-                }
-            });
+            this.combobox.valueProperty().addListener(this::handleComboboxChange);
 
             // load all appointments int he tableview
             loadAllAppointments();
@@ -312,6 +310,68 @@ public class AppointmentController {
     }
 
     /**
+     * If the fields are empty the button will be disabled
+     *
+     * Search button will be enabled when a search method has a value and all
+     * the fields needed for the search method are filled if the method does not
+     * need any field the button will be enabled.
+     *
+     * @param observable Object watched
+     * @param oldValue String with the old value
+     * @param newValue String with the new value
+     */
+    private void handleComboboxChange(ObservableValue observable, Object oldValue, Object newValue) {
+
+        switch (newValue.toString()) {
+
+            case "Find all Appointment":
+
+                idtf.setEditable(true);
+
+                datepicker.setDisable(false);
+
+                psychologisttf.setEditable(true);
+
+                patienttf.setEditable(true);
+
+                searchbtn.setDisable(true);
+
+                break;
+
+            case "Find Appointment by ID":
+
+                idtf.setEditable(true);
+
+                datepicker.setDisable(true);
+
+                psychologisttf.setEditable(false);
+
+                patienttf.setEditable(false);
+
+                searchbtn.setDisable(true);
+
+                break;
+
+            case "Find Appointment by Date":
+
+                idtf.setEditable(false);
+
+                datepicker.setDisable(false);
+
+                datepicker.getEditor().clear();
+
+                psychologisttf.setEditable(false);
+
+                patienttf.setEditable(false);
+
+                searchbtn.setDisable(true);
+
+                break;
+        }
+
+    }
+
+    /**
      *
      * @param primaryStage
      */
@@ -373,45 +433,6 @@ public class AppointmentController {
             updatebtn.setDisable(false);
 
             deletebtn.setDisable(false);
-        }
-    }
-
-    /**
-     * Search button will be enabled when a search method has a value and all
-     * the fields needed for the search method are filled if the method does not
-     * need any field the button will be enabled.
-     *
-     * @param observable
-     * @param oldValue
-     * @param newValue
-     */
-    private void handleComboboxChange(ObservableValue observable, String oldValue, String newValue) {
-
-        switch (newValue) {
-
-            case "Find all Appointment":
-                searchbtn.setDisable(false);
-                break;
-
-            case "Find Appointment by ID":
-                searchbtn.setDisable(false);
-                idtf.setEditable(true);
-                patienttf.setEditable(false);
-                psychologisttf.setEditable(false);
-
-                //Focus id Textfield 
-                idtf.requestFocus();
-                break;
-
-            case "Find Appointment by Date":
-                searchbtn.setDisable(false);
-                idtf.setEditable(false);
-                patienttf.setEditable(false);
-                psychologisttf.setEditable(false);
-
-                //Focus id Textfield 
-                datepicker.requestFocus();
-                break;
         }
     }
 
@@ -510,6 +531,77 @@ public class AppointmentController {
     }
 
     /**
+     * Find by ID
+     *
+     * @param event
+     * @return
+     * @throws Exception
+     */
+    @FXML
+    private ObservableList<Appointment> loadAppointmentID() {
+
+        ObservableList<Appointment> appointmentID = null;
+
+        List<Appointment> appointmentid;
+
+        try {
+
+            appointmentid = appointmentInterface.FindAppointmentById_XML(new GenericType<List<Appointment>>() {
+            }, this.searchtf.getText());
+
+            appointmentID = FXCollections.observableArrayList(appointmentid);
+
+            tableview.setItems(appointmentID);
+
+            tableview.refresh();
+
+        } catch (ClientErrorException ex) {
+
+            Logger.getLogger(AppointmentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return appointmentID;
+
+    }
+
+    /**
+     * Find by Date
+     *
+     * @param event
+     * @return
+     * @throws Exception
+     */
+    @FXML
+    private ObservableList<Appointment> loadAppointmentDate() {
+
+        ObservableList<Appointment> appointmentDate = null;
+
+        List<Appointment> appointment;
+
+        try {
+
+            Date date = Date.from(datepicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+            String dateString = formatter.format(date);
+
+            appointment = appointmentInterface.FindAppointmentByDate_XML(new GenericType<List<Appointment>>() {
+            }, this.searchtf.getText());
+
+            appointmentDate = FXCollections.observableArrayList(appointment);
+
+            tableview.setItems(appointmentDate);
+
+            tableview.refresh();
+
+        } catch (Exception ex) {
+
+            Logger.getLogger(AppointmentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return appointmentDate;
+    }
+
+    /**
      * it refresh TablewView appointment with all updated and created
      * appointments
      */
@@ -593,15 +685,20 @@ public class AppointmentController {
 
             appointmentCreate.setAppointmentDate(Date.from(datepicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
             String stringNewDate = sdf.format(appointmentCreate.getAppointmentDate());
 
             allAppointments.forEach((a) -> {
+                
                 String stringDate = sdf.format(a.getAppointmentDate());
+                
                 if (!a.getAppointmentDate().equals(appointmentCreate.getAppointmentDate())) {
+                    
                     if (stringDate.equals(stringNewDate)) {
+                        
                         showErrorAlert("Error Creating Appointment !!");
+                        
                     }
                 }
             });
@@ -631,13 +728,29 @@ public class AppointmentController {
                 appointmentCreate.setPsychologist(allPsychologist);
             });
 
-            appointmentInterface.createAppointment_XML(appointmentCreate);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to Create appointment?", ButtonType.OK, ButtonType.CANCEL);
 
-            tableview.refresh();
+            Optional<ButtonType> result = alert.showAndWait();
+
+            //If OK to modify
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+
+                appointmentInterface.createAppointment_XML(appointmentCreate);
+
+                //Clean fields
+                this.idtf.setText("");
+
+                this.patienttf.setText("");
+
+                this.psychologisttf.setText("");
+
+                reset();
+
+            }
 
             reset();
 
-            LOGGER.info("Created successfully");
+            LOGGER.info("Appointment Created successfully !!");
 
         } catch (ClientErrorException ex) {
 
@@ -668,14 +781,18 @@ public class AppointmentController {
 
             appointmentUpdate.setAppointmentDate(Date.from(datepicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
             String stringNewDate = sdf.format(appointmentUpdate.getAppointmentDate());
 
             allAppointments.forEach((a) -> {
+                
                 String stringDate = sdf.format(a.getAppointmentDate());
+                
                 if (!a.getAppointmentDate().equals(appointmentUpdate.getAppointmentDate())) {
+                    
                     if (stringDate.equals(stringNewDate)) {
+                        
                         showErrorAlert("Error Creating Appointment !!");
                     }
                 }
@@ -718,10 +835,6 @@ public class AppointmentController {
 
                 appointmentInterface.UpdateAppointment_XML(appointmentUpdate);
 
-                Alert alert2 = new Alert(Alert.AlertType.INFORMATION, "Appointment Updated Successfully !!", ButtonType.OK);
-
-                alert2.showAndWait();
-
                 //Clean fields
                 this.idtf.setText("");
 
@@ -740,6 +853,8 @@ public class AppointmentController {
             LOGGER.log(Level.SEVERE, ex.getMessage());
 
         }
+        
+         LOGGER.info("Appointment Updated successfully !!");
     }
 
     /**
@@ -794,45 +909,66 @@ public class AppointmentController {
     }
 
     /**
+     * Action event handler for Print button.
      *
      * @param event
      */
     @FXML
-    private void handlePrintButtonAction(ActionEvent event
-    ) {
+    private void handlePrintButtonAction(ActionEvent event) {
 
+        /*
         try {
+            LOGGER.info("Starting printing");
 
-            LOGGER.info("Printing appointment...");
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/AppointmentReport.jrxml"));
 
-        } catch (Exception ex) {
+            JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Appointment>) this.tableview.getItems());
 
-            //If there is an error show message and log it.
-            showErrorAlert("Error Printing !!" + ex.getMessage());
+            Map<String, Object> parameters = new HashMap<>();
 
-            LOGGER.log(Level.SEVERE, "View Appointment: Error printing report: {0}", ex.getMessage());
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
 
-        }
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
 
+            jasperViewer.setVisible(true);
+
+            jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+
+        } catch (JRException ex) {
+            //If there is an error show message and
+            //log it.
+            showErrorAlert("Error printing:\n" + ex.getMessage());
+
+            LOGGER.log(Level.SEVERE, "Error printing:\n", ex);
+        }*/
     }
 
     /**
+     * Action event handler for delete button.
      *
      * @param event
      */
     @FXML
-    private void handleSearchButtonAction(ActionEvent event
-    ) {
+    private void handleSearchButtonAction(ActionEvent event) {
 
         switch (combobox.getValue().toString()) {
+
             case "Find all Appointment":
+
                 loadAllAppointments();
+
                 break;
+
             case "Find Appointment by ID":
-                //loadAppointmentByID();
+
+                loadAppointmentID();
+
                 break;
+
             case "Find Appointment by Date":
-                //loadAppointmentBYDate();
+
+                loadAppointmentDate();
+
                 break;
         }
 
