@@ -313,6 +313,14 @@ public class AppointmentController {
 
     /**
      *
+     * @param primaryStage
+     */
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    /**
+     *
      * Validates that id, date, patient_DNI, Psychologist_DNI fields has any
      * content to enable/disable create button.
      *
@@ -321,12 +329,6 @@ public class AppointmentController {
      * @param newValue The new value of the observable.
      */
     public void handleFieldsTextChange(ObservableValue observable, String oldValue, String newValue) {
-
-        if (idtf.getText().trim().length() > 9) {
-
-            new Alert(Alert.AlertType.ERROR, "Automatically Generated !!", ButtonType.OK).showAndWait();
-
-        }
 
         if (patienttf.getText().trim().length() > 9) {
 
@@ -365,7 +367,7 @@ public class AppointmentController {
          * If any of the fields are empty the buttons will be disabled. If all
          * of them are written it will be enabled.
          */
-        if (patienttf.getText().trim().isEmpty() || psychologisttf.getText().trim().isEmpty()) {
+        if (idtf.getText().trim().isEmpty() /*|| datepicker.is().trim().isEmpty()*/ || patienttf.getText().trim().isEmpty() || psychologisttf.getText().trim().isEmpty()) {
 
             createbtn.setDisable(true);
 
@@ -373,31 +375,15 @@ public class AppointmentController {
 
             deletebtn.setDisable(true);
 
-        } //Else enable the buttons
-        else {
+        } else {
+
+            //Else enable the buttons
             createbtn.setDisable(false);
+
             updatebtn.setDisable(false);
+
             deletebtn.setDisable(false);
         }
-    }
-
-    private void TextFieldValidator() {
-
-        /**
-         * private static final String =
-         */
-        String DNI_REGEX = "^[0-9]{8,8}[A-Za-z]$";
-
-        if (!Pattern.matches(DNI_REGEX, patienttf.getText())) {
-
-            new Alert(Alert.AlertType.ERROR, "Please Enter Patient DNI Format: 11111111Y", ButtonType.OK).showAndWait();
-        }
-
-        if (!Pattern.matches(DNI_REGEX, psychologisttf.getText())) {
-
-            new Alert(Alert.AlertType.ERROR, "Please Enter Patient DNI Format: 11111111Y", ButtonType.OK).showAndWait();
-        }
-
     }
 
     /**
@@ -437,14 +423,6 @@ public class AppointmentController {
                 datepicker.requestFocus();
                 break;
         }
-    }
-
-    /**
-     *
-     * @param primaryStage
-     */
-    public void setStage(Stage stage) {
-        this.stage = stage;
     }
 
     /**
@@ -501,6 +479,22 @@ public class AppointmentController {
 
     }
 
+    private void TextFieldValidator() {
+
+        String DNI_REGEX = "^[0-9]{8,8}[A-Za-z]$";
+
+        if (!Pattern.matches(DNI_REGEX, patienttf.getText())) {
+
+            new Alert(Alert.AlertType.ERROR, "Please Enter Patient DNI Format: 11111111Y", ButtonType.OK).showAndWait();
+        }
+
+        if (!Pattern.matches(DNI_REGEX, psychologisttf.getText())) {
+
+            new Alert(Alert.AlertType.ERROR, "Please Enter Patient DNI Format: 11111111Y", ButtonType.OK).showAndWait();
+        }
+
+    }
+
     /**
      * Shows an error message in an alert dialog.
      *
@@ -541,20 +535,24 @@ public class AppointmentController {
         return allAppointment;
     }
 
+    /**
+     * it refresh TablewView appointment with all updated and created
+     * appointments
+     */
     public void refresh() {
 
-        ObservableList<Appointment> allAppointment; 
-        
+        ObservableList<Appointment> allAppointment;
+
         try {
             allAppointments = appointmentInterface.FindAllAppointments_XML(new GenericType<List<Appointment>>() {
             });
-            
+
             allAppointment = FXCollections.observableArrayList(allAppointments);
 
             tableview.setItems(allAppointment);
 
             tableview.refresh();
-            
+
         } catch (ClientErrorException e) {
 
         }
@@ -579,7 +577,7 @@ public class AppointmentController {
         updatebtn.setDisable(true);
 
         deletebtn.setDisable(true);
-        
+
         refresh();
     }
 
@@ -590,6 +588,8 @@ public class AppointmentController {
         LOGGER.info("Creating appointment...");
 
         try {
+
+            TextFieldValidator();
 
             Appointment appointmentCreate = new Appointment();
 
@@ -638,8 +638,6 @@ public class AppointmentController {
 
             //appointmentCreate.setAppointmentDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
             appointmentCreate.setAppointmentChange(checkbox.isSelected());
-
-            TextFieldValidator();
 
             try {
 
