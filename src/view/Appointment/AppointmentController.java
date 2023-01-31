@@ -71,7 +71,7 @@ public class AppointmentController {
 
     // Appointmentmenu
     @FXML
-    private Menu appointments;
+    private Menu appointmentmenu;
 
     // Appointment Menuitems
     @FXML
@@ -163,9 +163,6 @@ public class AppointmentController {
 
             //Set the cell value factory of the tableview.
             /**
-             *
-             *
-             *
              *
              *
              *

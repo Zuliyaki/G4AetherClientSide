@@ -42,7 +42,7 @@
             <MenuItem mnemonicParsing="false" text="Find all patient notes between day scores" />
           </items>
         </Menu>
-        <Menu fx:id="appointments" mnemonicParsing="false" text="Appointments">
+        <Menu fx:id="appointmentmenu" mnemonicParsing="false" text="Appointments">
                <items>
                   <MenuItem fx:id="findall" mnemonicParsing="false" text="Find all Appointment" />
                   <SeparatorMenuItem mnemonicParsing="false" />
@@ -88,10 +88,10 @@
       </Pane>
       <Pane fx:id="panetable" prefHeight="366.0" prefWidth="604.0">
          <children>
-            <TableView fx:id="tableview" layoutX="57.0" prefHeight="283.0" prefWidth="489.0">
+            <TableView fx:id="tableview" layoutX="66.0" layoutY="-6.0" prefHeight="283.0" prefWidth="472.0">
                <columns>
                   <TableColumn fx:id="idtc" prefWidth="40.0" resizable="false" text="Id" />
-                  <TableColumn fx:id="datetc" prefWidth="120.0" resizable="false" text="Date" />
+                  <TableColumn fx:id="datetc" prefWidth="100.0" resizable="false" text="Date" />
                   <TableColumn fx:id="changetc" minWidth="0.0" prefWidth="90.0" resizable="false" text="Change" />
                   <TableColumn fx:id="patienttc" minWidth="0.0" prefWidth="120.0" resizable="false" text="Patient" />
                   <TableColumn fx:id="psychologisttc" minWidth="0.0" prefWidth="120.0" resizable="false" text="Psychologist" />
