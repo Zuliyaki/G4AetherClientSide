@@ -10,16 +10,13 @@ import interfaces.AppointmentInterface;
 import interfaces.PatientInterface;
 import interfaces.PsychologistInterface;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -63,7 +60,6 @@ public class AppointmentController {
     private List<Appointment> allAppointments;
     private List<Appointment> loadAppointmentID;
     private List<Appointment> loadAppointmentDate;
-    private final String DNI_REGEX = "^[0-9]{8,8}[A-Za-z]$";
     private static final Logger LOGGER = Logger.getLogger(AppointmentController.class.getName());
 
     // VBox
@@ -164,12 +160,7 @@ public class AppointmentController {
             //Set the Event handlers
             stage.setOnShowing(this::handlerWindowShowing);
 
-            //Set the cell value factory of the tableview.
-            /**
-             *
-             *
-             *
-             */
+            //Not able to show id in the TableView 
             idtc.setCellValueFactory(new PropertyValueFactory<>("idAppointment"));
 
             datetc.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
@@ -394,14 +385,14 @@ public class AppointmentController {
 
             patienttf.setText(patienttf.getText().substring(0, 9));
 
-            new Alert(Alert.AlertType.ERROR, "The maximum length for the patient DNI is 8 digits and a characters", ButtonType.OK).showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Patient DNI Format: 11111111Y", ButtonType.OK).showAndWait();
         }
 
         if (psychologisttf.getText().trim().length() > 9) {
 
             psychologisttf.setText(psychologisttf.getText().substring(0, 9));
 
-            new Alert(Alert.AlertType.ERROR, "The maximum length for the psychologist DNI is 8 digits and a characters", ButtonType.OK).showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Psychologist DNI Format: 11111111Y", ButtonType.OK).showAndWait();
         }
 
         //Control label texts, when another letter is written the text will disappear.
@@ -417,7 +408,7 @@ public class AppointmentController {
          * If any of the fields are empty the buttons will be disabled. If all
          * of them are written it will be enabled.
          */
-        if (idtf.getText().trim().isEmpty() /*|| datepicker.is().trim().isEmpty()*/ || patienttf.getText().trim().isEmpty() || psychologisttf.getText().trim().isEmpty()) {
+        if (idtf.getText().trim().isEmpty() || patienttf.getText().trim().isEmpty() || psychologisttf.getText().trim().isEmpty()) {
 
             createbtn.setDisable(true);
 
@@ -488,18 +479,6 @@ public class AppointmentController {
             deletebtn.setDisable(true);
         }
 
-    }
-
-    /**
-     * Shows an error message in an alert dialog.
-     *
-     * @param errorMsg The error message to be shown.
-     */
-    protected void showErrorAlert(String errorMsg) {
-
-        //Shows error dialog.
-        Alert alert;
-        alert = new Alert(Alert.AlertType.ERROR, errorMsg, ButtonType.OK);
     }
 
     /**
@@ -594,7 +573,7 @@ public class AppointmentController {
 
             tableview.refresh();
 
-        } catch (Exception ex) {
+        } catch (ClientErrorException ex) {
 
             Logger.getLogger(AppointmentController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -647,24 +626,6 @@ public class AppointmentController {
         refresh();
     }
 
-    private void TextFieldValidator() {
-
-        if (!Pattern.matches(DNI_REGEX, patienttf.getText())) {
-
-            showErrorAlert("Please Enter Patient DNI Format: 11111111Y");
-
-            //new Alert(Alert.AlertType.ERROR, "Please Enter Patient DNI Format: 11111111Y", ButtonType.OK).showAndWait();
-        }
-
-        if (!Pattern.matches(DNI_REGEX, psychologisttf.getText())) {
-
-            showErrorAlert("Please Enter pSYCHOLOGIST DNI Format: 11111111Y");
-
-            //new Alert(Alert.AlertType.ERROR, "Please Enter Patient DNI Format: 11111111Y", ButtonType.OK).showAndWait();
-        }
-
-    }
-
     /**
      * Action event handler for create button.
      *
@@ -677,8 +638,6 @@ public class AppointmentController {
 
         try {
 
-            TextFieldValidator();
-
             Appointment appointmentCreate = new Appointment();
 
             Date date = new Date();
@@ -690,15 +649,15 @@ public class AppointmentController {
             String stringNewDate = sdf.format(appointmentCreate.getAppointmentDate());
 
             allAppointments.forEach((a) -> {
-                
+
                 String stringDate = sdf.format(a.getAppointmentDate());
-                
+
                 if (!a.getAppointmentDate().equals(appointmentCreate.getAppointmentDate())) {
-                    
+
                     if (stringDate.equals(stringNewDate)) {
-                        
+
                         showErrorAlert("Error Creating Appointment !!");
-                        
+
                     }
                 }
             });
@@ -786,13 +745,13 @@ public class AppointmentController {
             String stringNewDate = sdf.format(appointmentUpdate.getAppointmentDate());
 
             allAppointments.forEach((a) -> {
-                
+
                 String stringDate = sdf.format(a.getAppointmentDate());
-                
+
                 if (!a.getAppointmentDate().equals(appointmentUpdate.getAppointmentDate())) {
-                    
+
                     if (stringDate.equals(stringNewDate)) {
-                        
+
                         showErrorAlert("Error Creating Appointment !!");
                     }
                 }
@@ -853,8 +812,8 @@ public class AppointmentController {
             LOGGER.log(Level.SEVERE, ex.getMessage());
 
         }
-        
-         LOGGER.info("Appointment Updated successfully !!");
+
+        LOGGER.info("Appointment Updated successfully !!");
     }
 
     /**
@@ -987,6 +946,18 @@ public class AppointmentController {
 
         //Close Appointment Window.
         Platform.exit();
+    }
+
+    /**
+     * Shows an error message in an alert dialog.
+     *
+     * @param errorMsg The error message to be shown.
+     */
+    protected void showErrorAlert(String errorMsg) {
+
+        //Shows error dialog.
+        Alert alert;
+        alert = new Alert(Alert.AlertType.ERROR, errorMsg, ButtonType.OK);
     }
 
 }
