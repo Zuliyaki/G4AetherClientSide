@@ -12,10 +12,8 @@ import interfaces.PsychologistInterface;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -592,19 +590,19 @@ public class AppointmentController {
 
             TextFieldValidator();
 
-            Appointment appointmentUpdate = new Appointment();
+            Appointment appointmentCreate = new Appointment();
 
             Date date = new Date();
 
-            appointmentUpdate.setAppointmentDate(Date.from(datepicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            appointmentCreate.setAppointmentDate(Date.from(datepicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
-            String stringNewDate = sdf.format(appointmentUpdate.getAppointmentDate());
+            String stringNewDate = sdf.format(appointmentCreate.getAppointmentDate());
 
             allAppointments.forEach((a) -> {
                 String stringDate = sdf.format(a.getAppointmentDate());
-                if (!a.getAppointmentDate().equals(appointmentUpdate.getAppointmentDate())) {
+                if (!a.getAppointmentDate().equals(appointmentCreate.getAppointmentDate())) {
                     if (stringDate.equals(stringNewDate)) {
                         showErrorAlert("Error Creating Appointment !!");
                     }
@@ -612,11 +610,11 @@ public class AppointmentController {
             });
             if (checkbox.isSelected()) {
 
-                appointmentUpdate.setAppointmentChange(true);
+                appointmentCreate.setAppointmentChange(true);
 
             } else {
 
-                appointmentUpdate.setAppointmentChange(false);
+                appointmentCreate.setAppointmentChange(false);
             }
 
             Patient patient = new Patient();
@@ -624,7 +622,7 @@ public class AppointmentController {
             List<Patient> allPatients = patientInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
             });
             allPatients.stream().filter((patientFromAll) -> (patientFromAll.getDni().equals(patienttf.getText()))).forEachOrdered((patientFromAll) -> {
-                appointmentUpdate.setPatient(patientFromAll);
+                appointmentCreate.setPatient(patientFromAll);
             });
 
             // psychologist DNI
@@ -633,10 +631,10 @@ public class AppointmentController {
             List<Psychologist> allPsychologists = psychologistInterface.findAllPsychologists_XML(new GenericType<List<Psychologist>>() {
             });
             allPsychologists.stream().filter((allPsychologist) -> (allPsychologist.getDni().equals(psychologisttf.getText()))).forEachOrdered((allPsychologist) -> {
-                appointmentUpdate.setPsychologist(allPsychologist);
+                appointmentCreate.setPsychologist(allPsychologist);
             });
 
-            appointmentInterface.UpdateAppointment_XML(appointmentUpdate);
+            appointmentInterface.createAppointment_XML(appointmentCreate);
 
             tableview.refresh();
 
@@ -669,10 +667,22 @@ public class AppointmentController {
 
             appointmentUpdate.setAppointmentChange(checkbox.isSelected());
 
-            /**
-             * 
-             */
-            //appointmentUpdate.setAppointmentDate(Date.from(datepicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            Date date = new Date();
+
+            appointmentUpdate.setAppointmentDate(Date.from(datepicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+            String stringNewDate = sdf.format(appointmentUpdate.getAppointmentDate());
+
+            allAppointments.forEach((a) -> {
+                String stringDate = sdf.format(a.getAppointmentDate());
+                if (!a.getAppointmentDate().equals(appointmentUpdate.getAppointmentDate())) {
+                    if (stringDate.equals(stringNewDate)) {
+                        showErrorAlert("Error Creating Appointment !!");
+                    }
+                }
+            });
 
             Patient patient = new Patient();
 
