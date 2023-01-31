@@ -1,29 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE jasperReport PUBLIC "-//JasperReports//DTD JasperReport//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
-
-<jasperReport name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-    <background>
-        <band/>
-    </background>
-    <title>
-        <band height="79"/>
-    </title>
-    <pageHeader>
-        <band height="35"/>
-    </pageHeader>
-    <columnHeader>
-        <band height="61"/>
-    </columnHeader>
-    <detail>
-        <band height="125"/>
-    </detail>
-    <columnFooter>
-        <band height="45"/>
-    </columnFooter>
-    <pageFooter>
-        <band height="54"/>
-    </pageFooter>
-    <summary>
-        <band height="42"/>
-    </summary>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fca82d21-95a4-401f-aa31-bf10d12942e6">
+	<property name="ireport.zoom" value="1.610510000000001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="idMentalDisease" class="java.lang.Long"/>
+	<field name="mdName" class="java.lang.String"/>
+	<field name="mdType" class="java.lang.Object"/>
+	<field name="mdDescription" class="java.lang.String"/>
+	<field name="mdSympton" class="java.lang.String"/>
+	<field name="mdAddDate" class="java.util.Date"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="229" y="29" width="100" height="20" uuid="64bebeb7-2afa-4861-8362-22b088ca3781"/>
+				<text><![CDATA[Mental Diseases Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="52" height="20" uuid="cb879a10-3aad-457d-8ce8-d1901068c186"/>
+				<text><![CDATA[Id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="75" y="0" width="64" height="20" uuid="aa617a98-bd84-4c82-8124-99037d437771"/>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="149" y="0" width="51" height="20" uuid="e707f7ef-2877-4c8a-8877-409b559c291b"/>
+				<text><![CDATA[Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="229" y="0" width="100" height="20" uuid="ca6dd710-9c21-4df6-b308-6f3103eafbfa"/>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="344" y="0" width="97" height="20" uuid="fd859d04-d96d-4688-83db-179c6b663aec"/>
+				<text><![CDATA[Symptom]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="465" y="0" width="56" height="20" uuid="82e9f539-a067-4dd5-8846-2f34642ecc7c"/>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="61" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="10" width="52" height="20" uuid="a894f086-1677-4440-9d1d-9a9603dd8040"/>
+				<textFieldExpression><![CDATA[$F{idMentalDisease}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="75" y="10" width="64" height="20" uuid="78e21004-37f0-45a3-8da7-8c1d4af7b38b"/>
+				<textFieldExpression><![CDATA[$F{mdName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="149" y="10" width="51" height="20" uuid="ce76c2e1-dad3-4254-8e29-fd3f1468c48c"/>
+				<textFieldExpression><![CDATA[$F{mdType}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="229" y="10" width="100" height="20" uuid="de5cec5b-6a89-4bff-a30c-5aa07460fa42"/>
+				<textFieldExpression><![CDATA[$F{mdDescription}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="344" y="10" width="97" height="20" uuid="2be5474c-6061-4b64-a4bb-552abeefd8e9"/>
+				<textFieldExpression><![CDATA[$F{mdSympton}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="465" y="10" width="56" height="20" uuid="6229df7e-0d37-4983-b4a4-f16ec13784f7"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd-MM-yyyy").format($F{mdAddDate})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
 </jasperReport>

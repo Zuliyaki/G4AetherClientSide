@@ -31,6 +31,7 @@ import java.time.ZoneId;
 import java.util.Optional;
 import java.util.logging.Level;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
@@ -53,6 +54,10 @@ public class MentalDisease2Controller {
     MentalDiseaseFactory mentalFactory = new MentalDiseaseFactory();
     //obtener mediante la factoria la interface
     MentalDiseaseInterface mentalDiseaseInterface = mentalFactory.getModel();
+
+    private static final String USERNAME_REGEX = "^[a-zñÑA-Z0-9]*$";
+    private static final String FULLNAME_REGEX = "^[a-zA-Z]{1,} [a-zA-Z]{1,}$";
+    private static final String EMAIL_REGEX = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
     @FXML
     private TextField txtfName, txtfSymptons, txtfDescription;
@@ -105,6 +110,11 @@ public class MentalDisease2Controller {
         this.txtfDescription.textProperty().addListener((event) -> this.textChangeCreate(KeyEvent.KEY_TYPED));
         this.txtfSymptons.textProperty().addListener((event) -> this.textChangeCreate(KeyEvent.KEY_TYPED));
 
+        //Set event handlers
+        this.txtfName.textProperty().addListener(this::handleFieldsTextChange);
+        this.txtfDescription.textProperty().addListener(this::handleFieldsTextChange);
+        this.txtfSymptons.textProperty().addListener(this::handleFieldsTextChange);
+
         LOGGER.info("window initialized");
 
         stage.setScene(scene);
@@ -150,10 +160,42 @@ public class MentalDisease2Controller {
         this.txtfDescription.textProperty().addListener((event) -> this.textChangeModify(KeyEvent.KEY_TYPED));
         this.txtfSymptons.textProperty().addListener((event) -> this.textChangeModify(KeyEvent.KEY_TYPED));
 
+        //Set event handlers
+        this.txtfName.textProperty().addListener(this::handleFieldsTextChange);
+        this.txtfDescription.textProperty().addListener(this::handleFieldsTextChange);
+        this.txtfSymptons.textProperty().addListener(this::handleFieldsTextChange);
+
         LOGGER.info("window initialized");
 
         stage.setScene(scene);
         stage.show();
+    }
+
+    /**
+     *
+     * Validates that user, fullname, email, password, and repeatpassword fields
+     * has any content to enable/disable continue button.
+     *
+     * @param observable The value being observed.
+     * @param oldValue The old value of the observable.
+     * @param newValue The new value of the observable.
+     */
+    public void handleFieldsTextChange(ObservableValue observable,
+            String oldValue,
+            String newValue) {
+        /**
+         * Maximum character permitted in username field will be 20, fullname
+         * and email 30 and password fields 8 minimum, 24 maximum
+         */
+        if (this.txtfName.getText().length() > 255) {
+            txtfName.setText(txtfName.getText().substring(0, 255));
+        }
+        if (this.txtfDescription.getText().length() > 255) {
+            txtfDescription.setText(txtfDescription.getText().substring(0, 255));
+        }
+        if (this.txtfSymptons.getText().length() > 255) {
+            txtfSymptons.setText(txtfSymptons.getText().substring(0, 255));
+        }
     }
 
     /**
@@ -170,9 +212,6 @@ public class MentalDisease2Controller {
         if (!mentalDisease.getMdName().equals(this.txtfName.toString()) || !mentalDisease.getMdDescription().equals(this.txtfDescription.toString()) || !mentalDisease.getDiagnosis().equals(this.txtfSymptons.toString())) {
             this.btnModify.setDisable(false);
         }
-        /* if (!this.txtfName.getText().trim().equals(mentalDisease.getMdName())) {
-            this.btnModify.setDisable(false);
-        }*/
     }
 
     /**
@@ -180,18 +219,9 @@ public class MentalDisease2Controller {
      * @param KEY_TYPED
      */
     private void textChangeModify(EventType<KeyEvent> KEY_TYPED) {
-        /*if (!this.txtfName.getText().trim().isEmpty() && !this.txtfDescription.getText().trim().isEmpty() && !this.txtfSymptons.getText().trim().isEmpty()) {
-            this.btnModify.setDisable(false);
-        }
-        if (this.txtfName.getText().trim().isEmpty() || this.txtfDescription.getText().trim().isEmpty() || this.txtfSymptons.getText().trim().isEmpty()) {
-            this.btnModify.setDisable(true);
-        }*/
         if (!mentalDisease.getMdName().equals(this.txtfName.toString()) || !mentalDisease.getMdDescription().equals(this.txtfDescription.toString()) || !mentalDisease.getDiagnosis().equals(this.txtfSymptons.toString())) {
             this.btnModify.setDisable(false);
         }
-        /* if (!this.txtfName.getText().trim().equals(mentalDisease.getMdName())) {
-            this.btnModify.setDisable(false);
-        }*/
     }
 
     /**

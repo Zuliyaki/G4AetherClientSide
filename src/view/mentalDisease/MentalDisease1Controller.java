@@ -11,8 +11,11 @@ import interfaces.MentalDiseaseInterface;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,6 +43,13 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -50,7 +60,7 @@ public class MentalDisease1Controller {
     private static final Logger LOGGER = Logger.getLogger("view");
     private Stage stage;
     private ObservableList<MentalDisease> mentalDiseaseData;
-    private List<MentalDisease> byID = new ArrayList<>();
+    private MentalDisease byID;
     private List<MentalDisease> byName = new ArrayList<>();
     //iniciar factoria
     MentalDiseaseFactory mentalFactory = new MentalDiseaseFactory();
@@ -105,7 +115,6 @@ public class MentalDisease1Controller {
         this.btnSearch.setDisable(true);
         this.btnModify.setDisable(true);
         this.btnDelete.setDisable(true);
-        this.btnPrint.setDisable(true);
 
         LOGGER.info("window initialized");
 
@@ -173,7 +182,7 @@ public class MentalDisease1Controller {
     }
 
     /**
-     * Users table selection changed event handler. It enables or disables
+     * Mental diseases table selection changed event handler. It enables or disables
      * buttons depending on selection state of the table.
      *
      * @param observable the property being observed: SelectedItem Property
@@ -207,13 +216,11 @@ public class MentalDisease1Controller {
     private ObservableList<MentalDisease> handleSearchButtonAction(javafx.event.ActionEvent event) throws ClientErrorException {
         ObservableList<MentalDisease> mentalDisease = null;
         try {
-            if (this.cmbSearch.getSelectionModel().getSelectedItem().equals(cmbSearch.getItems().get(0))) {
-                byID = mentalDiseaseInterface.getMentalDiseasesById_XML(new GenericType<List<MentalDisease>>() {}, Long.parseLong(this.txtfSearch.getText()));
-
+            if (this.cmbSearch.getSelectionModel().getSelectedItem().equals("by ID")) {
+                byID = mentalDiseaseInterface.getMentalDiseasesById_XML(MentalDisease.class, this.txtfSearch.getText());
                 mentalDisease = FXCollections.observableArrayList(byID);
-            } else if (this.cmbSearch.getSelectionModel().getSelectedItem().equals(cmbSearch.getItems().get(1))) {
-                byName = mentalDiseaseInterface.getMentalDiseasesByName_XML(new GenericType<List<MentalDisease>>() {
-                }, this.txtfSearch.getText());
+            } else if (this.cmbSearch.getSelectionModel().getSelectedItem().equals("by name")) {
+                byName = mentalDiseaseInterface.getMentalDiseasesByName_XML(new GenericType<List<MentalDisease>>() {}, this.txtfSearch.getText());
 
                 mentalDisease = FXCollections.observableArrayList(byName);
             }
@@ -350,8 +357,30 @@ public class MentalDisease1Controller {
      * @param event
      */
     @FXML
-    private void handlePrintButtonAction(javafx.event.ActionEvent event
-    ) {
+    private void handlePrintButtonAction(javafx.event.ActionEvent event) {
+        try {
+            LOGGER.info("Beginning printing action...");
+            JasperReport report=JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/MentalDiseaseReport.jrxml"));
+            //Data for the report: a collection of UserBean passed as a JRDataSource 
+            //implementation 
+            JRBeanCollectionDataSource dataItems= new JRBeanCollectionDataSource((Collection<MentalDisease>)this.tbvMentalDiseases.getItems());
+            //Map of parameter to be passed to the report
+            Map<String,Object> parameters=new HashMap<>();
+            //Fill report with data
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report,parameters,dataItems);
+            //Create and show the report window. The second parameter false value makes 
+            //report window not to close app.
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint,false);
+            jasperViewer.setVisible(true);
+           // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            //If there is an error show message and
+            //log it.
+            LOGGER.log(Level.SEVERE,
+                        "UI GestionUsuariosController: Error printing report: {0}",
+                        ex.getMessage());
+        }
     }
 
     /**

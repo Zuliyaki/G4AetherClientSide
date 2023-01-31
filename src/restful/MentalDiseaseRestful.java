@@ -5,7 +5,10 @@
  */
 package restful;
 
+import entities.MentalDisease;
 import interfaces.MentalDiseaseInterface;
+import java.util.List;
+import static javafx.scene.input.KeyCode.T;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -54,7 +57,7 @@ public class MentalDiseaseRestful implements MentalDiseaseInterface {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T getMentalDiseasesById_XML(GenericType<T> responseType, Long id) throws ClientErrorException {
+    public <T> T getMentalDiseasesById_XML(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -106,4 +109,5 @@ public class MentalDiseaseRestful implements MentalDiseaseInterface {
     public void close() {
         client.close();
     }
+
 }
