@@ -62,9 +62,9 @@ public class AppointmentController {
     private final PatientInterface patientInterface = PatientFactory.getModel();
     private final PsychologistInterface psychologistInterface = PsychologistFactory.getModel();
     private List<Appointment> allAppointments;
+    private final String DNI_REGEX = "^[0-9]{8,8}[A-Za-z]$";
     private List<Appointment> appointmentID;
     private List<Appointment> appointmentDate;
-    private List<Appointment> appointmentChange;
     private static final Logger LOGGER = Logger.getLogger(AppointmentController.class.getName());
 
     // VBox
@@ -164,7 +164,15 @@ public class AppointmentController {
             stage.setOnShowing(this::handlerWindowShowing);
 
             //Set the cell value factory of the tableview.
-            idtc.setCellValueFactory(new PropertyValueFactory<>("id"));
+            /**
+             *
+             *
+             *
+             *
+             *
+             *
+             */
+            idtc.setCellValueFactory(new PropertyValueFactory<>("idAppointment"));
 
             datetc.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
 
@@ -554,29 +562,36 @@ public class AppointmentController {
 
     private void TextFieldValidator() {
 
-        String DNI_REGEX = "^[0-9]{8,8}[A-Za-z]$";
-
         if (!Pattern.matches(DNI_REGEX, patienttf.getText())) {
 
-            new Alert(Alert.AlertType.ERROR, "Please Enter Patient DNI Format: 11111111Y", ButtonType.OK).showAndWait();
+            showErrorAlert("Please Enter Patient DNI Format: 11111111Y");
+
+            //new Alert(Alert.AlertType.ERROR, "Please Enter Patient DNI Format: 11111111Y", ButtonType.OK).showAndWait();
         }
 
         if (!Pattern.matches(DNI_REGEX, psychologisttf.getText())) {
 
-            new Alert(Alert.AlertType.ERROR, "Please Enter Patient DNI Format: 11111111Y", ButtonType.OK).showAndWait();
+            showErrorAlert("Please Enter pSYCHOLOGIST DNI Format: 11111111Y");
+
+            //new Alert(Alert.AlertType.ERROR, "Please Enter Patient DNI Format: 11111111Y", ButtonType.OK).showAndWait();
         }
 
     }
 
+    /**
+     * Action event handler for create button.
+     *
+     * @param event
+     */
     @FXML
     private void handleCreateButtonAction(ActionEvent event) {
 
         LOGGER.info("Creating appointment...");
-        
+
         try {
-            
+
             TextFieldValidator();
-            
+
             Appointment appointmentUpdate = new Appointment();
 
             Date date = new Date();
@@ -587,18 +602,14 @@ public class AppointmentController {
 
             String stringNewDate = sdf.format(appointmentUpdate.getAppointmentDate());
 
-            for (Appointment a : allAppointments) {
-
+            allAppointments.forEach((a) -> {
                 String stringDate = sdf.format(a.getAppointmentDate());
-
                 if (!a.getAppointmentDate().equals(appointmentUpdate.getAppointmentDate())) {
-
                     if (stringDate.equals(stringNewDate)) {
-
                         showErrorAlert("Error Creating Appointment !!");
                     }
                 }
-            }
+            });
             if (checkbox.isSelected()) {
 
                 appointmentUpdate.setAppointmentChange(true);
@@ -612,13 +623,9 @@ public class AppointmentController {
 
             List<Patient> allPatients = patientInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
             });
-            for (Patient patientFromAll : allPatients) {
-
-                if (patientFromAll.getDni().equals(patienttf.getText())) {
-
-                    appointmentUpdate.setPatient(patientFromAll);
-                }
-            }
+            allPatients.stream().filter((patientFromAll) -> (patientFromAll.getDni().equals(patienttf.getText()))).forEachOrdered((patientFromAll) -> {
+                appointmentUpdate.setPatient(patientFromAll);
+            });
 
             // psychologist DNI
             Psychologist psychologist = new Psychologist();
@@ -654,143 +661,78 @@ public class AppointmentController {
     @FXML
     private void handleUpdateButtonAction(ActionEvent event) {
 
-        /*
         LOGGER.info("Updating appointment...");
 
         try {
-            Appointment appointmentUpdate = new Appointment();
 
-            Date date = new Date();
+            Appointment appointmentUpdate = (Appointment) tableview.getSelectionModel().getSelectedItem();
 
-            appointmentUpdate.setAppointmentDate(Date.from(datepicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            appointmentUpdate.setAppointmentChange(checkbox.isSelected());
 
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-
-            String stringNewDate = sdf.format(appointmentUpdate.getAppointmentDate());
-
-            for (Appointment a : allAppointments) {
-
-                String stringDate = sdf.format(a.getAppointmentDate());
-
-                if (!a.getAppointmentDate().equals(appointmentUpdate.getAppointmentDate())) {
-
-                    if (stringDate.equals(stringNewDate)) {
-
-                        showErrorAlert("Error Creating Appointment !!");
-                    }
-                }
-            }
-            if (checkbox.isSelected()) {
-
-                appointmentUpdate.setAppointmentChange(true);
-
-            } else {
-
-                appointmentUpdate.setAppointmentChange(false);
-            }
+            /**
+             * 
+             */
+            //appointmentUpdate.setAppointmentDate(Date.from(datepicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
             Patient patient = new Patient();
 
             List<Patient> allPatients = patientInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
             });
+
             for (Patient patientFromAll : allPatients) {
 
                 if (patientFromAll.getDni().equals(patienttf.getText())) {
 
                     appointmentUpdate.setPatient(patientFromAll);
+
                 }
             }
 
-            // psychologist DNI
             Psychologist psychologist = new Psychologist();
 
             List<Psychologist> allPsychologists = psychologistInterface.findAllPsychologists_XML(new GenericType<List<Psychologist>>() {
             });
-            allPsychologists.stream().filter((allPsychologist) -> (allPsychologist.getDni().equals(psychologisttf.getText()))).forEachOrdered((allPsychologist) -> {
-                appointmentUpdate.setPsychologist(allPsychologist);
-            });
 
-            appointmentInterface.UpdateAppointment_XML(appointmentUpdate);
+            for (Psychologist psychologisttFromAll : allPsychologists) {
 
-            tableview.refresh();
+                if (psychologisttFromAll.getDni().equals(psychologisttf.getText())) {
 
-            reset();
+                    appointmentUpdate.setPsychologist(psychologisttFromAll);
 
-            LOGGER.info("Created successfully");
-
-        } catch (ClientErrorException ex) {
-
-            Logger.getLogger(AppointmentController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
-
-            showErrorAlert(ex.getMessage());
-        }*/
-
-        /*
-        try {
-
-            TextFieldValidator();
-
-            Appointment appointmentUpdate = new Appointment();
-
-            Date date = new Date();
-
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
-            String stringNewDate = sdf.format(date);
-
-            allAppointments.stream().map((a) -> sdf.format(a.getAppointmentDate())).filter((stringDate) -> (stringDate.equals(stringNewDate)));
-            appointmentUpdate.setAppointmentDate(date);
-
-            if (checkbox.isSelected()) {
-
-                appointmentUpdate.setAppointmentChange(true);
-
-            } else {
-
-                appointmentUpdate.setAppointmentChange(false);
+                }
             }
 
-            // patient DNI
-            Patient patient = new Patient();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to update appointment?", ButtonType.OK, ButtonType.CANCEL);
 
-            List<Patient> allPatients = patientInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
-            });
-            allPatients.stream().filter((allPatient) -> (allPatient.getDni().equals(patienttf.getText()))).forEachOrdered((allPatient) -> {
-                appointmentUpdate.setPatient(allPatient);
-            });
+            Optional<ButtonType> result = alert.showAndWait();
 
-            // psychologist DNI
-            Psychologist psychologist = new Psychologist();
-
-            List<Psychologist> allPsychologists = psychologistInterface.findAllPsychologists_XML(new GenericType<List<Psychologist>>() {
-            });
-            allPsychologists.stream().filter((allPsychologist) -> (allPsychologist.getDni().equals(psychologisttf.getText()))).forEachOrdered((allPsychologist) -> {
-                appointmentUpdate.setPsychologist(allPsychologist);
-            });
-
-            try {
+            //If OK to modify
+            if (result.isPresent() && result.get() == ButtonType.OK) {
 
                 appointmentInterface.UpdateAppointment_XML(appointmentUpdate);
 
-                //It will show an alert that the Appointment is Created Successfully.
-                new Alert(Alert.AlertType.INFORMATION, "Appointment Updated Successfully !!", ButtonType.OK).showAndWait();
+                Alert alert2 = new Alert(Alert.AlertType.INFORMATION, "Appointment Updated Successfully !!", ButtonType.OK);
 
-                LOGGER.info("Appointment Updated Successfully !!");
+                alert2.showAndWait();
+
+                //Clean fields
+                this.idtf.setText("");
+
+                this.patienttf.setText("");
+
+                this.psychologisttf.setText("");
 
                 reset();
-            
 
-        } catch (ClientErrorException ex) {
-
-                Logger.getLogger(AppointmentController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-
         } catch (ClientErrorException ex) {
 
-            showErrorAlert("Error Updating Appointment !!" + ex.getMessage());
+            showErrorAlert("Error Updating appointment");
 
-        }*/
+            LOGGER.log(Level.SEVERE, ex.getMessage());
+
+        }
     }
 
     /**
