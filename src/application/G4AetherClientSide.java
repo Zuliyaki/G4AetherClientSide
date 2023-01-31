@@ -18,7 +18,8 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import view.dailyNote.patientView.DailyNoteWindowController;
+import view.dailyNote.DailyNoteWindowController;
+import view.logIn.LogInController;
 
 /**
  *
@@ -29,12 +30,12 @@ public class G4AetherClientSide extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dailyNote/patientView/DailyNoteWindowPatient.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/logIn/LogIn.fxml"));
             //FXMLLoader loader = new FXMLLoader(getClass().getResource("view/dailyNote/patientView/DailyNoteWindowPatient.fxml"));
 
-            System.out.println(getClass().getResource("/view/dailyNote/patientView/DailyNoteWindowPatient.fxml"));
+            //System.out.println(getClass().getResource("/view/dailyNote/DailyNoteWindowPatient.fxml"));
             Parent root = (Parent) loader.load();
-            DailyNoteWindowController controller = (DailyNoteWindowController) loader.getController();
+            LogInController controller = (LogInController) loader.getController();
             controller.setStage(stage);
             controller.initialize(root);
 

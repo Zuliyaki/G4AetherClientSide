@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package view.dailyNote.patientView;
+package view.dailyNote;
 
 import entities.DailyNote;
 import entities.EnumReadedStatus;
 import entities.Patient;
+import entities.User;
 import exceptions.ClientErrorException;
 import factories.DailyNoteFactory;
 import factories.PatientFactory;
@@ -38,7 +39,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TableCell;
@@ -67,6 +70,7 @@ import net.sf.jasperreports.view.JasperViewer;
  */
 public class DailyNoteWindowController {
 
+    private User user;
     private Stage stage;
     private final DailyNotesInterface dnInterface = DailyNoteFactory.getModel();
     private final PatientInterface pInterface = PatientFactory.getModel();
@@ -124,6 +128,10 @@ public class DailyNoteWindowController {
     private Button btnModify;
     @FXML
     private Button btnDelete;
+    @FXML
+    private ContextMenu tableContextMenu;
+    
+    private Patient patient;
 
     /**
      * Method for initializing Login Stage.
@@ -140,7 +148,20 @@ public class DailyNoteWindowController {
         //Add a leaf icon.
         //stage.getIcons().add(new Image("/resources/icon.png"));
 
-        this.tfPatientDni.setText("11111111z");
+        List<Patient> patients;
+        try {
+            patients = pInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
+            });
+            for (Patient newPatient : patients) {
+                if (newPatient.getDni().equals("35140444d")) {
+                    patient = newPatient;
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE,
+                    null, ex);
+        }
+
         this.tfPatientDni.setDisable(true);
         this.tfPatientDni.setEditable(false);
         spinnerDayScore.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 10, 5, 0.1));
@@ -157,6 +178,7 @@ public class DailyNoteWindowController {
         dpNoteDate.setValue(LocalDate.now());
         dpNoteDate.setDisable(true);
         txtaComment.setDisable(true);
+        btnPrint.setDisable(true);
         txtaNote.setPromptText("Writte a description of your day");
 
         //Valores de las columnas de la tabla
@@ -194,33 +216,30 @@ public class DailyNoteWindowController {
         this.dpNoteDate.valueProperty().addListener(this::handleDatePickerChange);
         this.dpStart.valueProperty().addListener(this::handleDatePickerChange);
         this.dpEnd.valueProperty().addListener(this::handleDatePickerChange);
-        this.spinnerDayScore.valueProperty().addListener(this::handleSpinnerChange);
-        this.spinnerScoreBottom.valueProperty().addListener(this::handleSpinnerChange);
-        this.spinnerScoreTop.valueProperty().addListener(this::handleSpinnerChange);
         this.txtaNote.textProperty().addListener(this::handleFieldsTextChange);
-        this.txtaComment.textProperty().addListener(this::handleFieldsTextChange);
         this.tb.getSelectionModel().selectedItemProperty().addListener(this::handleTableSelectionChanged);
-
-        loadAllPatientDailyNotes();
+        MenuItem miDelete = this.tableContextMenu.getItems().get(0);
+        miDelete.setOnAction((ActionEvent e) -> {
+            this.handleDeleteButtonAction(e);
+        });
 
         stage.show();
+    }
+    
+    public void initData(User user) {
+        this.user = user;
     }
 
     private void handleFieldsTextChange(ObservableValue observable,
             Object oldValue,
             Object newValue) {
-
-    }
-
-    private void handleSpinnerChange(ObservableValue observable,
-            Object oldValue,
-            Object newValue) {
-        if (spinnerScoreBottom.getValue().equals(oldValue)) {
-
+        if (txtaNote.getText() == null) {
+            btnAdd.setDisable(true);
+            btnModify.setDisable(true);
         } else {
-
+            btnAdd.setDisable(false);
+            btnModify.setDisable(false);
         }
-
     }
 
     private void handleTableSelectionChanged(ObservableValue observable,
@@ -304,6 +323,9 @@ public class DailyNoteWindowController {
     private void handleComboboxChange(ObservableValue observable,
             Object oldValue,
             Object newValue) {
+        tb.getItems().clear();
+        tb.refresh();
+        btnPrint.setDisable(true);
         switch (newValue.toString()) {
             case "Find note by date":
                 dpStart.setDisable(false);
@@ -357,7 +379,6 @@ public class DailyNoteWindowController {
                 btnSearch.setDisable(false);
                 break;
         }
-
     }
 
     /**
@@ -396,6 +417,7 @@ public class DailyNoteWindowController {
                 loadAllPatientDailyNotesBetweenScores();
                 break;
         }
+        btnPrint.setDisable(false);
     }
 
     private ObservableList<DailyNote> loadDailyNoteByDate() {
@@ -406,7 +428,7 @@ public class DailyNoteWindowController {
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             String dateString = formatter.format(date);
             dailyNote = dnInterface.findPatientDailyNoteByDate_XML(new GenericType<List<DailyNote>>() {
-            }, this.tfPatientDni.getText(), dateString);
+            }, patient.getDni(), dateString);
             olDailyNote = FXCollections.observableArrayList(dailyNote);
             tb.setItems(olDailyNote);
             tb.refresh();
@@ -421,7 +443,7 @@ public class DailyNoteWindowController {
         ObservableList<DailyNote> olDailyNote = null;
         try {
             allPatientDailyNote = dnInterface.findAllDailyNotesByPatientId_XML(new GenericType<List<DailyNote>>() {
-            }, this.tfPatientDni.getText());
+            }, patient.getDni());
             olDailyNote = FXCollections.observableArrayList(allPatientDailyNote);
             tb.setItems(olDailyNote);
             tb.refresh();
@@ -435,7 +457,7 @@ public class DailyNoteWindowController {
         ObservableList<DailyNote> olDailyNote = null;
         try {
             allPatientEditedDailyNote = dnInterface.findPatientEditedDailyNotes_XML(new GenericType<List<DailyNote>>() {
-            }, this.tfPatientDni.getText());
+            }, patient.getDni());
             olDailyNote = FXCollections.observableArrayList(allPatientEditedDailyNote);
             tb.setItems(olDailyNote);
             tb.refresh();
@@ -449,7 +471,7 @@ public class DailyNoteWindowController {
         ObservableList<DailyNote> olDailyNote = null;
         try {
             allPatientNotReadableDailyNote = dnInterface.findPatientDailyNotesByNotReadable_XML(new GenericType<List<DailyNote>>() {
-            }, this.tfPatientDni.getText());
+            }, patient.getDni());
             olDailyNote = FXCollections.observableArrayList(allPatientNotReadableDailyNote);
             tb.setItems(olDailyNote);
             tb.refresh();
@@ -464,7 +486,7 @@ public class DailyNoteWindowController {
         try {
             if (Double.parseDouble(this.spinnerScoreBottom.getValue().toString()) <= Double.parseDouble(this.spinnerScoreTop.getValue().toString())) {
                 allPatientDailyNoteBetweemScores = dnInterface.findPatientNotesBetweenDayScores_XML(new GenericType<List<DailyNote>>() {
-                }, this.tfPatientDni.getText(), Double.parseDouble(this.spinnerScoreBottom.getValue().toString()), Double.parseDouble(this.spinnerScoreTop.getValue().toString()));
+                }, patient.getDni(), Double.parseDouble(this.spinnerScoreBottom.getValue().toString()), Double.parseDouble(this.spinnerScoreTop.getValue().toString()));
                 olDailyNote = FXCollections.observableArrayList(allPatientDailyNoteBetweemScores);
                 tb.setItems(olDailyNote);
                 tb.refresh();
@@ -487,7 +509,7 @@ public class DailyNoteWindowController {
                 String dateStartString = formatter.format(dateStart);
                 String dateEndString = formatter.format(dateEnd);
                 allPatientDailyNoteBetweemDates = dnInterface.findPatientDailyNotesBetweenDates_XML(new GenericType<List<DailyNote>>() {
-                }, this.tfPatientDni.getText(), dateStartString, dateEndString);
+                }, patient.getDni(), dateStartString, dateEndString);
                 olDailyNote = FXCollections.observableArrayList(allPatientDailyNoteBetweemDates);
                 tb.setItems(olDailyNote);
                 tb.refresh();
@@ -517,10 +539,7 @@ public class DailyNoteWindowController {
 
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
-            // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         } catch (JRException ex) {
-            //If there is an error show message and
-            //log it.
             showErrorAlert("Error printing:\n"
                     + ex.getMessage());
             LOGGER.log(Level.SEVERE,

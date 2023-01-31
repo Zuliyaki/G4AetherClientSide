@@ -19,7 +19,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.dailyNote.patientView.DailyNoteWindowController">
+<VBox prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.dailyNote.DailyNoteWindowController">
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
@@ -127,7 +127,6 @@
                         <ContextMenu fx:id="tableContextMenu">
                             <items>
                                 <MenuItem mnemonicParsing="false" text="Delete" />
-                                <MenuItem mnemonicParsing="false" text="Modify" />
                             </items>
                         </ContextMenu>
                     </contextMenu>

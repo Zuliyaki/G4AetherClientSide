@@ -5,7 +5,10 @@
  */
 package view.logIn;
 
+import entities.Patient;
 import entities.User;
+import factories.UserFactory;
+import interfaces.UserInterface;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +28,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import view.dailyNote.DailyNoteWindowController;
 import view.signUp.SignUpController;
 
 /**
@@ -38,6 +42,7 @@ public class LogInController {
 
     private User user;
     private Stage stage;
+    private final UserInterface userInterface = UserFactory.getModel();
     private static final Logger LOGGER = Logger.getLogger("view");
 
     @FXML
@@ -99,7 +104,7 @@ public class LogInController {
         //Disable login button.
         this.btnAccept.setDisable(true);
         LOGGER.info("window initialized");
-        
+
     }
 
     /**
@@ -115,20 +120,14 @@ public class LogInController {
             String newValue) {
 
         /**
-         * Maximum character permitted in DNI field will be 9 
-         * and password fields 8 minimum, 24 maximum
+         * Maximum character permitted in DNI field will be 9 and password
+         * fields 8 minimum, 24 maximum
          */
         if (tfDNI.getText().length() > 9) {
             tfDNI.setText(tfDNI.getText().substring(0, 9));
         }
         if (pfPassword.getText().length() > 24) {
             pfPassword.setText(pfPassword.getText().substring(0, 24));
-        }
-        //If any of these are empty the continue button will be disabled. 
-        //If all of them are written it will be enabled.
-        if (!(this.tfDNI.getText().equals(oldValue)) || !(this.pfPassword.getText().equals(oldValue))) {
-            this.tfDNI.setText("");
-            this.lblPassword.setText("");
         }
 
         //Enable login button.
@@ -174,31 +173,19 @@ public class LogInController {
      */
     @FXML
     private void handleLogInButtonAction(ActionEvent event) throws IOException, Exception {
-/*
         try {
             LOGGER.info("inicio de envio información al servidor");
-            User loginUser = new User();
-            loginUser.setLogin(tfDNI.getText());
-            loginUser.setPassword(pfPassword.getText());
-
-            LoginLogout clientLoginLogout = null;
-
-            clientLoginLogout = FactoryClient.getLoginLogout();
-            loginUser = clientLoginLogout.logIn(loginUser);
+            
+            user = userInterface.logInUser_XML(User.class, tfDNI.getText(), pfPassword.getText());
 
             Stage stage = new Stage();
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/logOut/LogOut.fxml"));
-
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dailyNote/DailyNoteWindowPatient.fxml"));
             Parent root = (Parent) loader.load();
 
-            LogOutController controller = (LogOutController) loader.getController();
-
+            DailyNoteWindowController controller = (DailyNoteWindowController) loader.getController();
             controller.setStage(stage);
-
-            controller.initData(loginUser);
-
             controller.initialize(root);
+            controller.initData(user);
 
             tfDNI.setText("");
             pfPassword.setText("");
@@ -206,7 +193,7 @@ public class LogInController {
             showErrorAlert(ex.getMessage());
             LOGGER.log(Level.SEVERE, ex.getMessage());
 
-        }*/
+        }
     }
 
     /**
