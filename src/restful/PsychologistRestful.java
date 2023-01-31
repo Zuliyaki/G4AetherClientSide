@@ -5,9 +5,11 @@
  */
 package restful;
 
+import interfaces.PsychologistInterface;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 
 /**
  * Jersey REST client generated for REST resource:PsychologistFacadeREST
@@ -22,10 +24,10 @@ import javax.ws.rs.client.WebTarget;
  *
  * @author Janam
  */
-public class PsychologistRestful {
+public class PsychologistRestful implements PsychologistInterface {
 
-    private WebTarget webTarget;
-    private Client client;
+    private final WebTarget webTarget;
+    private final Client client;
     private static final String BASE_URI = "http://localhost:8080/G4Aether/webresources";
 
     public PsychologistRestful() {
@@ -41,11 +43,13 @@ public class PsychologistRestful {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
+    @Override
     public void removePsychologist(String dni) throws ClientErrorException {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{dni})).request().delete();
     }
 
-    public <T> T findAllPsychologists_XML(Class<T> responseType) throws ClientErrorException {
+    @Override
+    public <T> T findAllPsychologists_XML(GenericType<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
@@ -66,5 +70,5 @@ public class PsychologistRestful {
     public void close() {
         client.close();
     }
-    
+
 }

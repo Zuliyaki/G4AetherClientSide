@@ -5,9 +5,11 @@
  */
 package restful;
 
+import interfaces.PatientInterface;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 
 /**
  * Jersey REST client generated for REST resource:PatientFacadeREST
@@ -22,7 +24,7 @@ import javax.ws.rs.client.WebTarget;
  *
  * @author Janam
  */
-public class PatientRestful {
+public class PatientRestful implements PatientInterface {
 
     private WebTarget webTarget;
     private Client client;
@@ -41,8 +43,16 @@ public class PatientRestful {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
-    public <T> T findAllPatients_XML(Class<T> responseType) throws ClientErrorException {
+    @Override
+    public <T> T findAllPatients_XML(GenericType<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
+        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    }
+
+    @Override
+    public <T> T findAllPatientsByPsychologist_XML(GenericType<T> responseType, String dniPsychologist) throws ClientErrorException {
+        WebTarget resource = webTarget;
+        resource = resource.path(java.text.MessageFormat.format("findPatientsByPsychologist/{0}", new Object[]{dniPsychologist}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
@@ -53,12 +63,6 @@ public class PatientRestful {
 
     public void removePatient(String dni) throws ClientErrorException {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{dni})).request().delete();
-    }
-
-    public <T> T findAllPatientsByPsychologist_XML(Class<T> responseType, String dniPsychologist) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("findPatientsByPsychologist/{0}", new Object[]{dniPsychologist}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
     public <T> T findAllPatientsByPsychologist_JSON(Class<T> responseType, String dniPsychologist) throws ClientErrorException {
@@ -78,5 +82,5 @@ public class PatientRestful {
     public void close() {
         client.close();
     }
-    
+
 }

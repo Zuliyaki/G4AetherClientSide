@@ -1,6 +1,7 @@
 package interfaces;
 
 import javax.ws.rs.ClientErrorException;
+
 import javax.ws.rs.core.GenericType;
 
 /**
@@ -9,29 +10,30 @@ import javax.ws.rs.core.GenericType;
  */
 public interface AppointmentInterface {
 
-    public <T> T getAllAppointments_XML(GenericType<T> responseType) throws ClientErrorException;
+    public <T> T FindAllAppointments_XML(GenericType<T> responseType) throws ClientErrorException;
 
-    public <T> T getAllAppointments_JSON(Class<T> responseType) throws ClientErrorException;
+    public <T> T FindAllAppointments_JSON(Class<T> responseType) throws ClientErrorException;
 
-    public void edit_XML(Object requestEntity) throws ClientErrorException;
+    public void UpdateAppointment_XML(Object requestEntity) throws ClientErrorException;
 
-    public void edit_JSON(Object requestEntity) throws ClientErrorException;
+    public void updateAppointment_JSON(Object requestEntity) throws ClientErrorException;
 
-    public <T> T getAppointmentByChange_XML(Class<T> responseType, String appointmentchange) throws ClientErrorException;
+    public <T> T FindAppointmentByChange_XML(Class<T> responseType, String appointmentchange) throws ClientErrorException;
 
-    public <T> T getAppointmentByChange_JSON(Class<T> responseType, String appointmentchange) throws ClientErrorException;
+    public <T> T FindAppointmentByChange_JSON(Class<T> responseType, String appointmentchange) throws ClientErrorException;
 
-    public void create_XML(Object requestEntity) throws ClientErrorException;
+    public void createAppointment_XML(Object requestEntity) throws ClientErrorException;
 
-    public void create_JSON(Object requestEntity) throws ClientErrorException;
+    public void createAppointment_JSON(Object requestEntity) throws ClientErrorException;
 
-    public <T> T getAppointmentById_XML(GenericType<T> responseType, String id) throws ClientErrorException;
+    public <T> T FindAppointmentById_XML(GenericType<T> responseType, String id) throws ClientErrorException;
 
-    public <T> T getAppointmentById_JSON(Class<T> responseType, String id) throws ClientErrorException;
+    public <T> T FindAppointmentById_JSON(Class<T> responseType, String id) throws ClientErrorException;
 
-    public void remove(String id) throws ClientErrorException;
+    public void DeleteAppointment(String id) throws ClientErrorException;
 
-    public <T> T getAppointmentByDate_XML(GenericType<T> responseType, String appointmentDate) throws ClientErrorException;
+    public <T> T FindAppointmentByDate_XML(GenericType<T> responseType, String appointmentDate) throws ClientErrorException;
 
-    public <T> T getAppointmentByDate_JSON(Class<T> responseType, String appointmentDate) throws ClientErrorException;
+    public <T> T FindAppointmentByDate_JSON(Class<T> responseType, String appointmentDate) throws ClientErrorException;
+
 }

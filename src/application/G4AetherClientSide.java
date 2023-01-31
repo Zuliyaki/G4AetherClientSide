@@ -3,40 +3,40 @@ package application;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import view.Appointment.AppointmentController;
 
 /**
  *
  * @author Leire
  */
-public class G4AetherClientSide extends javafx.application.Application {
+public class G4AetherClientSide extends Application {
 
     @Override
-    public void start(javafx.stage.Stage primaryStage) {
-
+    public void start(Stage stage) {
+        
         try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/Appointment/Psychologist/AppointmentPsychologist.fxml"));
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Appointment/Appointment.fxml"));
 
             Parent root = (Parent) loader.load();
 
-            // get controller
-            view.Appointment.Psychologist.AppointmentPsychologistController controller = loader.getController();
+            AppointmentController controller = (AppointmentController) loader.getController();
 
-            //set stage in controller
-            controller.setStage(primaryStage);
+            controller.setStage(stage);
 
-            controller.initStage(root);
+            controller.initSatge(root);
 
-            // not resizable
-            primaryStage.setResizable(false);
+            Scene scene = new Scene(root);
 
-            // set stage
-            javafx.scene.Scene scene = new javafx.scene.Scene(root);
+            stage.setScene(scene);
 
-            primaryStage.setScene(scene);
+            stage.show();
 
-            primaryStage.show();
-            
         } catch (IOException ex) {
             
             Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
