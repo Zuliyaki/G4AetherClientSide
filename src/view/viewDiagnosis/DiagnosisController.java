@@ -10,6 +10,7 @@ import entities.MentalDisease;
 import entities.Patient;
 import entities.Psychologist;
 import entities.Treatment;
+import entities.User;
 import exceptions.DiagnosisNotFoundException;
 import factories.DiagnosisFactory;
 import factories.MentalDiseaseFactory;
@@ -89,6 +90,7 @@ import restful.TreatmentResful;
 
 public class DiagnosisController {
 
+    public User user = null;
     public Stage stage;
     private ObservableList<Diagnosis> diagnosises;
     private DiagnosisInterface diagnosisInterface = DiagnosisFactory.getModel();
@@ -194,6 +196,7 @@ public class DiagnosisController {
 
     public void initialize(Parent root) {
         final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        Scene scene = new Scene(root);
         //Not a resizable window.
         stage.setResizable(false);
         //Modal window of LogIn.
@@ -220,17 +223,27 @@ public class DiagnosisController {
         tfMentalDisease.setVisible(false);
 
         // LOAD ALL Diagnosises
-        diagnosises = loadAllDiagnosises();
         //listeners
         comboboxSearchBy.valueProperty().addListener(this::handleComboboxChange);
         dpDateLow.valueProperty().addListener(this::handleDatePickerChange);
         dtDateGreat.valueProperty().addListener(this::handleDatePickerChange);
 
         // FILTRADO
-        String[] a = {"Find all diagnosis", "Find all diagnosis by patient id", "Find all diangosis if patient on teraphy", "Find diagnosis between dates"};
-        ObservableList<String> searchMethods = FXCollections.observableArrayList(a);
-        comboboxSearchBy.setItems(searchMethods);
-        comboboxSearchBy.getSelectionModel().select(-1);
+        if (user instanceof Psychologist) {
+            String[] a = {"Find all diagnosis", "Find all diagnosis by patient id", "Find all diangosis if patient on teraphy", "Find diagnosis between dates"};
+            ObservableList<String> searchMethods = FXCollections.observableArrayList(a);
+            comboboxSearchBy.setItems(searchMethods);
+            comboboxSearchBy.getSelectionModel().select(-1);
+            diagnosises = loadAllDiagnosises();
+        } else {
+            String[] a = {"Find all diagnosis by patient id", "Find all diangosis if patient on teraphy", "Find diagnosis between dates"};
+            ObservableList<String> searchMethods = FXCollections.observableArrayList(a);
+            comboboxSearchBy.setItems(searchMethods);
+            comboboxSearchBy.getSelectionModel().select(-1);
+            tfPatientDNI.setText(user.getDni());
+            tfPatientDNI.setDisable(true);
+            diagnosises = loadDiagnosisesByPatient();
+        }
 
         //
         //Mental disease combobox for the table
@@ -240,19 +253,22 @@ public class DiagnosisController {
         ObservableList<MentalDisease> mentaldisease = FXCollections.observableArrayList(allMentalDisease);
         //////////
         //Patients combobox for the table
-        Psychologist currentPshychologist = new Psychologist();
-        currentPshychologist.setDni("45949977w"); //ESTO HAY QUE CAMBIAR
+
         List<Patient> allPatients;
         allPatients = patientInterface.findAllPatientsByPsychologist_XML(new GenericType<List<Patient>>() {
-        }, currentPshychologist.getDni());
+        }, user.getDni());
         ObservableList<Patient> patients = FXCollections.observableArrayList(allPatients);
 
         ////////////
         //the date editing cell factory
         final Callback<TableColumn<Diagnosis, Date>, TableCell<Diagnosis, Date>> dateCellFactory
                 = (TableColumn<Diagnosis, Date> param) -> new DateEditingCell();
-
-        tbDiagnosis.setEditable(true);
+                if (user instanceof Psychologist) {
+                      tbDiagnosis.setEditable(true);
+                } else {
+                   tbDiagnosis.setEditable(false);
+                }
+      
         tbDiagnosis.getSelectionModel().selectedItemProperty().addListener(this::handleDiagnosisTableSelectionChanged);
         ////////////
         tbcPatient.setCellValueFactory(
@@ -286,8 +302,8 @@ public class DiagnosisController {
                     diagnosisInterface.updateDiagnosis_XML(diagnosis);
                 })
         );
-        //////////////
 
+        //////////////
         ////////////////
         tbcMentalDisease.setCellValueFactory(
                 new PropertyValueFactory<>("mentalDisease"));
@@ -327,7 +343,7 @@ public class DiagnosisController {
             Diagnosis newDiagnosis = new Diagnosis();
             newDiagnosis.setDiagnosisDate(date);
             newDiagnosis.setLastDiagnosisChangeDate(date);
-            newDiagnosis.setPsychologist(currentPshychologist);
+            newDiagnosis.setPsychologist((Psychologist) user);
             newDiagnosis.setOnTherapy(true);
             diagnosisInterface.updateDiagnosis_XML(newDiagnosis);
             diagnosises = loadAllDiagnosises();
@@ -344,7 +360,7 @@ public class DiagnosisController {
         tbTreatment.getSelectionModel().selectedItemProperty().addListener(this::handleTreatmentTableSelectionChanged);
         tbcDay.setCellValueFactory(new PropertyValueFactory<>("treatmentId"));
         tbcMedication.setCellValueFactory(new PropertyValueFactory<>("medication"));
-
+        stage.setScene(scene);
         stage.show();
     }
 
@@ -450,12 +466,14 @@ public class DiagnosisController {
             //Context Menu
             final ContextMenu contextMenu = new ContextMenu();
             MenuItem DeleteDiagnosisMenuIt = new MenuItem("Delete Diagnosis");
+
             DeleteDiagnosisMenuIt.setOnAction((ActionEvent e) -> {
                 diagnosisInterface.deleteDiagnosis(selectedDiagnosis.getDiagnosisId().toString());
                 diagnosises.remove(selectedDiagnosis);
                 diagnosises = loadAllDiagnosises();
 
             });
+
             //SET THE CONTEXT MENU
             contextMenu.getItems().add(DeleteDiagnosisMenuIt);
             tbDiagnosis.setContextMenu(contextMenu);
@@ -501,13 +519,25 @@ public class DiagnosisController {
     private void handleComboboxChange(ObservableValue observable,
             Object oldValue,
             Object newValue) {
-        
+
         tbDiagnosis.getItems().clear();
         tbDiagnosis.refresh();
+        tbTreatment.getItems().clear();
+        tbTreatment.setVisible(false);
+        txtMentalDisease.setVisible(false);
+        txtTreatments.setVisible(false);
+        tfMentalDisease.clear();
+        tfMentalDisease.setVisible(false);
         switch (newValue.toString()) {
             case "Find diagnosis between dates":
-                 tfPatientDNI.setDisable(false);
-                tfPatientDNI.clear();
+
+                if (user instanceof Psychologist) {
+                    tfPatientDNI.setDisable(false);
+                    tfPatientDNI.clear();
+                } else {
+                    tfPatientDNI.setDisable(true);
+                }
+
                 dpDateLow.setDisable(false);
                 dpDateLow.getEditor().clear();
                 dtDateGreat.setDisable(false);
@@ -516,20 +546,44 @@ public class DiagnosisController {
                 tfMentalDisease.setDisable(true);
                 cbxOnTherapy.setDisable(true);
                 cbxOnTherapy.setSelected(false);
-
                 btnSearch.setDisable(true);
                 tfDiagnosisID.setDisable(true);
                 tfDiagnosisID.clear();
                 break;
             case "Find all diangosis if patient on teraphy":
-                tfPatientDNI.setDisable(false);
-                tfPatientDNI.clear();
+
+                if (user instanceof Psychologist) {
+                    tfPatientDNI.setDisable(false);
+                    tfPatientDNI.clear();
+                } else {
+                    tfPatientDNI.setDisable(true);
+                }
                 dpDateLow.setDisable(true);
                 dpDateLow.getEditor().clear();
                 dtDateGreat.setDisable(true);
                 dtDateGreat.getEditor().clear();
                 cbxOnTherapy.setDisable(true);
                 cbxOnTherapy.setSelected(true);
+                tfMentalDisease.setDisable(true);
+                tfDiagnosisID.setDisable(true);
+                tfDiagnosisID.clear();
+
+                btnSearch.setDisable(false);
+
+                break;
+            case "Find all diagnosis by patient id":
+                if (user instanceof Psychologist) {
+                    tfPatientDNI.setDisable(false);
+                    tfPatientDNI.clear();
+                } else {
+                    tfPatientDNI.setDisable(true);
+                }
+                dpDateLow.setDisable(true);
+                dpDateLow.getEditor().clear();
+                dtDateGreat.setDisable(true);
+                dtDateGreat.getEditor().clear();
+                cbxOnTherapy.setDisable(true);
+                cbxOnTherapy.setSelected(false);
                 tfMentalDisease.setDisable(true);
                 tfDiagnosisID.setDisable(true);
                 tfDiagnosisID.clear();
@@ -576,9 +630,10 @@ public class DiagnosisController {
                 break;
         }
     }
+
     @FXML
-    private void handlePrintButtonAction(ActionEvent event){
-         try {
+    private void handlePrintButtonAction(ActionEvent event) {
+        try {
             LOGGER.info("Starting printing");
             JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/DiagnosisReport.jrxml"));
             JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Diagnosis>) this.tbDiagnosis.getItems());
@@ -598,11 +653,9 @@ public class DiagnosisController {
                     "Error printing:\n",
                     ex);
         }
-        
-        
-        
-        
+
     }
+
     public void handleDatePickerChange(ObservableValue observable,
             LocalDate oldValue,
             LocalDate newValue) {
@@ -624,8 +677,12 @@ public class DiagnosisController {
     }
 
     private void showErrorAlert(String errormsg) {
-    Alert alert = new Alert(Alert.AlertType.ERROR, errormsg, ButtonType.OK);
+        Alert alert = new Alert(Alert.AlertType.ERROR, errormsg, ButtonType.OK);
         alert.showAndWait();
+    }
+
+    public void initData(Patient psychologist) {
+        user = psychologist;
     }
 
 }

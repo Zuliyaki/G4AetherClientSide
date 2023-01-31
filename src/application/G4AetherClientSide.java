@@ -19,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import view.mainMenu.MainMenuController;
 import view.viewDiagnosis.DiagnosisController;
 
 /**
@@ -29,9 +30,9 @@ public class G4AetherClientSide extends javafx.application.Application {
     
     @Override
     public void start(Stage stage) {
-           //System.out.println(getClass().getResource("/view/viewDiagnosis/Diagnosis.fxml"));
+           System.out.println(getClass().getResource("../view/mainMenu/mainMenu.fxml"));
 
-     FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/viewDiagnosis/Diagnosis.fxml"));
+     FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/mainMenu/mainMenu.fxml"));
         
       
         
@@ -42,7 +43,7 @@ public class G4AetherClientSide extends javafx.application.Application {
             Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
         }
       
-              DiagnosisController controller = (DiagnosisController) loader.getController();
+              MainMenuController controller = (MainMenuController) loader.getController();
 
       controller.setStage(stage);
 
@@ -51,7 +52,7 @@ public class G4AetherClientSide extends javafx.application.Application {
         Scene scene = new Scene(root);
 
         stage.setResizable(false);
-        stage.setTitle("Diagnosis");
+        stage.setTitle("MainMenu");
         //stage.getIcons().add(new Image("/resources/icon.png"));
 
         stage.setScene(scene);
