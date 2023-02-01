@@ -47,7 +47,9 @@ import view.viewDiagnosis.DiagnosisController;
  * @author unaiz
  */
 public class MainMenuController {
-    private User user  = new Patient();
+   
+    private User user;
+   
 
     @FXML
     private ResourceBundle resources;
@@ -91,11 +93,24 @@ public class MainMenuController {
      * @param Root
      */
     public void initialize(Parent Root) {
+                 Scene scene = new Scene(Root);
         
         
-                user.setDni("24761194s");
+                if (user.getDni().equals("45949977w")){
+              
+                Psychologist  initPsychologist =  new Psychologist();
+                initPsychologist.setUser_type("Psychologist");
+                initPsychologist.setDni("45949977w");
+                user = initPsychologist;
+    
+                }else{
+                     user.setDni("24761194s");
                 user.setFullName("Tuki");
-                
+                 
+                }
+        
+        
+              
 
         txtDiagnosis.setVisible(true);
         txtDailyNotes.setVisible(true);
@@ -111,6 +126,9 @@ public class MainMenuController {
         btnDiagnosis.setDisable(false);
         btnDailyNotes.setDisable(false);
         btnAppointments.setDisable(false);
+        stage.setScene(scene);
+        stage.show();
+        
         
         
         
@@ -123,7 +141,7 @@ public class MainMenuController {
                 Stage stage = new Stage();
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../viewDiagnosis/Diagnosis.fxml"));
-  Parent root = null;
+        Parent root = null;
         try {
             root = (Parent) loader.load();
         } catch (IOException ex) {
@@ -134,7 +152,7 @@ public class MainMenuController {
 
             controller.setStage(stage);
 
-            controller.initData((Patient) user);
+            controller.initData(user);
 
             controller.initialize(root);
         }
@@ -154,7 +172,7 @@ public class MainMenuController {
         this.stage = stage;
     }
     
-     public void initData(Psychologist psychologist) {
-        this.user = psychologist;
+     public void initData(User user) {
+        this.user = user;
     }
 }

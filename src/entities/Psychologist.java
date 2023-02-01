@@ -38,7 +38,7 @@ public class Psychologist extends User {
 
     //Pshychologist with super constructor
     public Psychologist(String titulation, String invitationCode, Set<Patient> patient, Set<Appointment> appointments, String dni, String fullName, Date birthDate, String password, Integer phoneNumber, String email) {
-        super(dni, fullName, birthDate, password, phoneNumber, email);
+        super(dni, fullName, birthDate, password, phoneNumber, email, "Psychologist");
         this.titulation = titulation;
         this.invitationCode = invitationCode;
         this.patient = patient;

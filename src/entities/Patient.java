@@ -37,7 +37,7 @@ public class Patient extends User {
     }
 
     public Patient(String mbti, Set<DailyNote> dailyNotes, Set<Diagnosis> diagnosises, Psychologist psychologist, Set<Appointment> appointments, String dni, String fullName, Date birthDate, String password, Integer phoneNumber, String email) {
-        super(dni, fullName, birthDate, password, phoneNumber, email);
+        super(dni, fullName, birthDate, password, phoneNumber, email, "Patient");
         this.mbti = mbti;
         this.dailyNotes = dailyNotes;
         this.diagnosises = diagnosises;

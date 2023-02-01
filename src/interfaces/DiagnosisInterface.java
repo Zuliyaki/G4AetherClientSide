@@ -23,34 +23,34 @@ import javax.ws.rs.core.GenericType;
  */
 public interface DiagnosisInterface {
 
-    public void createDiagnosis_XML(Object requestEntity) throws ClientErrorException;
+    public void createDiagnosis_XML(Object requestEntity) throws CreateException;
 
-    public void createDiagnosis_JSON(Object requestEntity) throws ClientErrorException;
+    public void createDiagnosis_JSON(Object requestEntity) throws CreateException;
 
-    public <T> T findAllIfPatientOnTeraphy_XML(GenericType<T> responseType, String id) throws ClientErrorException;
+    public <T> T findAllIfPatientOnTeraphy_XML(GenericType<T> responseType, String id) throws DiagnosisNotFoundException;
 
-    public <T> T findAllIfPatientOnTeraphy_JSON(GenericType<T> responseType, String id) throws ClientErrorException;
+    public <T> T findAllIfPatientOnTeraphy_JSON(GenericType<T> responseType, String id) throws DiagnosisNotFoundException;
 
-    public <T> T findDiagnosisById_XML(GenericType<T> responseType, String id) throws ClientErrorException;
+    public <T> T findDiagnosisById_XML(GenericType<T> responseType, String id) throws DiagnosisNotFoundException;
 
-    public <T> T findDiagnosisById_JSON(GenericType<T> responseType, String id) throws ClientErrorException;
+    public <T> T findDiagnosisById_JSON(GenericType<T> responseType, String id)  throws DiagnosisNotFoundException;
 
-    public void updateDiagnosis_XML(Object requestEntity) throws ClientErrorException;
+    public void updateDiagnosis_XML(Object requestEntity)  throws UpdateException;
 
-    public void updateDiagnosis_JSON(Object requestEntity) throws ClientErrorException;
+    public void updateDiagnosis_JSON(Object requestEntity)  throws UpdateException;
 
-    public <T> T findAllDiagnosis_XML(GenericType<T> responseType) throws ClientErrorException;
+    public <T> T findAllDiagnosis_XML(GenericType<T> responseType)  throws DiagnosisNotFoundException;
 
-    public <T> T findAllDiagnosis_JSON(GenericType<T> responseType) throws ClientErrorException;
+    public <T> T findAllDiagnosis_JSON(GenericType<T> responseType)  throws DiagnosisNotFoundException;
 
-    public <T> T findPatientDiagnosisByDate_XML(GenericType<T> responseType, String id, String dateLow, String dateGreat) throws ClientErrorException;
+    public <T> T findPatientDiagnosisByDate_XML(GenericType<T> responseType, String id, String dateLow, String dateGreat)  throws DiagnosisNotFoundException;
 
-    public <T> T findPatientDiagnosisByDate_JSON(GenericType<T> responseType, String id, String dateLow, String dateGreat) throws ClientErrorException;
+    public <T> T findPatientDiagnosisByDate_JSON(GenericType<T> responseType, String id, String dateLow, String dateGreat)  throws DiagnosisNotFoundException;
 
-    public void deleteDiagnosis(String id) throws ClientErrorException;
+    public void deleteDiagnosis(String id)  throws DeleteException;
 
-    public <T> T findAllDiagnosisByPatient_XML(GenericType<T> responseType, String id) throws ClientErrorException;
+    public <T> T findAllDiagnosisByPatient_XML(GenericType<T> responseType, String id)  throws DiagnosisNotFoundException;
 
-    public <T> T findAllDiagnosisByPatient_JSON(GenericType<T> responseType, String id) throws ClientErrorException;
+    public <T> T findAllDiagnosisByPatient_JSON(GenericType<T> responseType, String id)  throws DiagnosisNotFoundException;
 
 }

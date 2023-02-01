@@ -11,7 +11,9 @@ import entities.Patient;
 import entities.Psychologist;
 import entities.Treatment;
 import entities.User;
+import exceptions.DeleteException;
 import exceptions.DiagnosisNotFoundException;
+import exceptions.UpdateException;
 import factories.DiagnosisFactory;
 import factories.MentalDiseaseFactory;
 import factories.PatientFactory;
@@ -247,9 +249,11 @@ public class DiagnosisController {
 
         //
         //Mental disease combobox for the table
-        List<MentalDisease> allMentalDisease;
+        List<MentalDisease> allMentalDisease = null;
+
         allMentalDisease = mentalDiseaseInterface.getAllMentalDiseasesOrderByName_XML(new GenericType<List<MentalDisease>>() {
         });
+
         ObservableList<MentalDisease> mentaldisease = FXCollections.observableArrayList(allMentalDisease);
         //////////
         //Patients combobox for the table
@@ -263,12 +267,12 @@ public class DiagnosisController {
         //the date editing cell factory
         final Callback<TableColumn<Diagnosis, Date>, TableCell<Diagnosis, Date>> dateCellFactory
                 = (TableColumn<Diagnosis, Date> param) -> new DateEditingCell();
-                if (user instanceof Psychologist) {
-                      tbDiagnosis.setEditable(true);
-                } else {
-                   tbDiagnosis.setEditable(false);
-                }
-      
+        if (user instanceof Psychologist) {
+            tbDiagnosis.setEditable(true);
+        } else {
+            tbDiagnosis.setEditable(false);
+        }
+
         tbDiagnosis.getSelectionModel().selectedItemProperty().addListener(this::handleDiagnosisTableSelectionChanged);
         ////////////
         tbcPatient.setCellValueFactory(
@@ -279,7 +283,11 @@ public class DiagnosisController {
                     ((Diagnosis) t.getTableView().getItems()
                             .get(t.getTablePosition().getRow()))
                             .setPatient(t.getNewValue());
-                    diagnosisInterface.updateDiagnosis_XML(tbDiagnosis.getSelectionModel().getSelectedItem());
+                    try {
+                        diagnosisInterface.updateDiagnosis_XML(tbDiagnosis.getSelectionModel().getSelectedItem());
+                    } catch (UpdateException ex) {
+                        showErrorAlert(ex.getMessage());
+                    }
                 });
         //////////////////
         tbcPsychologist.setCellValueFactory(
@@ -299,7 +307,11 @@ public class DiagnosisController {
 
         diagnosises.forEach(
                 diagnosis -> diagnosis.onTherapyProperty().addListener((observable, oldValue, newValue) -> {
-                    diagnosisInterface.updateDiagnosis_XML(diagnosis);
+                    try {
+                        diagnosisInterface.updateDiagnosis_XML(diagnosis);
+                    } catch (UpdateException ex) {
+                        showErrorAlert(ex.getMessage());
+                    }
                 })
         );
 
@@ -313,7 +325,11 @@ public class DiagnosisController {
                     ((Diagnosis) t.getTableView().getItems()
                             .get(t.getTablePosition().getRow()))
                             .setMentalDisease(t.getNewValue());
-                    diagnosisInterface.updateDiagnosis_XML(tbDiagnosis.getSelectionModel().getSelectedItem());
+                    try {
+                        diagnosisInterface.updateDiagnosis_XML(tbDiagnosis.getSelectionModel().getSelectedItem());
+                    } catch (UpdateException ex) {
+                        showErrorAlert(ex.getMessage());
+                    }
                     txtMentalDisease.setText("Information about: " + tbDiagnosis.getSelectionModel().getSelectedItem().getMentalDisease().getMdName());
                     tfMentalDisease.setText(tbDiagnosis.getSelectionModel().getSelectedItem().getMentalDisease().getMdDescription());
                 });
@@ -329,7 +345,11 @@ public class DiagnosisController {
                     ((Diagnosis) t.getTableView().getItems()
                             .get(t.getTablePosition().getRow()))
                             .setLastDiagnosisChangeDate(t.getNewValue());
-                    diagnosisInterface.updateDiagnosis_XML(tbDiagnosis.getSelectionModel().getSelectedItem());
+                    try {
+                        diagnosisInterface.updateDiagnosis_XML(tbDiagnosis.getSelectionModel().getSelectedItem());
+                    } catch (UpdateException ex) {
+                        showErrorAlert(ex.getMessage());
+                    }
                 });
         //////// 
 
@@ -345,7 +365,11 @@ public class DiagnosisController {
             newDiagnosis.setLastDiagnosisChangeDate(date);
             newDiagnosis.setPsychologist((Psychologist) user);
             newDiagnosis.setOnTherapy(true);
-            diagnosisInterface.updateDiagnosis_XML(newDiagnosis);
+            try {
+                diagnosisInterface.updateDiagnosis_XML(newDiagnosis);
+            } catch (UpdateException ex) {
+                showErrorAlert(ex.getMessage());
+            }
             diagnosises = loadAllDiagnosises();
             //  diagnosises = loadAllDiagnosises();
         });
@@ -371,9 +395,13 @@ public class DiagnosisController {
     //ALL SEARCHS
     private ObservableList<Diagnosis> loadAllDiagnosises() {
         ObservableList<Diagnosis> diagnosisTableInfo;
-        List<Diagnosis> allDiangosis;
-        allDiangosis = diagnosisInterface.findAllDiagnosis_XML(new GenericType<List<Diagnosis>>() {
-        });
+        List<Diagnosis> allDiangosis = null;
+        try {
+            allDiangosis = diagnosisInterface.findAllDiagnosis_XML(new GenericType<List<Diagnosis>>() {
+            });
+        } catch (DiagnosisNotFoundException ex) {
+            showErrorAlert(ex.getMessage());
+        }
         diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
         tbDiagnosis.setItems(diagnosisTableInfo);
         return diagnosisTableInfo;
@@ -382,15 +410,19 @@ public class DiagnosisController {
 
     private ObservableList<Diagnosis> loadDiagnosisesBetweenDates() {
         ObservableList<Diagnosis> diagnosisTableInfo;
-        List<Diagnosis> allDiangosis;
+        List<Diagnosis> allDiangosis = null;
         Date dateStart = Date.from(dpDateLow.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
         Date dateEnd = Date.from(dtDateGreat.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         String dateStartString = formatter.format(dateStart);
         String dateEndString = formatter.format(dateEnd);
 
-        allDiangosis = diagnosisInterface.findPatientDiagnosisByDate_XML(new GenericType<List<Diagnosis>>() {
-        }, tfPatientDNI.getText(), dateStartString, dateEndString);
+        try {
+            allDiangosis = diagnosisInterface.findPatientDiagnosisByDate_XML(new GenericType<List<Diagnosis>>() {
+            }, tfPatientDNI.getText(), dateStartString, dateEndString);
+        } catch (DiagnosisNotFoundException ex) {
+            showErrorAlert(ex.getMessage());
+        }
         diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
         tbDiagnosis.setItems(diagnosisTableInfo);
         return diagnosisTableInfo;
@@ -420,9 +452,13 @@ public class DiagnosisController {
         if (tfPatientDNI.getText().isEmpty()) {
             showInfoAlert("Patient DNI field can not be empty");
         } else {
-            List<Diagnosis> allDiangosis;
-            allDiangosis = diagnosisInterface.findAllIfPatientOnTeraphy_XML(new GenericType<List<Diagnosis>>() {
-            }, tfPatientDNI.getText());
+            List<Diagnosis> allDiangosis = null;
+            try {
+                allDiangosis = diagnosisInterface.findAllIfPatientOnTeraphy_XML(new GenericType<List<Diagnosis>>() {
+                }, tfPatientDNI.getText());
+            } catch (DiagnosisNotFoundException ex) {
+                showErrorAlert(ex.getMessage());
+            }
             diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
             tbDiagnosis.setItems(diagnosisTableInfo);
         }
@@ -436,9 +472,13 @@ public class DiagnosisController {
             showInfoAlert("Patient DNI field can not be empty");
 
         } else {
-            List<Diagnosis> allDiangosis;
-            allDiangosis = diagnosisInterface.findAllDiagnosisByPatient_XML(new GenericType<List<Diagnosis>>() {
-            }, tfPatientDNI.getText());
+            List<Diagnosis> allDiangosis = null;
+            try {
+                allDiangosis = diagnosisInterface.findAllDiagnosisByPatient_XML(new GenericType<List<Diagnosis>>() {
+                }, tfPatientDNI.getText());
+            } catch (DiagnosisNotFoundException ex) {
+                showErrorAlert(ex.getMessage());
+            }
             diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
             tbDiagnosis.setItems(diagnosisTableInfo);
 
@@ -468,7 +508,11 @@ public class DiagnosisController {
             MenuItem DeleteDiagnosisMenuIt = new MenuItem("Delete Diagnosis");
 
             DeleteDiagnosisMenuIt.setOnAction((ActionEvent e) -> {
-                diagnosisInterface.deleteDiagnosis(selectedDiagnosis.getDiagnosisId().toString());
+                try {
+                    diagnosisInterface.deleteDiagnosis(selectedDiagnosis.getDiagnosisId().toString());
+                } catch (DeleteException ex) {
+                    showErrorAlert(ex.getMessage());
+                }
                 diagnosises.remove(selectedDiagnosis);
                 diagnosises = loadAllDiagnosises();
 
@@ -494,7 +538,11 @@ public class DiagnosisController {
                 currentPshychologist.setDni("45949977w"); //ESTO HAY QUE CAMBIAR
                 newDiagnosis.setPsychologist(currentPshychologist);
                 newDiagnosis.setOnTherapy(true);
-                diagnosisInterface.updateDiagnosis_XML(newDiagnosis);
+                try {
+                    diagnosisInterface.updateDiagnosis_XML(newDiagnosis);
+                } catch (UpdateException ex) {
+                    showErrorAlert(ex.getMessage());
+                }
                 diagnosises = loadAllDiagnosises();
                 //  diagnosises = loadAllDiagnosises();
             });
@@ -681,8 +729,15 @@ public class DiagnosisController {
         alert.showAndWait();
     }
 
-    public void initData(Patient psychologist) {
-        user = psychologist;
+    public void initData(User inituser) {
+        if (inituser.getUser_type().equals("Psychologist")) {
+            user = inituser;
+
+        } else {
+            user = new Patient();
+            user.setDni(inituser.getDni());
+        }
+
     }
 
 }

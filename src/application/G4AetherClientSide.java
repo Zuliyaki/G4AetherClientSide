@@ -6,7 +6,6 @@
 package application;
 
 import java.io.IOException;
-import static java.lang.System.out;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -19,44 +18,34 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import view.mainMenu.MainMenuController;
-import view.viewDiagnosis.DiagnosisController;
+import view.logIn.LogInController;
 
 /**
  *
  * @author 2dam
  */
-public class G4AetherClientSide extends javafx.application.Application {
-    
+public class G4AetherClientSide extends Application {
+
     @Override
     public void start(Stage stage) {
-           System.out.println(getClass().getResource("../view/mainMenu/mainMenu.fxml"));
-
-     FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/mainMenu/mainMenu.fxml"));
-        
-      
-        
-        Parent root = null;
         try {
-            root = (Parent) loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/logIn/LogIn.fxml"));
+            //FXMLLoader loader = new FXMLLoader(getClass().getResource("view/dailyNote/patientView/DailyNoteWindowPatient.fxml"));
+
+            //System.out.println(getClass().getResource("/view/dailyNote/DailyNoteWindowPatient.fxml"));
+            Parent root = (Parent) loader.load();
+            LogInController controller = (LogInController) loader.getController();
+            controller.setStage(stage);
+            controller.initialize(root);
+
+            Scene scene = new Scene(root);
+            //stage.getIcons().add(new Image("/resources/icon.png"));
+            stage.setScene(scene);
+            stage.show();
+
         } catch (IOException ex) {
             Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
         }
-      
-              MainMenuController controller = (MainMenuController) loader.getController();
-
-      controller.setStage(stage);
-
-        controller.initialize(root);
-
-        Scene scene = new Scene(root);
-
-        stage.setResizable(false);
-        stage.setTitle("MainMenu");
-        //stage.getIcons().add(new Image("/resources/icon.png"));
-
-        stage.setScene(scene);
-        stage.show();
     }
 
     /**
@@ -65,5 +54,5 @@ public class G4AetherClientSide extends javafx.application.Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }
