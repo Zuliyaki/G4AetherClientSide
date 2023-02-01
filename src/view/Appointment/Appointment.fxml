@@ -88,13 +88,13 @@
       </Pane>
       <Pane fx:id="panetable" prefHeight="366.0" prefWidth="604.0">
          <children>
-            <TableView fx:id="tableview" layoutX="86.0" prefHeight="280.0" prefWidth="400.0">
+            <TableView fx:id="tableview" layoutX="86.0" prefHeight="280.0" prefWidth="422.0">
                <columns>
+                  <TableColumn minWidth="0.0" prefWidth="10.0" resizable="false" />
                   <TableColumn fx:id="datetc" prefWidth="100.0" resizable="false" text="Date" />
                   <TableColumn fx:id="changetc" minWidth="0.0" prefWidth="100.0" resizable="false" text="Change" />
                   <TableColumn fx:id="patienttc" minWidth="0.0" prefWidth="100.0" resizable="false" text="Patient" />
                   <TableColumn fx:id="psychologisttc" minWidth="0.0" prefWidth="100.0" resizable="false" text="Psychologist" />
-                  <TableColumn minWidth="0.0" prefWidth="10.0" resizable="false" />
                   <TableColumn minWidth="0.0" prefWidth="10.0" resizable="false" />
                </columns>
             </TableView>

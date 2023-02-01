@@ -49,14 +49,6 @@ import javafx.stage.WindowEvent;
 import javax.swing.WindowConstants;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.view.JasperViewer;
-
-/*
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -64,8 +56,6 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
-*/
-
 
 /**
  * FXML Controller class
@@ -178,7 +168,6 @@ public class AppointmentController {
             stage.setOnShowing(this::handlerWindowShowing);
 
             //idtc.setCellValueFactory(new PropertyValueFactory<>("idAppointment"));
-
             datetc.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
 
             datetc.setCellFactory(column -> {
@@ -239,7 +228,7 @@ public class AppointmentController {
             this.psychologisttf.textProperty().addListener(this::handleFieldsTextChange);
 
             // Load combobox with search methods
-            String[] a = {"Find all Appointment", "Find Appointment by ID", "Find Appointment by Date"};
+            String[] a = {"Find all Appointment", /*"Find Appointment by ID" ,  "Find Appointment by Date"*/};
 
             ObservableList<String> searchMethods = FXCollections.observableArrayList(a);
 
@@ -276,6 +265,9 @@ public class AppointmentController {
             //Set hand cursor on leave button
             leavebtn.setCursor(Cursor.HAND);
 
+            //Set hand cursor on print button
+            printbtn.setCursor(Cursor.HAND);
+            
             //Show the window.
             stage.show();
 
@@ -303,7 +295,7 @@ public class AppointmentController {
         this.searchbtn.setDisable(true);
 
         // Disable search button
-        this.printbtn.setDisable(true);
+        this.printbtn.setDisable(false);
 
         // Enable leave button
         this.leavebtn.setDisable(false);
@@ -576,7 +568,6 @@ public class AppointmentController {
      * @return
      * @throws Exception
      */
-    
     /*
     @FXML
     private ObservableList<Appointment> loadAppointmentDate() {
@@ -608,7 +599,6 @@ public class AppointmentController {
         }
         return appointmentDate;
     }*/
-
     /**
      * it refresh TablewView appointment with all updated and created
      * appointments
@@ -904,35 +894,34 @@ public class AppointmentController {
     @FXML
     private void handlePrintButtonAction(ActionEvent event) {
 
-        
         try {
-            
+
             LOGGER.info("Printing Appointment Report ... ");
 
             JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/AppointmentReport.jrxml"));
-            
+
             //Data for the report: a collection of UserBean passed as a JRDataSource implementation 
             JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Appointment>) this.tableview.getItems());
-           
+
             //Map of parameter to be passed to the report
             Map<String, Object> parameters = new HashMap<>();
-            
+
             //Fill report with data
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
-            
+
             //Create and show the report window. The second parameter false value makes report window not to close app.
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
-            
-            jasperViewer.setVisible(true);
-            
-            jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
-        } catch (Exception ex) {
+            jasperViewer.setVisible(true);
+
+            //jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+
+        } catch (JRException ex) {
 
             //If there is an error show message and log it.
-            LOGGER.log(Level.SEVERE, "Error Printing Appointment Report !!", ex.getMessage());
+            LOGGER.log(Level.SEVERE, "Error Printing Appointment Report.", ex.getMessage());
         }
-        
+
     }
 
     /**
@@ -960,7 +949,6 @@ public class AppointmentController {
             case "Find Appointment by Date":
 
                 //loadAppointmentDate();
-
                 break;
         }
 

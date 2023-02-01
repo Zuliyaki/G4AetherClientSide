@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed091f48-1182-4977-ae84-e5e1da04285e">
-	<property name="ireport.zoom" value="1.4641000000000013"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Appointment Report" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4e0ea61e-01b7-4182-8d50-80d15716bc07">
+	<property name="ireport.zoom" value="2.143588810000002"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="table">
@@ -23,88 +23,103 @@
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<subDataset name="Table Dataset 1" uuid="f4b11ef0-054c-4847-8b2c-c488285ec9e0"/>
+	<field name="idAppointment" class="java.lang.Long"/>
+	<field name="appointmentChange" class="java.lang.Boolean"/>
+	<field name="appointmentDate" class="java.util.Date"/>
+	<field name="patient.dni" class="java.lang.String"/>
+	<field name="psychologist.dni" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="79" splitType="Stretch">
-			<textField>
-				<reportElement x="148" y="21" width="269" height="34" uuid="f52aa729-8fd9-4f96-90c8-d4f072265f08"/>
-				<textElement>
-					<font size="24"/>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="79" uuid="d7db57f2-5908-4cfc-b81d-a4df875de7e4"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="36"/>
 				</textElement>
-				<textFieldExpression><![CDATA[Appointment Report]]></textFieldExpression>
-			</textField>
+				<text><![CDATA[Appointment Report]]></text>
+			</staticText>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="34" splitType="Stretch"/>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="30" height="30" uuid="3f1f8a54-0444-47bd-aa05-6839c9aa9b84"/>
+				<textElement textAlignment="Center">
+					<font size="20"/>
+				</textElement>
+				<text><![CDATA[Id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="0" width="130" height="30" uuid="4a222957-80a3-4e2d-b094-1a34cf39ceaa"/>
+				<textElement textAlignment="Center">
+					<font size="20"/>
+				</textElement>
+				<text><![CDATA[Change]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="0" width="130" height="30" uuid="4edfd3fa-4ae7-4a1d-98e3-1a1353906c59"/>
+				<textElement textAlignment="Center">
+					<font size="20"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="0" width="130" height="30" uuid="7d5055b1-7309-4e8d-b706-15f461980abb"/>
+				<textElement textAlignment="Center">
+					<font size="20"/>
+				</textElement>
+				<text><![CDATA[Patient]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="420" y="0" width="135" height="30" uuid="4f7ce86c-0242-490c-b0b8-21f57bead9cd"/>
+				<textElement textAlignment="Center">
+					<font size="20"/>
+				</textElement>
+				<text><![CDATA[Psychologist]]></text>
+			</staticText>
+		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="30" splitType="Stretch">
-			<textField>
-				<reportElement x="0" y="0" width="54" height="31" uuid="dc262f5f-2097-4c39-968d-543ef7174c8d"/>
-				<textElement textAlignment="Center">
-					<font size="20"/>
-				</textElement>
-				<textFieldExpression><![CDATA[ID]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="54" y="0" width="112" height="31" uuid="45158a36-63ce-47ed-bca3-5bb07bafac58"/>
-				<textElement textAlignment="Center">
-					<font size="20"/>
-				</textElement>
-				<textFieldExpression><![CDATA[Date]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="166" y="0" width="112" height="31" uuid="35c7a39a-44db-49a1-9250-be87ac39972e"/>
-				<textElement textAlignment="Center">
-					<font size="20"/>
-				</textElement>
-				<textFieldExpression><![CDATA[Change]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="278" y="0" width="126" height="31" uuid="3adbf57e-4b2a-4266-a256-196b15cd9039"/>
-				<textElement textAlignment="Center">
-					<font size="20"/>
-				</textElement>
-				<textFieldExpression><![CDATA[Patient]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="404" y="0" width="151" height="31" uuid="82f713e3-3308-4d23-861d-6e175a253ddf"/>
-				<textElement textAlignment="Center">
-					<font size="20"/>
-				</textElement>
-				<textFieldExpression><![CDATA[Psychologist]]></textFieldExpression>
-			</textField>
-		</band>
+		<band height="13" splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="227" splitType="Stretch">
+		<band height="125" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="54" height="227" uuid="3d40b85a-0d5d-4f10-a6ac-82e75584bc05"/>
+				<reportElement x="0" y="0" width="30" height="20" uuid="8a25a3d4-18be-46c2-8121-3c5bb152fa9c"/>
 				<textElement textAlignment="Center">
 					<font size="14"/>
 				</textElement>
+				<textFieldExpression><![CDATA[$F{idAppointment}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="54" y="0" width="112" height="227" uuid="f8ef65d2-5df4-499a-a695-2a0ffbab5f2b"/>
+				<reportElement x="30" y="0" width="130" height="20" uuid="c2f68956-9fbd-4fed-8ed8-4dd8113bb9ec"/>
 				<textElement textAlignment="Center">
 					<font size="14"/>
 				</textElement>
+				<textFieldExpression><![CDATA[$F{appointmentChange}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="278" y="0" width="126" height="227" uuid="5d33a9ee-9766-4bf0-9098-80fe96d01bd7"/>
+				<reportElement x="160" y="0" width="130" height="20" uuid="50faf63a-8c38-4591-a325-f9ea6c68ec9f"/>
 				<textElement textAlignment="Center">
 					<font size="14"/>
 				</textElement>
+				<textFieldExpression><![CDATA[$F{appointmentDate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="404" y="0" width="151" height="227" uuid="e02d67ae-98c6-4519-bfee-6b07113f66aa"/>
+				<reportElement x="290" y="0" width="130" height="20" uuid="c092aa59-daca-4daf-bb1a-53367d4fe9b4"/>
 				<textElement textAlignment="Center">
 					<font size="14"/>
 				</textElement>
+				<textFieldExpression><![CDATA[$F{patient.dni}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="420" y="0" width="135" height="20" uuid="48871098-73e2-464c-bfe2-d3e229d8f8b9"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{psychologist.dni}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -115,6 +130,6 @@
 		<band height="54" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="150" splitType="Stretch"/>
+		<band height="42" splitType="Stretch"/>
 	</summary>
 </jasperReport>
