@@ -30,14 +30,9 @@
                   
                </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Appointments">
+            <Menu fx:id="AppointmentMenu" mnemonicParsing="false" text="Appointments">
                <items>
                   <MenuItem mnemonicParsing="false"  onAction="#handleOpenAppointment" text="Open Appointment" />
-               </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Help">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="User Manual" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="&lt;User&gt;">

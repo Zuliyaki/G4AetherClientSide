@@ -35,6 +35,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -96,6 +97,8 @@ public class MainMenuController {
     private Text txtQuote;
     @FXML
     private Stage stage;
+    @FXML
+    private Menu AppointmentMenu;
 
     /**
      * Initializes the controller class.
@@ -104,9 +107,11 @@ public class MainMenuController {
      */
     public void initialize(Parent Root) {
         Scene scene = new Scene(Root);
-stage.getIcons().add(new Image("resources/icon.png"));
+        stage.setResizable(false);
+        
+        stage.getIcons().add(new Image("resources/icon.png"));
         if (user.getDni().equals("45949977w")) {
-            
+
             Psychologist initPsychologist = new Psychologist();
             initPsychologist.setUser_type("Psychologist");
             initPsychologist.setDni("45949977w");
@@ -133,7 +138,8 @@ stage.getIcons().add(new Image("resources/icon.png"));
 
         btnDiagnosis.setDisable(false);
         btnDailyNotes.setDisable(false);
-        btnAppointments.setDisable(false);
+        btnAppointments.setDisable(true);
+        AppointmentMenu.setDisable(true);
         stage.setScene(scene);
         stage.show();
 
@@ -243,9 +249,10 @@ stage.getIcons().add(new Image("resources/icon.png"));
 
         controller.initialize(root);
     }
+
     @FXML
     private void handleOpenAppointment(ActionEvent event) {
-       Stage stage = new Stage();
+        Stage stage = new Stage();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../Appointment/Appointment.fxml"));
         Parent root = null;

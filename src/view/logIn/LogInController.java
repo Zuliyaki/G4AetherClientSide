@@ -77,6 +77,7 @@ public class LogInController {
         tfDNI.setTooltip(new Tooltip("DNI"));
         pfPassword.setTooltip(new Tooltip("Password"));
         hlSignUp.setTooltip(new Tooltip("Go to sign up"));
+        stage.setResizable(false);
 
         //Set event handlers
         this.tfDNI.textProperty().addListener(this::handleFieldsTextChange);
