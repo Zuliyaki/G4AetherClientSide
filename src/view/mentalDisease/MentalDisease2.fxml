@@ -35,8 +35,7 @@
             </image>
         </ImageView>
         <Button fx:id="btnSignOff" layoutX="28.0" layoutY="554.0" mnemonicParsing="false" onAction="#handleSignOffButtonAction" prefHeight="25.0" prefWidth="84.0" text="Sign off" />
-        <Button fx:id="btnHome" layoutX="28.0" layoutY="126.0" mnemonicParsing="false" onAction="#handleHomeButtonAction" prefHeight="25.0" prefWidth="84.0" text="Home" />
-        <Button fx:id="btnGoBack" layoutX="28.0" layoutY="165.0" mnemonicParsing="false" onAction="#handleBackButtonAction" prefHeight="25.0" prefWidth="84.0" text="Go back" />
+        <Button fx:id="btnGoBack" layoutX="28.0" layoutY="140.0" mnemonicParsing="false" onAction="#handleBackButtonAction" prefHeight="25.0" prefWidth="84.0" text="Go back" />
         <Text fx:id="txtName" layoutX="222.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" />
         <Text fx:id="txtType" layoutX="222.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type" />
         <Text fx:id="txtSymptons" layoutX="221.0" layoutY="259.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Symptons" />

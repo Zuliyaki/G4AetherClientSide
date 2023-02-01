@@ -74,7 +74,7 @@ public class MentalDisease1Controller {
     @FXML
     private TableColumn tcID, tcAdmin, tcName, tcType, tcDescription, tcSymptoms, tcDate;
     @FXML
-    private Button btnModify, btnSearch, btnSignOff, btnDelete, btnCreate, btnHome, btnPrint;
+    private Button btnModify, btnSearch, btnSignOff, btnDelete, btnCreate, btnPrint;
     @FXML
     private ComboBox cmbSearch;
     @FXML
@@ -103,7 +103,6 @@ public class MentalDisease1Controller {
         //Tooltips
         btnCreate.setTooltip(new Tooltip("Create"));
         btnDelete.setTooltip(new Tooltip("Delete"));
-        btnHome.setTooltip(new Tooltip("Home"));
         btnModify.setTooltip(new Tooltip("Modify"));
         btnPrint.setTooltip(new Tooltip("Print"));
         btnSearch.setTooltip(new Tooltip("Search"));
@@ -345,15 +344,6 @@ public class MentalDisease1Controller {
             LOGGER.log(Level.SEVERE,
                     ex.getMessage());
         }
-    }
-
-    /**
-     *
-     * @param event
-     */
-    @FXML
-    private void handleHomeButtonAction(javafx.event.ActionEvent event
-    ) {
     }
 
     /**

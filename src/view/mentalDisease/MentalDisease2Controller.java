@@ -63,7 +63,7 @@ public class MentalDisease2Controller {
     @FXML
     private TextField txtfName, txtfSymptons, txtfDescription;
     @FXML
-    private Button btnSignOff, btnHome, btnGoBack, btnCreate, btnModify;
+    private Button btnSignOff, btnGoBack, btnCreate, btnModify;
     @FXML
     private ComboBox cmbType;
     @FXML
@@ -92,7 +92,6 @@ public class MentalDisease2Controller {
         //Tooltips
         btnCreate.setTooltip(new Tooltip("Create"));
         btnGoBack.setTooltip(new Tooltip("Go Back"));
-        btnHome.setTooltip(new Tooltip("Home"));
         btnModify.setTooltip(new Tooltip("Modify"));
         btnSignOff.setTooltip(new Tooltip("Sign Off"));
 
@@ -141,7 +140,6 @@ public class MentalDisease2Controller {
         //Tooltips
         btnCreate.setTooltip(new Tooltip("Create"));
         btnGoBack.setTooltip(new Tooltip("Go Back"));
-        btnHome.setTooltip(new Tooltip("Home"));
         btnModify.setTooltip(new Tooltip("Modify"));
         btnSignOff.setTooltip(new Tooltip("Sign Off"));
 
@@ -296,11 +294,6 @@ public class MentalDisease2Controller {
             LOGGER.log(Level.SEVERE,
                     ex.getMessage());
         }
-    }
-
-    @FXML
-    private void handleHomeButtonAction(ActionEvent event
-    ) {
     }
 
     @FXML
