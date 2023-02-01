@@ -42,7 +42,7 @@
 		<band height="34" splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="31" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="0" width="54" height="31" uuid="dc262f5f-2097-4c39-968d-543ef7174c8d"/>
 				<textElement textAlignment="Center">
@@ -81,26 +81,30 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="125" splitType="Stretch">
+		<band height="227" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="54" height="125" uuid="3d40b85a-0d5d-4f10-a6ac-82e75584bc05"/>
-				<textFieldExpression><![CDATA[$F{field}]]></textFieldExpression>
+				<reportElement x="0" y="0" width="54" height="227" uuid="3d40b85a-0d5d-4f10-a6ac-82e75584bc05"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
 			</textField>
 			<textField>
-				<reportElement x="54" y="0" width="112" height="125" uuid="f8ef65d2-5df4-499a-a695-2a0ffbab5f2b"/>
-				<textFieldExpression><![CDATA[$F{field}]]></textFieldExpression>
+				<reportElement x="54" y="0" width="112" height="227" uuid="f8ef65d2-5df4-499a-a695-2a0ffbab5f2b"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
 			</textField>
 			<textField>
-				<reportElement x="166" y="0" width="112" height="125" uuid="3c6353d4-5ebc-436e-bc05-a84838c216ae"/>
-				<textFieldExpression><![CDATA[$F{field}]]></textFieldExpression>
+				<reportElement x="278" y="0" width="126" height="227" uuid="5d33a9ee-9766-4bf0-9098-80fe96d01bd7"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
 			</textField>
 			<textField>
-				<reportElement x="278" y="0" width="126" height="125" uuid="5d33a9ee-9766-4bf0-9098-80fe96d01bd7"/>
-				<textFieldExpression><![CDATA[$F{field}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="404" y="0" width="151" height="125" uuid="e02d67ae-98c6-4519-bfee-6b07113f66aa"/>
-				<textFieldExpression><![CDATA[$F{field}]]></textFieldExpression>
+				<reportElement x="404" y="0" width="151" height="227" uuid="e02d67ae-98c6-4519-bfee-6b07113f66aa"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
 			</textField>
 		</band>
 	</detail>

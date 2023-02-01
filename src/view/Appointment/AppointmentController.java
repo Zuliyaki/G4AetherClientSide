@@ -11,8 +11,11 @@ import interfaces.PatientInterface;
 import interfaces.PsychologistInterface;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,8 +46,26 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javax.swing.WindowConstants;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
+
+/*
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
+*/
+
 
 /**
  * FXML Controller class
@@ -58,8 +79,6 @@ public class AppointmentController {
     private final PatientInterface patientInterface = PatientFactory.getModel();
     private final PsychologistInterface psychologistInterface = PsychologistFactory.getModel();
     private List<Appointment> allAppointments;
-    private List<Appointment> loadAppointmentID;
-    private List<Appointment> loadAppointmentDate;
     private static final Logger LOGGER = Logger.getLogger(AppointmentController.class.getName());
 
     // VBox
@@ -85,8 +104,6 @@ public class AppointmentController {
     private TextField psychologisttf;
     @FXML
     private TextField patienttf;
-    @FXML
-    private TextField searchtf;
 
     // Combobox for the search methods
     @FXML
@@ -160,8 +177,7 @@ public class AppointmentController {
             //Set the Event handlers
             stage.setOnShowing(this::handlerWindowShowing);
 
-            //Not able to show id in the TableView 
-            idtc.setCellValueFactory(new PropertyValueFactory<>("idAppointment"));
+            //idtc.setCellValueFactory(new PropertyValueFactory<>("idAppointment"));
 
             datetc.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
 
@@ -228,6 +244,8 @@ public class AppointmentController {
             ObservableList<String> searchMethods = FXCollections.observableArrayList(a);
 
             combobox.setItems(searchMethods);
+
+            combobox.getSelectionModel().select(0);
 
             this.combobox.valueProperty().addListener(this::handleComboboxChange);
 
@@ -325,11 +343,16 @@ public class AppointmentController {
 
                 patienttf.setEditable(true);
 
-                searchbtn.setDisable(true);
+                searchbtn.setDisable(false);
+
+                reset();
 
                 break;
 
             case "Find Appointment by ID":
+
+                //Focus
+                idtf.requestFocus();
 
                 idtf.setEditable(true);
 
@@ -339,23 +362,27 @@ public class AppointmentController {
 
                 patienttf.setEditable(false);
 
-                searchbtn.setDisable(true);
+                searchbtn.setDisable(false);
+
+                reset();
 
                 break;
 
             case "Find Appointment by Date":
 
-                idtf.setEditable(false);
+                //Focus
+                datepicker.requestFocus();
 
+                //idtf.setEditable(false);
                 datepicker.setDisable(false);
 
                 datepicker.getEditor().clear();
 
-                psychologisttf.setEditable(false);
+                //psychologisttf.setEditable(false);
+                //patienttf.setEditable(false);
+                searchbtn.setDisable(false);
 
-                patienttf.setEditable(false);
-
-                searchbtn.setDisable(true);
+                reset();
 
                 break;
         }
@@ -526,7 +553,7 @@ public class AppointmentController {
         try {
 
             appointmentid = appointmentInterface.FindAppointmentById_XML(new GenericType<List<Appointment>>() {
-            }, this.searchtf.getText());
+            }, this.idtf.getText());
 
             appointmentID = FXCollections.observableArrayList(appointmentid);
 
@@ -549,6 +576,8 @@ public class AppointmentController {
      * @return
      * @throws Exception
      */
+    
+    /*
     @FXML
     private ObservableList<Appointment> loadAppointmentDate() {
 
@@ -565,7 +594,7 @@ public class AppointmentController {
             String dateString = formatter.format(date);
 
             appointment = appointmentInterface.FindAppointmentByDate_XML(new GenericType<List<Appointment>>() {
-            }, this.searchtf.getText());
+            }, this.idtf.getText());
 
             appointmentDate = FXCollections.observableArrayList(appointment);
 
@@ -578,7 +607,7 @@ public class AppointmentController {
             Logger.getLogger(AppointmentController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return appointmentDate;
-    }
+    }*/
 
     /**
      * it refresh TablewView appointment with all updated and created
@@ -875,31 +904,35 @@ public class AppointmentController {
     @FXML
     private void handlePrintButtonAction(ActionEvent event) {
 
-        /*
+        
         try {
-            LOGGER.info("Starting printing");
+            
+            LOGGER.info("Printing Appointment Report ... ");
 
             JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/AppointmentReport.jrxml"));
-
+            
+            //Data for the report: a collection of UserBean passed as a JRDataSource implementation 
             JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<Appointment>) this.tableview.getItems());
-
+           
+            //Map of parameter to be passed to the report
             Map<String, Object> parameters = new HashMap<>();
-
+            
+            //Fill report with data
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
-
+            
+            //Create and show the report window. The second parameter false value makes report window not to close app.
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
-
+            
             jasperViewer.setVisible(true);
-
+            
             jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
-        } catch (JRException ex) {
-            //If there is an error show message and
-            //log it.
-            showErrorAlert("Error printing:\n" + ex.getMessage());
+        } catch (Exception ex) {
 
-            LOGGER.log(Level.SEVERE, "Error printing:\n", ex);
-        }*/
+            //If there is an error show message and log it.
+            LOGGER.log(Level.SEVERE, "Error Printing Appointment Report !!", ex.getMessage());
+        }
+        
     }
 
     /**
@@ -926,7 +959,7 @@ public class AppointmentController {
 
             case "Find Appointment by Date":
 
-                loadAppointmentDate();
+                //loadAppointmentDate();
 
                 break;
         }

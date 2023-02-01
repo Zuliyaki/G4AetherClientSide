@@ -11,6 +11,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "appointment")
 public class Appointment implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private Long idAppointment;
 
     private Boolean appointmentChange;
