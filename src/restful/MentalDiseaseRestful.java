@@ -55,7 +55,7 @@ public class MentalDiseaseRestful implements MentalDiseaseInterface {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T getMentalDiseasesById_XML(GenericType<T> responseType, String id) throws ClientErrorException {
+    public <T> T getMentalDiseasesById_XML(Class<T> responseType, String id) throws ClientErrorException {
         WebTarget resource = webTarget;
         resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
@@ -67,6 +67,7 @@ public class MentalDiseaseRestful implements MentalDiseaseInterface {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
+    @Override
     public <T> T getAllMentalDiseasesOrderByName_XML(GenericType<T> responseType) throws MentalDiseaseException {
         try {
             WebTarget resource = webTarget;
@@ -113,4 +114,6 @@ public void create_JSON(Object requestEntity) throws ClientErrorException {
     public void close() {
         client.close();
     }
+
+    
 }

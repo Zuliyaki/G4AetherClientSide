@@ -47,6 +47,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
+import view.dailyNote.DailyNoteWindowController;
 import view.viewDiagnosis.DiagnosisController;
 
 /**
@@ -159,7 +160,23 @@ public class MainMenuController {
 
     @FXML
     private void handleDailyNoteButtonAction(ActionEvent event) {
+        Stage stage = new Stage();
 
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../dailyNote/DailyNoteWindowPatient.fxml"));
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        DailyNoteWindowController controller = (DailyNoteWindowController) loader.getController();
+
+        controller.setStage(stage);
+
+        controller.initData(user);
+
+        controller.initialize(root);
     }
 
     @FXML
@@ -190,25 +207,36 @@ public class MainMenuController {
 
     @FXML
     private void handleOpenDailyNote(ActionEvent event) {
+ Stage stage = new Stage();
 
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../dailyNote/DailyNoteWindowPatient.fxml"));
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        DailyNoteWindowController controller = (DailyNoteWindowController) loader.getController();
+
+        controller.setStage(stage);
+
+        controller.initData(user);
+
+        controller.initialize(root);
     }
 
     @FXML
     private void exitapp(ActionEvent event) {
-        ButtonType chooseLogOut = new ButtonType("Log out", ButtonBar.ButtonData.OK_DONE);
+
         ButtonType chooseExit = new ButtonType("Exit", ButtonBar.ButtonData.CANCEL_CLOSE);
-        Alert alert = new Alert(AlertType.NONE, "Do you want to log out or exit the application?", chooseLogOut, chooseExit);
+        Alert alert = new Alert(Alert.AlertType.NONE, "Do you want to log out or exit the application?", chooseExit);
 
         alert.setTitle("Log out or exit");
 
         Optional<ButtonType> option = alert.showAndWait();
-
-        if (option.get() == chooseLogOut) {
-            Node node= (Node)event.getSource();
-            
-            Stage stage1 = (Stage)  node.getScene().getWindow();
-            stage1.close();
-        } else if (option.get() == chooseExit) {
+        if (option.get()
+                == chooseExit) {
             Platform.exit();
         }
     }

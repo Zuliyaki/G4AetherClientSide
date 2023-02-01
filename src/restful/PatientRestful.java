@@ -16,11 +16,11 @@ import javax.ws.rs.core.GenericType;
  * [entities.patient]<br>
  * USAGE:
  * <pre>
-        PatientRestful client = new PatientRestful();
-        Object response = client.XXX(...);
-        // do whatever with response
-        client.close();
- </pre>
+ * PatientRestful client = new PatientRestful();
+ * Object response = client.XXX(...);
+ * // do whatever with response
+ * client.close();
+ * </pre>
  *
  * @author 2dam
  */
@@ -35,15 +35,25 @@ public class PatientRestful implements PatientInterface {
         webTarget = client.target(BASE_URI).path("entities.patient");
     }
 
+    public void sendRecoveryEmail_XML(Object requestEntity) throws ClientErrorException {
+        webTarget.path("sendRecoveryEmail").request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+    }
+
+    public void sendRecoveryEmail_JSON(Object requestEntity) throws ClientErrorException {
+        webTarget.path("sendRecoveryEmail").request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
+    }
+
     public void createPatient_XML(Object requestEntity) throws ClientErrorException {
+
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+
     }
 
     public void createPatient_JSON(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 
-    public <T> T findAllPatients_XML(Class<T> responseType) throws ClientErrorException {
+    public <T> T findAllPatients_XML(GenericType<T> responseType) throws ClientErrorException {
         WebTarget resource = webTarget;
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
@@ -80,5 +90,5 @@ public class PatientRestful implements PatientInterface {
     public void close() {
         client.close();
     }
-    
+
 }

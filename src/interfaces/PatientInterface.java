@@ -5,32 +5,21 @@
  */
 package interfaces;
 
-import entities.Patient;
-import java.util.List;
 import javax.ws.rs.ClientErrorException;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 
 /**
  *
- * @author 2dam
+ * @author unaib
  */
 public interface PatientInterface {
-     public void createPatient_XML(Object requestEntity) throws ClientErrorException ;
+    
+    public void createPatient_XML(Object requestEntity) throws ClientErrorException;
+    
+    public void sendRecoveryEmail_XML(Object requestEntity) throws ClientErrorException;
 
-    public void createPatient_JSON(Object requestEntity) throws ClientErrorException;
+    public <T> T findAllPatients_XML(GenericType<T> responseType) throws ClientErrorException;
 
-    public <T> T findAllPatients_XML(Class<T> responseType) throws ClientErrorException;
-
-    public <T> T findAllPatients_JSON(Class<T> responseType) throws ClientErrorException;
-    public void removePatient(String dni) throws ClientErrorException;
-
-    public <T> T findAllPatientsByPsychologist_XML(GenericType<T> responseType, String dniPsychologist) throws ClientErrorException; 
-
-    public <T> T findAllPatientsByPsychologist_JSON(Class<T> responseType, String dniPsychologist) throws ClientErrorException;
-
-    public void editPatient_XML(Object requestEntity) throws ClientErrorException ;
-    public void editPatient_JSON(Object requestEntity) throws ClientErrorException;
-
+    public <T> T findAllPatientsByPsychologist_XML(GenericType<T> responseType, String dniPsychologist) throws ClientErrorException;
     
 }

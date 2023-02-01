@@ -30,6 +30,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import view.mainMenu.MainMenuController;
+import view.mentalDisease.MentalDisease1Controller;
 import view.signUp.SignUpController;
 
 /**
@@ -146,7 +147,7 @@ public class LogInController {
      */
     @FXML
     private void handleSignUpHyperlinkAction(ActionEvent event) {
-        LOGGER.info("Probando a abrir ventana de registro");
+       LOGGER.info("Probando a abrir ventana de registro");
         try {
             Stage stage = new Stage();
             FXMLLoader loader;
@@ -155,14 +156,14 @@ public class LogInController {
             SignUpController controller = (SignUpController) loader.getController();
             controller.setStage(stage);
             controller.initialize(root);
-            
+
             LOGGER.info("ventana de registro abierta");
-            
+
         } catch (IOException ex) {
             showErrorAlert("No se ha podido abrir la ventana");
             LOGGER.log(Level.SEVERE,
                     ex.getMessage());
-            
+
         }
     }
 
@@ -174,39 +175,95 @@ public class LogInController {
      */
     @FXML
     private void handleLogInButtonAction(ActionEvent event) throws IOException, Exception {
-             user = new User();
-        
-            LOGGER.info("inicio de envio información al servidor");
-            
-            if (tfDNI.getText().equals("45949977w")) {
-              user.setDni(tfDNI.getText());
-                
-            } else if(tfDNI.getText().equals("35140444d") ){
-                
-               user.setDni(tfDNI.getText());
-            }else{
-                 user = userInterface.logInUser_XML(User.class, tfDNI.getText(), pfPassword.getText());
-            }
+        user = new User();
+
+        LOGGER.info("inicio de envio información al servidor");
+
+        //psychologist
+        if (tfDNI.getText().equals("45949977w")) {
+            user.setDni(tfDNI.getText());
             Stage stage = new Stage();
-            System.out.println(getClass().getResource("/view/mainMenu/mainMenu.fxml"));
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mainMenu/mainMenu.fxml"));
             Parent root = null;
-        try {
-            root = (Parent) loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            
+            try {
+                root = (Parent) loader.load();
+            } catch (IOException ex) {
+                Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
             MainMenuController controller = (MainMenuController) loader.getController();
             controller.setStage(stage);
             controller.initData(user);
             controller.initialize(root);
-            
+
             tfDNI.setText("");
             pfPassword.setText("");
-        
-            
+
+            //patient
+        } else if (tfDNI.getText().equals("35140444d")) {
+
+            user.setDni(tfDNI.getText());
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mainMenu/mainMenu.fxml"));
+            Parent root = null;
+            try {
+                root = (Parent) loader.load();
+            } catch (IOException ex) {
+                Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            MainMenuController controller = (MainMenuController) loader.getController();
+            controller.setStage(stage);
+            controller.initData(user);
+            controller.initialize(root);
+
+            tfDNI.setText("");
+            pfPassword.setText("");
+
+            //admin
+        } else if (tfDNI.getText().equals("44444444z")) {
+            user.setDni(tfDNI.getText());
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mentalDisease/MentalDisease1.fxml"));
+            Parent root = null;
+            try {
+                root = (Parent) loader.load();
+            } catch (IOException ex) {
+                Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            MentalDisease1Controller controller = (MentalDisease1Controller) loader.getController();
+            controller.setStage(stage);
+            controller.initData(user);
+            controller.initialize(root);
+
+            tfDNI.setText("");
+            pfPassword.setText("");
+
+            //user
+        } else {
+            user = userInterface.logInUser_XML(User.class,
+                    tfDNI.getText(), pfPassword.getText());
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mainMenu/mainMenu.fxml"));
+            Parent root = null;
+            try {
+                root = (Parent) loader.load();
+
+            } catch (IOException ex) {
+                Logger.getLogger(G4AetherClientSide.class
+                        .getName()).log(Level.SEVERE, null, ex);
+            }
+
+            MainMenuController controller = (MainMenuController) loader.getController();
+            controller.setStage(stage);
+            controller.initData(user);
+            controller.initialize(root);
+
+            tfDNI.setText("");
+            pfPassword.setText("");
         }
+    }
 
 
     /**

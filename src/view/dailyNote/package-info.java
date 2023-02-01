@@ -3,4 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package interfaces;
+package view.dailyNote;
+/**
+ * This folder contains the patients Dialy Note view and Controller
+ */

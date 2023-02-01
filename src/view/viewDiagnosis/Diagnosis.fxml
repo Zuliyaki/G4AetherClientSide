@@ -19,32 +19,22 @@
 
 <VBox fx:id="vBox" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.viewDiagnosis.DiagnosisController">
   <children>
-    <MenuBar VBox.vgrow="NEVER">
-      <menus>
-        <Menu mnemonicParsing="false" text="Diagnosis">
+    <MenuBar prefHeight="26.0" prefWidth="603.0">
+         <menus>
+            <Menu fx:id ="diagnosisMenu" mnemonicParsing="false" text="Diagnosis">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Find diagnosis by id" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleOpenDiagnosis" text="Open" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Find all diagnosis" />
-                  <MenuItem mnemonicParsing="false" text="Find all diagnosis by patient" />
-                  <MenuItem mnemonicParsing="false" text="Find all diagnosis by date" />
-                  <MenuItem mnemonicParsing="false" text="Find all diagnosis on teraphy" />
+                  
                </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Daily Notes">
-          <items>
-            <MenuItem mnemonicParsing="false" text="Find note by id" />
-            <MenuItem mnemonicParsing="false" text="Find note by date" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Find all notes" />
-            <MenuItem mnemonicParsing="false" text="Find all notes by patient" />
-            <MenuItem mnemonicParsing="false" text="Find all patient edited notes" />
-            <MenuItem mnemonicParsing="false" text="Find all patient notes by not readable" />
-            <MenuItem mnemonicParsing="false" text="Find all patient notes between dates" />
-            <MenuItem mnemonicParsing="false" text="Find all patient notes between day scores" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Appointments">
+            </Menu>
+            <Menu mnemonicParsing="false" text="Daily Notes">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handleOpenDailyNote" text="Open" />
+                  
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Appointments">
                <items>
                   <MenuItem mnemonicParsing="false" text="Find appointment by id" />
                   <MenuItem mnemonicParsing="false" text="Find appointment by date" />
@@ -52,24 +42,20 @@
                   <MenuItem mnemonicParsing="false" text="Find all appointments" />
                   <MenuItem mnemonicParsing="false" text="Find all appointment by change" />
                </items>
-        </Menu>
+            </Menu>
             <Menu mnemonicParsing="false" text="Help">
                <items>
-                  <MenuItem mnemonicParsing="false" text="User Manual" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuHelp" text="User Manual" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="&lt;User&gt;">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Find all users" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Register a psychologist" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" text="Change Password" />
-                  <MenuItem mnemonicParsing="false" text="Log out" />
+                  <MenuItem mnemonicParsing="false" onAction="#exitapp" text="Log out" />
                </items>
             </Menu>
-      </menus>
-    </MenuBar>
+         </menus>
+      </MenuBar>
     <AnchorPane fx:id="AnchorPane" maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" style="-fx-background-color: e7f1ff;" VBox.vgrow="ALWAYS">
          <children>
             <Pane fx:id="paneSearch" layoutX="135.0" layoutY="14.0" prefHeight="200.0" prefWidth="931.0">

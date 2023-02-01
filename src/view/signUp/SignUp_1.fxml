@@ -68,7 +68,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="btnDailyNotes" layoutX="471.0" layoutY="261.0" mnemonicParsing="false" onAction="#handleDailyNoteButtonAction"  prefHeight="199.0" prefWidth="259.0" style="-fx-background-color: e7f1ff;">
+            <Button fx:id="btnDailyNotes" layoutX="471.0" layoutY="261.0" mnemonicParsing="false" prefHeight="199.0" prefWidth="259.0" style="-fx-background-color: e7f1ff;">
                <graphic>
                   <ImageView fitHeight="175.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
                      <image>

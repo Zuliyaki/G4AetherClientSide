@@ -5,6 +5,7 @@
  */
 package view.viewDiagnosis;
 
+import application.G4AetherClientSide;
 import entities.Diagnosis;
 import entities.MentalDisease;
 import entities.Patient;
@@ -25,6 +26,7 @@ import interfaces.MentalDiseaseInterface;
 import interfaces.PatientInterface;
 import interfaces.TreatmentInterface;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -36,9 +38,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javafx.application.Application.launch;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -47,16 +51,20 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -91,6 +99,8 @@ import restful.DiagnosisRestful;
 import restful.MentalDiseaseRestful;
 import restful.PatientRestful;
 import restful.TreatmentResful;
+import view.dailyNote.DailyNoteWindowController;
+import view.mentalDisease.Help2Controller;
 
 public class DiagnosisController {
 
@@ -197,10 +207,12 @@ public class DiagnosisController {
     private Button btnPrint;
     private Integer posDiag;
     final Logger LOGGER = Logger.getLogger("paquete.NombreClase");
+    @FXML
+    private Menu diagnosisMenu;
 
     public void initialize(Parent root) {
         final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        Scene scene = new Scene(root);
+
         //Not a resizable window.
         stage.setResizable(false);
         //Modal window of LogIn.
@@ -210,8 +222,9 @@ public class DiagnosisController {
         //Add a leaf icon.
         //stage.getIcons().add(new Image("/resources/icon.png"));
         //Add scene 
-
+        Scene scene = new Scene(root);
         //set all disable
+        diagnosisMenu.setDisable(true);
         comboboxSearchBy.setDisable(false);
         tfPatientDNI.setDisable(true);
         dpDateLow.setDisable(true);
@@ -727,6 +740,78 @@ public class DiagnosisController {
                 break;
         }
 
+    }
+
+    @FXML
+    public void handleOpenDiagnosis(ActionEvent event) {
+        Stage stage = new Stage();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../viewDiagnosis/Diagnosis.fxml"));
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        DiagnosisController controller = (DiagnosisController) loader.getController();
+
+        controller.setStage(stage);
+
+        controller.initData(user);
+        controller.initialize(root);
+
+    }
+
+    @FXML
+    private void handleOpenDailyNote(ActionEvent event) {
+        Stage stage = new Stage();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../dailyNote/DailyNoteWindowPatient.fxml"));
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        DailyNoteWindowController controller = (DailyNoteWindowController) loader.getController();
+
+        controller.setStage(stage);
+
+        controller.initData(user);
+
+        controller.initialize(root);
+    }
+
+    @FXML
+    private void exitapp(ActionEvent event) {
+
+        ButtonType chooseExit = new ButtonType("Exit", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert alert = new Alert(Alert.AlertType.NONE, "Do you want to log out or exit the application?", chooseExit);
+
+        alert.setTitle("Log out or exit");
+
+        Optional<ButtonType> option = alert.showAndWait();
+        if (option.get()
+                == chooseExit) {
+            Platform.exit();
+        }
+    }
+    @FXML
+    private void menuHelp(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/viewDiagnosis/DiagnosisHelp.fxml"));
+            Parent root = (Parent) loader.load();
+            DiagnosisHelpController help2Controller = ((DiagnosisHelpController) loader.getController());
+            //Initializes and shows help stage
+            help2Controller.initialize(root);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE,
+                    "UI GestionUsuariosController: Error loading help window: {0}",
+                    ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 
     private void showInfoAlert(String infoMsg) {

@@ -5,7 +5,6 @@
  */
 package interfaces;
 
-import entities.Diagnosis;
 import entities.MentalDisease;
 import exceptions.MentalDiseaseException;
 import java.util.List;
@@ -18,8 +17,6 @@ import javax.ws.rs.core.GenericType;
  */
 public interface MentalDiseaseInterface {
 
-
-
     public void create_XML(Object requestEntity) throws ClientErrorException;
 
     public void edit_XML(Object requestEntity) throws ClientErrorException;
@@ -28,9 +25,9 @@ public interface MentalDiseaseInterface {
 
     public <T> T getAllMentalDiseases_XML(GenericType<T> responseType) throws ClientErrorException;
 
-    public <T> T getMentalDiseasesById_XML(GenericType<T> responseType, String id) throws ClientErrorException;
+    public <T> T getMentalDiseasesById_XML(Class<T> responseType, String id) throws ClientErrorException;
 
-    public <T> T getMentalDiseasesByName_XML(GenericType<T> responseType, String name) throws MentalDiseaseException;
+    public <T> T getMentalDiseasesByName_XML(GenericType<T> responseType, String name) throws ClientErrorException;
 
     public <T> T getAllMentalDiseasesOrderByName_XML(GenericType<T> responseType) throws MentalDiseaseException;
 }

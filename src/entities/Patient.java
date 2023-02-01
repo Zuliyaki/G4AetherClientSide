@@ -29,6 +29,7 @@ public class Patient extends User {
     }
 
     public Patient(String mbti, Set<DailyNote> dailyNotes, Set<Diagnosis> diagnosises, Psychologist psychologist, Set<Appointment> appointments) {
+        super();
         this.mbti = mbti;
         this.dailyNotes = dailyNotes;
         this.diagnosises = diagnosises;
