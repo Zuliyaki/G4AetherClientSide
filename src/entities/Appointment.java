@@ -2,28 +2,30 @@ package entities;
 
 import java.io.Serializable;
 import java.util.Date;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Janam
  */
-
-
+@XmlRootElement(name = "appointment")
 public class Appointment implements Serializable {
 
     private static final long serialVersionUID = 1L;
-   
+
+    // ID for the appointment
     private Long idAppointment;
 
-    
+    // In case of appointment change
     private Boolean appointmentChange;
 
+    // Dated for the appointments
     private Date appointmentDate;
-
+    
+    // Patient DNI for the appointment
     private Patient patient;
 
+    // Psychologist DNI for the appointment
     private Psychologist psychologist;
 
     /**
@@ -34,7 +36,7 @@ public class Appointment implements Serializable {
     }
 
     /**
-     * Constructor with parameters
+     * Constructor with  Appointment parameters
      *
      * @param idAppointmet
      * @param appointmentDate
@@ -42,7 +44,7 @@ public class Appointment implements Serializable {
      * @param patient
      * @param psychologist
      */
-    public Appointment(Long idAppointmet, Date appointmentDate, Boolean appointmentChange, Patient patient, Psychologist psychologist) {
+    public Appointment(Long idAppointment, Date appointmentDate, Boolean appointmentChange, Patient patient, Psychologist psychologist) {
         this.idAppointment = idAppointment;
         this.appointmentDate = appointmentDate;
         this.appointmentChange = appointmentChange;
@@ -50,7 +52,8 @@ public class Appointment implements Serializable {
         this.psychologist = psychologist;
     }
 
-    //Getters & Setters
+    //Getters & Setters for all the appointments 
+    
     /**
      *
      * @return idAppointment
@@ -132,38 +135,8 @@ public class Appointment implements Serializable {
     }
 
     /**
-     * HasCode
-     *
-     * @return
-     */
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idAppointment != null ? idAppointment.hashCode() : 0);
-        return hash;
-    }
-
-    /**
-     *
-     * @param object
-     * @return
-     */
-    @Override
-    public boolean equals(Object object) {
-
-        if (!(object instanceof Appointment)) {
-            return false;
-        }
-        Appointment other = (Appointment) object;
-        if ((this.idAppointment == null && other.idAppointment != null) || (this.idAppointment != null && !this.idAppointment.equals(other.idAppointment))) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     *
-     * @return
+     * 
+     * @return 
      */
     @Override
     public String toString() {

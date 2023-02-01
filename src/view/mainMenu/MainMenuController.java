@@ -47,6 +47,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
+import view.Appointment.AppointmentController;
 import view.dailyNote.DailyNoteWindowController;
 import view.viewDiagnosis.DiagnosisController;
 
@@ -181,7 +182,22 @@ public class MainMenuController {
 
     @FXML
     private void handleAppointmentButtonAction(ActionEvent event) {
+        Stage stage = new Stage();
 
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../Appointment/Appointment.fxml"));
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        AppointmentController controller = (AppointmentController) loader.getController();
+
+        controller.setStage(stage);
+
+        controller.initData(user);
+        controller.initialize(root);
     }
 
     @FXML
@@ -207,7 +223,7 @@ public class MainMenuController {
 
     @FXML
     private void handleOpenDailyNote(ActionEvent event) {
- Stage stage = new Stage();
+        Stage stage = new Stage();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../dailyNote/DailyNoteWindowPatient.fxml"));
         Parent root = null;
@@ -223,6 +239,25 @@ public class MainMenuController {
 
         controller.initData(user);
 
+        controller.initialize(root);
+    }
+    @FXML
+    private void handleOpenAppointment(ActionEvent event) {
+       Stage stage = new Stage();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../Appointment/Appointment.fxml"));
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        AppointmentController controller = (AppointmentController) loader.getController();
+
+        controller.setStage(stage);
+
+        controller.initData(user);
         controller.initialize(root);
     }
 
