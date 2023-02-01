@@ -32,6 +32,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -78,6 +80,10 @@ public class MentalDisease1Controller {
     @FXML
     private TextField txtfSearch;
     @FXML
+    private MenuItem mniFindAllDiseases;
+    @FXML
+    private Menu mnUser;
+    @FXML
     private Pane pnMentalDisease1;
 
     /**
@@ -115,6 +121,12 @@ public class MentalDisease1Controller {
         this.btnSearch.setDisable(true);
         this.btnModify.setDisable(true);
         this.btnDelete.setDisable(true);
+
+        // The menu item is disabled
+        this.mniFindAllDiseases.setDisable(true);
+
+        //The menu user is disabled
+        this.mnUser.setDisable(true);
 
         LOGGER.info("window initialized");
 
@@ -182,8 +194,8 @@ public class MentalDisease1Controller {
     }
 
     /**
-     * Mental diseases table selection changed event handler. It enables or disables
-     * buttons depending on selection state of the table.
+     * Mental diseases table selection changed event handler. It enables or
+     * disables buttons depending on selection state of the table.
      *
      * @param observable the property being observed: SelectedItem Property
      * @param oldValue old UserBean value for the property.
@@ -218,14 +230,31 @@ public class MentalDisease1Controller {
         try {
             if (this.cmbSearch.getSelectionModel().getSelectedItem().equals("by ID")) {
                 byID = mentalDiseaseInterface.getMentalDiseasesById_XML(MentalDisease.class, this.txtfSearch.getText());
-                mentalDisease = FXCollections.observableArrayList(byID);
-            } else if (this.cmbSearch.getSelectionModel().getSelectedItem().equals("by name")) {
-                byName = mentalDiseaseInterface.getMentalDiseasesByName_XML(new GenericType<List<MentalDisease>>() {}, this.txtfSearch.getText());
+                if (byID != null) {
+                    mentalDisease = FXCollections.observableArrayList(byID);
+                    this.tbvMentalDiseases.setItems(mentalDisease);
+                    tbvMentalDiseases.refresh();
+                    this.txtfSearch.setText("");
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Not found.", ButtonType.OK);
+                    alert.showAndWait();
+                }
 
-                mentalDisease = FXCollections.observableArrayList(byName);
+            } else if (this.cmbSearch.getSelectionModel().getSelectedItem().equals("by name")) {
+                byName = mentalDiseaseInterface.getMentalDiseasesByName_XML(new GenericType<List<MentalDisease>>() {
+                }, this.txtfSearch.getText());
+
+                if (!byName.isEmpty()) {
+                    mentalDisease = FXCollections.observableArrayList(byName);
+                    this.tbvMentalDiseases.setItems(mentalDisease);
+                    tbvMentalDiseases.refresh();
+                    this.txtfSearch.setText("");
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Not found.", ButtonType.OK);
+                    alert.showAndWait();
+                }
             }
-            this.tbvMentalDiseases.setItems(mentalDisease);
-            tbvMentalDiseases.refresh();
+
         } catch (ClientErrorException ex) {
             showErrorAlert("Error, not found.");
             LOGGER.log(Level.SEVERE,
@@ -360,26 +389,26 @@ public class MentalDisease1Controller {
     private void handlePrintButtonAction(javafx.event.ActionEvent event) {
         try {
             LOGGER.info("Beginning printing action...");
-            JasperReport report=JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/MentalDiseaseReport.jrxml"));
+            JasperReport report = JasperCompileManager.compileReport(getClass().getResourceAsStream("/reports/MentalDiseaseReport.jrxml"));
             //Data for the report: a collection of UserBean passed as a JRDataSource 
             //implementation 
-            JRBeanCollectionDataSource dataItems= new JRBeanCollectionDataSource((Collection<MentalDisease>)this.tbvMentalDiseases.getItems());
+            JRBeanCollectionDataSource dataItems = new JRBeanCollectionDataSource((Collection<MentalDisease>) this.tbvMentalDiseases.getItems());
             //Map of parameter to be passed to the report
-            Map<String,Object> parameters=new HashMap<>();
+            Map<String, Object> parameters = new HashMap<>();
             //Fill report with data
-            JasperPrint jasperPrint = JasperFillManager.fillReport(report,parameters,dataItems);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
             //Create and show the report window. The second parameter false value makes 
             //report window not to close app.
-            JasperViewer jasperViewer = new JasperViewer(jasperPrint,false);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
-           // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+            // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         } catch (Exception ex) {
             ex.printStackTrace();
             //If there is an error show message and
             //log it.
             LOGGER.log(Level.SEVERE,
-                        "UI GestionUsuariosController: Error printing report: {0}",
-                        ex.getMessage());
+                    "UI GestionUsuariosController: Error printing report: {0}",
+                    ex.getMessage());
         }
     }
 

@@ -2,14 +2,14 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 
 <Pane fx:id="pnMentalDisease2" prefHeight="600" prefWidth="850.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.mentalDisease.MentalDisease2Controller">
    
@@ -51,10 +51,10 @@
             <menus>
                 <Menu mnemonicParsing="false" text="Mental diseases">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Find all diseases" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleFindAllDiseasesMenuAction" text="Find all diseases" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="User">
+                <Menu fx:id="mnUser" mnemonicParsing="false" text="User">
                     <items>
                         <MenuItem mnemonicParsing="false" text="Find all users" />
                         <MenuItem mnemonicParsing="false" text="Register a psychologist" />

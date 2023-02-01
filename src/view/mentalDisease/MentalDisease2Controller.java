@@ -36,6 +36,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.Menu;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javax.ws.rs.ClientErrorException;
@@ -75,6 +76,8 @@ public class MentalDisease2Controller {
     private Text txtSymptons;
     @FXML
     private Text txtDescription;
+    @FXML
+    private Menu mnUser;
 
     public void initializeCreate(Parent root) {
         LOGGER.info("Initializing the window");
@@ -104,6 +107,9 @@ public class MentalDisease2Controller {
         // The Create and Modify buttons are disabled.
         this.btnModify.setDisable(true);
         this.btnCreate.setDisable(true);
+
+        //The menu user is disabled
+        this.mnUser.setDisable(true);
 
         //
         this.txtfName.textProperty().addListener((event) -> this.textChangeCreate(KeyEvent.KEY_TYPED));
@@ -343,6 +349,31 @@ public class MentalDisease2Controller {
                 Platform.exit();
             }
         }
+    }
+
+    @FXML
+    private void handleFindAllDiseasesMenuAction(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mentalDisease/MentalDisease1.fxml"));
+
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(MentalDisease2Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        MentalDisease1Controller controller = (MentalDisease1Controller) loader.getController();
+
+        controller.setStage(stage);
+
+        controller.initialize(root);
+
+        Scene scene = new Scene(root);
+
+        stage.setResizable(false);
+
+        stage.setScene(scene);
+        stage.show();
     }
 
     protected void showErrorAlert(String errorMsg) {
