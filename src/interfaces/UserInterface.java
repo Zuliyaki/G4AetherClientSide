@@ -5,7 +5,7 @@
  */
 package interfaces;
 
-import exceptions.ClientErrorException;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 
 /**

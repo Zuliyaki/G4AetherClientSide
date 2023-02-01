@@ -7,9 +7,27 @@ package view.signUp;
 
 //import classes.*;
 //import factories.FactoryClient;
+import entities.Patient;
+import entities.Psychologist;
+import entities.User;
+import factories.PatientFactory;
+import factories.PsychologistFactory;
+import interfaces.PatientInterface;
+import interfaces.PsychologistInterface;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -18,6 +36,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -28,7 +47,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import view.logIn.LogInController;
+import javax.crypto.Cipher;
+import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.core.GenericType;
 
 /**
  *
@@ -37,6 +58,8 @@ import view.logIn.LogInController;
 public class SignUpController {
 
     public Stage stage;
+    private final PsychologistInterface psychologistInterface = PsychologistFactory.getModel();
+    private final PatientInterface patientInterface = PatientFactory.getModel();
     private static final Logger LOGGER = Logger.getLogger("view");
 
     private static final String USERNAME_REGEX = "^[a-zñÑA-Z0-9]*$";
@@ -45,11 +68,10 @@ public class SignUpController {
     private static final String PASSWORD_REGEX = "^[A-Za-z\\d@$!%*#?&]{8,}$";
     private boolean passwordFieldCorrect = false;
     private boolean allFieldsFill = false;
-    
-//    private User user;
 
+//    private User user;
     @FXML
-    private TextField tfUsername;
+    private TextField tfDNI;
     @FXML
     private TextField tfFullName;
     @FXML
@@ -58,6 +80,14 @@ public class SignUpController {
     private PasswordField pfPassword;
     @FXML
     private PasswordField pfRepeatPassword;
+    @FXML
+    private TextField tfPhoneNumber;
+    @FXML
+    private TextField tfInvitationCode;
+    @FXML
+    private TextField tfBirthDate;
+    @FXML
+    private ComboBox<String> comboMBTI;
     @FXML
     private Hyperlink hlLogin;
     @FXML
@@ -96,15 +126,18 @@ public class SignUpController {
         stage.show();
 
         //For each field add tooltips with the same name as the prompt text.
-        tfUsername.setTooltip(new Tooltip("Username"));
+        tfDNI.setTooltip(new Tooltip("Username"));
         tfFullName.setTooltip(new Tooltip("Name and Surname"));
         tfEmail.setTooltip(new Tooltip("Email"));
         pfPassword.setTooltip(new Tooltip("Password"));
         pfRepeatPassword.setTooltip(new Tooltip("Repeat password"));
         hlLogin.setTooltip(new Tooltip("Back to login"));
+        String[] a = {"INTP", "ENTP", "INTJ", "ENTJ", "INFP", "ENFP", "INFJ", "ENFJ", "ISFP", "ESTP", "ISTP", "ESFP", "ISTJ", "ESTJ", "ESFJ", "ISFJ",};
+        ObservableList<String> mBTIs = FXCollections.observableArrayList(a);
+        comboMBTI.setItems(mBTIs);
 
         //Set event handlers
-        this.tfUsername.textProperty().addListener(this::handleFieldsTextChange);
+        this.tfDNI.textProperty().addListener(this::handleFieldsTextChange);
         this.tfFullName.textProperty().addListener(this::handleFieldsTextChange);
         this.tfEmail.textProperty().addListener(this::handleFieldsTextChange);
         this.pfPassword.textProperty().addListener(this::handleFieldsTextChange);
@@ -117,7 +150,7 @@ public class SignUpController {
          * will appear below the text field with a “We don't allow spaces in
          * this field.”, when another letter is written the text will disappear.
          */
-        tfUsername.addEventFilter(KeyEvent.KEY_TYPED, evt -> {
+        tfDNI.addEventFilter(KeyEvent.KEY_TYPED, evt -> {
             if (" ".equals(evt.getCharacter())) {
                 evt.consume();
                 lblUsername.setText("We do not allow spaces in this field.");
@@ -159,8 +192,8 @@ public class SignUpController {
 
     /**
      *
-     * Validates that user, fullname, email, password, and repeatpassword fields has any content to enable/disable
-     * continue button.
+     * Validates that user, fullname, email, password, and repeatpassword fields
+     * has any content to enable/disable continue button.
      *
      * @param observable The value being observed.
      * @param oldValue The old value of the observable.
@@ -173,8 +206,8 @@ public class SignUpController {
          * Maximum character permitted in username field will be 20, fullname
          * and email 30 and password fields 8 minimum, 24 maximum
          */
-        if (tfUsername.getText().length() > 20) {
-            tfUsername.setText(tfUsername.getText().substring(0, 20));
+        if (tfDNI.getText().length() > 20) {
+            tfDNI.setText(tfDNI.getText().substring(0, 20));
         }
         if (tfEmail.getText().length() > 30) {
             tfEmail.setText(tfEmail.getText().substring(0, 30));
@@ -190,7 +223,7 @@ public class SignUpController {
         }
 
         //Control label texts, when another letter is written the text will disappear.
-        if (!(tfUsername.getText().equals(oldValue)) || !(tfEmail.getText().equals(oldValue)) || !(pfPassword.getText().equals(oldValue)) || !(pfRepeatPassword.getText().equals(oldValue))) {
+        if (!(tfDNI.getText().equals(oldValue)) || !(tfEmail.getText().equals(oldValue)) || !(pfPassword.getText().equals(oldValue)) || !(pfRepeatPassword.getText().equals(oldValue))) {
             lblUsername.setText("");
             lblEmail.setText("");
             lblPassword.setText("");
@@ -240,7 +273,7 @@ public class SignUpController {
          * If any of the fields are empty the continue button will be disabled.
          * If all of them are written it will be enabled.
          */
-        if (tfUsername.getText().isEmpty() || tfFullName.getText().isEmpty() || tfEmail.getText().isEmpty() || pfPassword.getText().isEmpty() || pfRepeatPassword.getText().isEmpty()) {
+        if (tfDNI.getText().isEmpty() || tfFullName.getText().isEmpty() || tfEmail.getText().isEmpty() || pfPassword.getText().isEmpty() || pfRepeatPassword.getText().isEmpty()) {
             allFieldsFill = false;
             pfPassword.setStyle("-fx-control-inner-background: white;");
             pfRepeatPassword.setStyle("-fx-control-inner-background: white;");
@@ -285,7 +318,7 @@ public class SignUpController {
     public void handleButtonContinueAction(ActionEvent event) {
         try {
             //The username (text field) and full name text field will not allow special characters
-            if (!this.tfUsername.getText().matches(USERNAME_REGEX)) {
+            if (!this.tfDNI.getText().matches(USERNAME_REGEX)) {
                 throw new Exception("Username field do not admit special characters.");
             }
             /**
@@ -305,37 +338,85 @@ public class SignUpController {
             if (!this.pfPassword.getText().matches(PASSWORD_REGEX)) {
                 throw new Exception("The password can only use this special characters [@$!%*#?&]");
             }
-/*
+
             //The information of all text fields will be collected, validated, and stored in an object of type User.
-            User newUser = new User();
-            newUser.setLogin(tfUsername.getText().toLowerCase());
+            Patient newUser = new Patient();
+            Psychologist newPsychologist = new Psychologist();
+            List<Psychologist> newPsychologists;
+            List<Patient> newPatients;
+
+            newPsychologists = psychologistInterface.findAllPsychologists_XML(new GenericType<List<Psychologist>>() {
+            });
+            for (Psychologist newPsychologist1 : newPsychologists) {
+                if (tfInvitationCode.getText().equals(newPsychologist1.getDni())) {
+                    newPsychologist = newPsychologist1;
+                }
+            }
+
+            newUser.setUser_type("patient");
+            newUser.setDni(tfDNI.getText().toLowerCase());
             newUser.setFullName(tfFullName.getText().trim());
             newUser.setEmail(tfEmail.getText());
-            newUser.setPassword(pfPassword.getText());
-            newUser.setPrivilege(UserPrivilege.USER);
-            newUser.setStatus(UserStatus.ENABLE);
 
-            LoginLogout clientLoginLogout = null;
+            // Encryt
+            byte[] encodedMessage = null;
+            byte fileKeyPublicClient[] = fileReader(".\\Cliente\\PublicKeyServidor.key");
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            X509EncodedKeySpec spec = new X509EncodedKeySpec(fileKeyPublicClient);
+            PublicKey publicKey = keyFactory.generatePublic(spec);
 
+            Cipher cipher = Cipher.getInstance("RSA/ECB/NoPadding");
+
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+            encodedMessage = cipher.doFinal(pfPassword.getText().getBytes());
+
+            newUser.setPassword(encodedMessage.toString());
+            newUser.setPhoneNumber(Integer.parseInt(tfPhoneNumber.getText()));
+            newUser.setPsychologist(newPsychologist);
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            date = sdf.parse(tfBirthDate.getText());
+            newUser.setBirthDate(date);
+            newUser.setMbti(comboMBTI.getSelectionModel().getSelectedItem());
+
+            newPatients = patientInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
+            });
+            for (Patient newPatient1 : newPatients) {
+                if (newUser.getDni().equals(newPatient1.getDni())) {
+                    throw new Exception("This user DNI already exists");
+                }
+                if (newUser.getEmail().equals(newPatient1.getEmail())) {
+                    throw new Exception("This email already exists");
+                }
+            }
             try {
-                clientLoginLogout = FactoryClient.getLoginLogout();
-                clientLoginLogout.signUp(newUser);
-
-            } catch (Exception ex) {
+                patientInterface.createPatient_XML(newUser);
+            } catch (ClientErrorException ex) {
                 throw new Exception(ex.getMessage());
                 //LOGGER.log(Level.SEVERE, ex.getMessage());
             }
 
             //It will show an alert that the user signed up correctly. We will close this window and open the login window.
-            new Alert(Alert.AlertType.INFORMATION, "User created correctly", ButtonType.OK).showAndWait();            
-            
+            new Alert(Alert.AlertType.INFORMATION, "User created correctly", ButtonType.OK).showAndWait();
+
             //Close the stage
             Stage stage = (Stage) this.btnContinue.getScene().getWindow();
             stage.close();
-            */
+
         } catch (Exception e) {
             //If there is any error, the exception that has been received will be managed by an alert.
             new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
         }
+    }
+
+    private byte[] fileReader(String path) {
+        byte ret[] = null;
+        File file = new File(path);
+        try {
+            ret = Files.readAllBytes(file.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ret;
     }
 }

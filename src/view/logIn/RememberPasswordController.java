@@ -38,7 +38,7 @@ import view.signUp.SignUpController;
  *
  * @author LeireyZulu
  */
-public class LogInController {
+public class RememberPasswordController {
 
     private User user;
     private Stage stage;

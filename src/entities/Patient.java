@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author unaibAndLeire
  */
-@XmlRootElement(name="patient")
+@XmlRootElement(name = "patient")
 public class Patient extends User {
 
     private String mbti;
@@ -28,15 +28,6 @@ public class Patient extends User {
     }
 
     public Patient(String mbti, Set<DailyNote> dailyNotes, Set<Diagnosis> diagnosises, Psychologist psychologist, Set<Appointment> appointments) {
-        this.mbti = mbti;
-        this.dailyNotes = dailyNotes;
-        this.diagnosises = diagnosises;
-        this.psychologist = psychologist;
-        this.appointments = appointments;
-    }
-
-    public Patient(String mbti, Set<DailyNote> dailyNotes, Set<Diagnosis> diagnosises, Psychologist psychologist, Set<Appointment> appointments, String dni, String fullName, Date birthDate, String password, Integer phoneNumber, String email) {
-        super(dni, fullName, birthDate, password, phoneNumber, email);
         this.mbti = mbti;
         this.dailyNotes = dailyNotes;
         this.diagnosises = diagnosises;

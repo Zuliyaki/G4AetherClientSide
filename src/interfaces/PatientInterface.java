@@ -14,6 +14,8 @@ import javax.ws.rs.core.GenericType;
  */
 public interface PatientInterface {
     
+    public void createPatient_XML(Object requestEntity) throws ClientErrorException;
+    
     public void sendRecoveryEmail_XML(Object requestEntity) throws ClientErrorException;
 
     public <T> T findAllPatients_XML(GenericType<T> responseType) throws ClientErrorException;

@@ -9,7 +9,6 @@ import entities.DailyNote;
 import entities.EnumReadedStatus;
 import entities.Patient;
 import entities.User;
-import exceptions.ClientErrorException;
 import factories.DailyNoteFactory;
 import factories.PatientFactory;
 import interfaces.DailyNotesInterface;
@@ -52,6 +51,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -130,7 +130,7 @@ public class DailyNoteWindowController {
     private Button btnDelete;
     @FXML
     private ContextMenu tableContextMenu;
-    
+
     private Patient patient;
 
     /**
@@ -225,7 +225,7 @@ public class DailyNoteWindowController {
 
         stage.show();
     }
-    
+
     public void initData(User user) {
         this.user = user;
     }
@@ -564,7 +564,7 @@ public class DailyNoteWindowController {
             for (DailyNote dn : allPatientDailyNote) {
                 String stringDate = sdf.format(dn.getNoteDate());
                 if (stringDate.equals(stringNewDate)) {
-                    throw new ClientErrorException("Today's note has already been added");
+                    throw new Exception("");
                 }
             }
             newDailyNote.setNoteDate(date);
@@ -597,6 +597,9 @@ public class DailyNoteWindowController {
         } catch (ClientErrorException ex) {
             Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
             showErrorAlert(ex.getMessage());
+        } catch (Exception ex) {
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+            showErrorAlert(ex.getMessage());
         }
 
     }
@@ -625,7 +628,7 @@ public class DailyNoteWindowController {
                 String stringDate = sdf.format(dn.getNoteDate());
                 if (!dn.getId().equals(newDailyNote.getId())) {
                     if (stringDate.equals(stringNewDate)) {
-                        throw new ClientErrorException("There already exists a note on that date");
+                        throw new Exception("There already exists a note on that date");
                     }
                 }
             }
@@ -650,6 +653,9 @@ public class DailyNoteWindowController {
             showInfoAlert("Modified successfully");
             LOGGER.info("Modified successfully");
         } catch (ClientErrorException ex) {
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+            showErrorAlert(ex.getMessage());
+        } catch (Exception ex) {
             Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
             showErrorAlert(ex.getMessage());
         }

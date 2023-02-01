@@ -10,9 +10,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author unaibAndLeire
  */
-@XmlRootElement(name="user")
+@XmlRootElement(name = "user")
 public class User implements Serializable {
 
+    private String user_type;
     private String dni;
     private String fullName;
     private Date birthDate;
@@ -26,17 +27,8 @@ public class User implements Serializable {
     public User() {
     }
 
-    /**
-     * Costructor with parameters
-     *
-     * @param dni
-     * @param fullName
-     * @param birthDate
-     * @param password
-     * @param phoneNumber
-     * @param email
-     */
-    public User(String dni, String fullName, Date birthDate, String password, Integer phoneNumber, String email) {
+    public User(String user_type, String dni, String fullName, Date birthDate, String password, Integer phoneNumber, String email) {
+        this.user_type = user_type;
         this.dni = dni;
         this.fullName = fullName;
         this.birthDate = birthDate;
@@ -46,6 +38,14 @@ public class User implements Serializable {
     }
 
     //Getters & Setters
+    public void setUser_type(String user_type) {
+        this.user_type = user_type;
+    }
+
+    public String getUser_type() {
+        return user_type;
+    }
+
     public void setDni(String dni) {
         this.dni = dni;
     }
