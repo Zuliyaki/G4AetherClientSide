@@ -150,6 +150,7 @@ public class DailyNoteWindowController {
      * @param root The Parent object representing root node of view graph.
      */
     public void initialize(Parent root) {
+        
         Scene scene = new Scene(root);
         //Not a resizable window.
         stage.setResizable(false);
@@ -161,12 +162,14 @@ public class DailyNoteWindowController {
         stage.getIcons().add(new Image("resources/icon.png"));
         //init values
         List<Patient> patients;
+        
         try {
             patients = pInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
             });
             for (Patient newPatient : patients) {
                 if (newPatient.getDni().equals(user.getDni())) {
                     patient = newPatient;
+                    patient.setDni("35140444d");
                 }
             }
         } catch (Exception ex) {
@@ -243,6 +246,7 @@ public class DailyNoteWindowController {
 
     public void initData(User user) {
         this.user = user;
+        this.user.setDni("35140444d");
     }
 
     private void handleFieldsTextChange(ObservableValue observable,

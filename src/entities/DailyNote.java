@@ -4,15 +4,13 @@ import java.io.Serializable;
 
 import java.util.Date;
 import java.util.Objects;
-
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author unaib
  */
-
+@XmlRootElement(name = "dailyNote")
 public class DailyNote implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -20,12 +18,11 @@ public class DailyNote implements Serializable {
     /**
      * Auto generated daily note id
      */
-   
     private Long id;
     /**
      * Patient that wrote the note
      */
-   
+
     private Patient dnPatient;
     /**
      * Content of the note
