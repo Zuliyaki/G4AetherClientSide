@@ -9,6 +9,7 @@ import factories.PsychologistFactory;
 import interfaces.AppointmentInterface;
 import interfaces.PatientInterface;
 import interfaces.PsychologistInterface;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.util.Collection;
@@ -25,6 +26,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
@@ -46,7 +48,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javax.swing.WindowConstants;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
 import net.sf.jasperreports.engine.JRException;
@@ -114,6 +115,8 @@ public class AppointmentController {
     private Button updatebtn;
     @FXML
     private Button createbtn;
+    @FXML
+    private Button helpbtn;
 
     // exit Button
     @FXML
@@ -220,6 +223,9 @@ public class AppointmentController {
             // searchbtn setOnAction event Handlers
             this.searchbtn.setOnAction(this::handleSearchButtonAction);
 
+            // searchbtn setOnAction event Handlers
+            this.helpbtn.setOnAction(this::handleHelpButtonAction);
+
             //Set handleFieldsTextChange event handlers
             this.idtf.textProperty().addListener(this::handleFieldsTextChange);
 
@@ -267,7 +273,7 @@ public class AppointmentController {
 
             //Set hand cursor on print button
             printbtn.setCursor(Cursor.HAND);
-            
+
             //Show the window.
             stage.show();
 
@@ -535,6 +541,7 @@ public class AppointmentController {
      * @return
      * @throws Exception
      */
+    /*
     @FXML
     private ObservableList<Appointment> loadAppointmentID() {
 
@@ -560,7 +567,7 @@ public class AppointmentController {
         return appointmentID;
 
     }
-
+     */
     /**
      * Find by Date
      *
@@ -915,7 +922,6 @@ public class AppointmentController {
             jasperViewer.setVisible(true);
 
             //jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-
         } catch (JRException ex) {
 
             //If there is an error show message and log it.
@@ -942,14 +948,46 @@ public class AppointmentController {
 
             case "Find Appointment by ID":
 
-                loadAppointmentID();
-
+                //loadAppointmentID();
                 break;
 
             case "Find Appointment by Date":
 
                 //loadAppointmentDate();
                 break;
+        }
+
+    }
+
+    /**
+     * Action event handler for help button. It shows a Stage containing a scene
+     * with a web viewer showing a help page for the window.
+     *
+     * @param event The ActionEvent object for the event.
+     */
+    @FXML
+    private void handleHelpButtonAction(ActionEvent event) {
+
+        try {
+
+            LOGGER.info("Loading help view...");
+
+            //Load node graph from fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Appointment/Help.fxml"));
+
+            Parent root = (Parent) loader.load();
+
+            HelpController helpController = ((HelpController) loader.getController());
+
+            //Initializes and shows help stage
+            helpController.initHelp(root);
+
+        } catch (IOException ex) {
+
+            //If there is an error show message and log it.
+            showErrorAlert("Error showing help window." + ex.getMessage());
+
+            LOGGER.log(Level.SEVERE, "View AppointmentController: Error loading help window !!", ex.getMessage());
         }
 
     }

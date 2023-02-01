@@ -84,6 +84,7 @@
             <Label fx:id="patientlbl" layoutX="24.0" layoutY="152.0" prefHeight="17.0" prefWidth="149.0" />
             <Label fx:id="psychologistlbl" layoutX="212.0" layoutY="152.0" prefHeight="17.0" prefWidth="149.0" />
             <DatePicker fx:id="datepicker" layoutX="212.0" layoutY="68.0" prefHeight="25.0" prefWidth="149.0" promptText="dd-mm-yyyy" />
+            <Button fx:id="helpbtn" layoutX="492.0" layoutY="19.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Help" />
          </children>
       </Pane>
       <Pane fx:id="panetable" prefHeight="366.0" prefWidth="604.0">

@@ -21,6 +21,8 @@
         </data>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
             <word>Costructor</word>
+            <word>DNI</word>
+            <word>fmxl</word>
         </spellchecker-wordlist>
     </configuration>
 </project>
