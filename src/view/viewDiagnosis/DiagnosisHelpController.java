@@ -36,7 +36,7 @@ public class DiagnosisHelpController {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
-        stage.setTitle("Help");
+        stage.setTitle("Diagnosis Help");
         stage.setResizable(false);
         stage.setMinWidth(800);
         stage.setMinHeight(600);
@@ -51,7 +51,6 @@ public class DiagnosisHelpController {
     private void handleWindowShowing(WindowEvent event){
         WebEngine webEngine = webView.getEngine();
         //Load help page.
-        System.out.println(getClass().getResource("DiagnosisHelp.html"));
         webEngine.load(getClass().getResource("/view/viewDiagnosis/DiagnosisHelp.html").toExternalForm());
     }
 }

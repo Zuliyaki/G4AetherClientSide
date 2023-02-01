@@ -55,6 +55,6 @@ public class DailyNoteHelpController {
         WebEngine webEngine = webView.getEngine();
         //Load help page.
         webEngine.load(getClass()
-                .getResource("/javafxapplicationud3example/ui/view/help.html").toExternalForm());
+                .getResource("/view/dailyNote/DailyNoteHelp.html").toExternalForm());
     }
 }

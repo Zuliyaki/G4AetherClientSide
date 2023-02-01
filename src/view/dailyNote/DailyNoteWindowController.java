@@ -804,7 +804,7 @@ public class DailyNoteWindowController {
     @FXML
     private void menuHelp(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/dailyNote/DailyNoteHelp.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dailyNote/DailyNoteHelp.fxml"));
             Parent root = (Parent) loader.load();
             DailyNoteHelpController helpDailyNoteController = ((DailyNoteHelpController) loader.getController());
             //Initializes and shows help stage
