@@ -15,32 +15,22 @@
 
 <VBox prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.mainMenu.MainMenuController">
   <children>
-    <MenuBar VBox.vgrow="NEVER">
-      <menus>
-        <Menu mnemonicParsing="false" text="Diagnosis">
+      <MenuBar prefHeight="26.0" prefWidth="603.0">
+         <menus>
+            <Menu mnemonicParsing="false" text="Diagnosis">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Find diagnosis by id" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleOpenDiagnosis" text="Open" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Find all diagnosis" />
-                  <MenuItem mnemonicParsing="false" text="Find all diagnosis by patient" />
-                  <MenuItem mnemonicParsing="false" text="Find all diagnosis by date" />
-                  <MenuItem mnemonicParsing="false" text="Find all diagnosis on teraphy" />
+                  
                </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Daily Notes">
-          <items>
-            <MenuItem mnemonicParsing="false" text="Find note by id" />
-            <MenuItem mnemonicParsing="false" text="Find note by date" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Find all notes" />
-            <MenuItem mnemonicParsing="false" text="Find all notes by patient" />
-            <MenuItem mnemonicParsing="false" text="Find all patient edited notes" />
-            <MenuItem mnemonicParsing="false" text="Find all patient notes by not readable" />
-            <MenuItem mnemonicParsing="false" text="Find all patient notes between dates" />
-            <MenuItem mnemonicParsing="false" text="Find all patient notes between day scores" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Appointments">
+            </Menu>
+            <Menu mnemonicParsing="false" text="Daily Notes">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handleOpenDailyNote" text="Open" />
+                  
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Appointments">
                <items>
                   <MenuItem mnemonicParsing="false" text="Find appointment by id" />
                   <MenuItem mnemonicParsing="false" text="Find appointment by date" />
@@ -48,28 +38,20 @@
                   <MenuItem mnemonicParsing="false" text="Find all appointments" />
                   <MenuItem mnemonicParsing="false" text="Find all appointment by change" />
                </items>
-        </Menu>
-            <Menu mnemonicParsing="false" text="Mental diseases">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="Find all diseases" />
-               </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="&lt;User&gt;">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="Find all users" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Register a psychologist" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Log out" />
-               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
                <items>
                   <MenuItem mnemonicParsing="false" text="User Manual" />
                </items>
             </Menu>
-      </menus>
-    </MenuBar>
+            <Menu mnemonicParsing="false" text="&lt;User&gt;">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Change Password" />
+                  <MenuItem mnemonicParsing="false" onAction="#exitapp" text="Log out" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
     <AnchorPane fx:id="anchorPane" maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" style="-fx-background-color: e7f1ff;" VBox.vgrow="ALWAYS">
       <children>
         <Label fx:id="lblWelcome" alignment="CENTER" layoutX="307.0" layoutY="73.0" prefHeight="27.0" prefWidth="587.0" style="&#10;" text="Welcome &lt;UserFullName&gt;" textAlignment="CENTER" wrapText="false">
@@ -81,7 +63,7 @@
                <graphic>
                   <ImageView fitHeight="175.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image fx:id="imgDiagnosis" url="@../view/mainMenu/resources/Diagnosis.png" />
+                        <Image fx:id="imgDiagnosis" url="@resources/Diagnosis.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -90,7 +72,7 @@
                <graphic>
                   <ImageView fitHeight="175.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../Documents/NetBeansProjects/G4AetherClientSide/build/classes/view/mainMenu/resources/DailyNote.png" />
+                        <Image url="@resources/DailyNote.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -99,7 +81,7 @@
                <graphic>
                   <ImageView fitHeight="175.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../Documents/NetBeansProjects/G4AetherClientSide/build/classes/view/mainMenu/resources/Appointment.png" />
+                        <Image url="@resources/Appointment.png" />
                      </image>
                   </ImageView>
                </graphic>

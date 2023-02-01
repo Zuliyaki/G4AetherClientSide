@@ -5,6 +5,7 @@
  */
 package restful;
 
+import exceptions.MentalDiseaseException;
 import interfaces.MentalDiseaseInterface;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
@@ -66,13 +67,19 @@ public class MentalDiseaseRestful implements MentalDiseaseInterface {
         return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
     }
 
-    public <T> T getAllMentalDiseasesOrderByName_XML(GenericType<T> responseType) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path("getAllByName");
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    public <T> T getAllMentalDiseasesOrderByName_XML(GenericType<T> responseType) throws MentalDiseaseException {
+        try {
+            WebTarget resource = webTarget;
+            resource = resource.path("getAllByName");
+            return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        } catch (Exception e) {
+            throw new MentalDiseaseException("cannot get mental diseases");
+        }
     }
 
-    public void create_JSON(Object requestEntity) throws ClientErrorException {
+
+
+public void create_JSON(Object requestEntity) throws ClientErrorException {
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
     }
 

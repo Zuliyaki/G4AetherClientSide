@@ -13,6 +13,8 @@ import entities.Treatment;
 import entities.User;
 import exceptions.DeleteException;
 import exceptions.DiagnosisNotFoundException;
+import exceptions.MentalDiseaseException;
+import exceptions.TreatmentNotFoundException;
 import exceptions.UpdateException;
 import factories.DiagnosisFactory;
 import factories.MentalDiseaseFactory;
@@ -251,8 +253,12 @@ public class DiagnosisController {
         //Mental disease combobox for the table
         List<MentalDisease> allMentalDisease = null;
 
-        allMentalDisease = mentalDiseaseInterface.getAllMentalDiseasesOrderByName_XML(new GenericType<List<MentalDisease>>() {
-        });
+        try {
+            allMentalDisease = mentalDiseaseInterface.getAllMentalDiseasesOrderByName_XML(new GenericType<List<MentalDisease>>() {
+            });
+        } catch (MentalDiseaseException ex) {
+            showErrorAlert(ex.getMessage());
+        }
 
         ObservableList<MentalDisease> mentaldisease = FXCollections.observableArrayList(allMentalDisease);
         //////////
@@ -430,9 +436,13 @@ public class DiagnosisController {
 
     private ObservableList<Treatment> loadAllTreaments(Diagnosis diagnosis) {
         ObservableList<Treatment> treatmentTableInfo;
-        List<Treatment> allTreatment;
-        allTreatment = treatmentInterface.findTreatmentsByDiagnosisId_XML(new GenericType<List<Treatment>>() {
-        }, diagnosis.getDiagnosisId());
+        List<Treatment> allTreatment = null;
+        try {
+            allTreatment = treatmentInterface.findTreatmentsByDiagnosisId_XML(new GenericType<List<Treatment>>() {
+            }, diagnosis.getDiagnosisId());
+        } catch (TreatmentNotFoundException ex) {
+            showErrorAlert(ex.getMessage());
+        }
         treatmentTableInfo = FXCollections.observableArrayList(allTreatment);
         if (allTreatment.isEmpty()) {
             tbTreatment.setVisible(false);
@@ -734,8 +744,7 @@ public class DiagnosisController {
             user = inituser;
 
         } else {
-            user = new Patient();
-            user.setDni(inituser.getDni());
+            user = inituser;
         }
 
     }
