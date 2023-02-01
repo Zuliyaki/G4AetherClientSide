@@ -21,7 +21,7 @@ import javafx.stage.WindowEvent;
  *
  * @author javi
  */
-public class Help1Controller {
+public class Help2Controller {
     /**
      * The control that shows the help page.
      */
@@ -50,6 +50,6 @@ public class Help1Controller {
     private void handleWindowShowing(WindowEvent event){
         WebEngine webEngine = webView.getEngine();
         //Load help page.
-        webEngine.load(getClass().getResource("/view/mentalDisease/HelpMentalDisease1.html").toExternalForm());
+        webEngine.load(getClass().getResource("/view/mentalDisease/HelpMentalDisease2.html").toExternalForm());
     }
 }

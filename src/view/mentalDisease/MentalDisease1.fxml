@@ -69,7 +69,7 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="User Manual" />
+                        <MenuItem fx:id="mniHelp" mnemonicParsing="false" text="User Manual" onAction="#handleHelpAction"/>
                     </items>
                 </Menu>
             </menus>

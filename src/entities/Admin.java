@@ -22,7 +22,7 @@ public class Admin extends User {
     }
 
     public Admin(String dni, String fullName, Date birthDate, String password, Integer phoneNumber, String email) {
-        super(dni, fullName, birthDate, password, phoneNumber, email);
+        super(dni, fullName, birthDate, password, phoneNumber, email, "Admin");
     }
 
     /**

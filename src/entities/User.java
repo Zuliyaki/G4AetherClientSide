@@ -4,45 +4,21 @@ import java.io.Serializable;
 
 import java.util.Date;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author unaibAndLeire
  */
-@Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Table(name = "user", schema = "aether")
-@DiscriminatorColumn(name = "user_type",
-        discriminatorType = DiscriminatorType.STRING)
-@NamedQueries({
-    @NamedQuery(
-            name = "singIn", query = "SELECT u FROM User u WHERE u.dni=:dniUser AND u.password=:passwordUser"
-    )
-    ,@NamedQuery(
-            name = "findAllUsers", query = "SELECT u FROM User u"
-    )
-    ,
-    @NamedQuery(
-            name = "findUserByDni", query = "SELECT u FROM User u WHERE u.dni=:dniUser"
-    )
-})
 @XmlRootElement
 public class User implements Serializable {
 
-    @Id
+    private String user_type;
     private String dni;
-    @NotNull
     private String fullName;
-    @Temporal(TemporalType.DATE)
     private Date birthDate;
-    @NotNull
     private String password;
-    @NotNull
     private Integer phoneNumber;
-    @NotNull
     private String email;
 
     /**
@@ -60,14 +36,16 @@ public class User implements Serializable {
      * @param password
      * @param phoneNumber
      * @param email
+     * @param userType
      */
-    public User(String dni, String fullName, Date birthDate, String password, Integer phoneNumber, String email) {
+    public User(String dni, String fullName, Date birthDate, String password, Integer phoneNumber, String email, String userType) {
         this.dni = dni;
         this.fullName = fullName;
         this.birthDate = birthDate;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.user_type = userType;
     }
 
     //Getters & Setters
@@ -117,5 +95,13 @@ public class User implements Serializable {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getUser_type() {
+        return user_type;
+    }
+
+    public void setUser_type(String user_type) {
+        this.user_type = user_type;
     }
 }

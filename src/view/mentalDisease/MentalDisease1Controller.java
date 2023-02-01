@@ -5,11 +5,18 @@
  */
 package view.mentalDisease;
 
+import entities.Admin;
 import entities.MentalDisease;
+import entities.User;
+
 import factories.MentalDiseaseFactory;
+
 import interfaces.MentalDiseaseInterface;
+
 import java.io.IOException;
+
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -19,13 +26,20 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.application.Platform;
+
 import javafx.beans.value.ObservableValue;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+
 import javafx.event.EventType;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -42,9 +56,12 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+
 import javafx.stage.Stage;
+
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
+
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -54,6 +71,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 
 /**
+ * Controller UI class for Mental Disease view.
  *
  * @author Leire
  */
@@ -61,6 +79,7 @@ public class MentalDisease1Controller {
 
     private static final Logger LOGGER = Logger.getLogger("view");
     private Stage stage;
+    private User user;
     private ObservableList<MentalDisease> mentalDiseaseData;
     private MentalDisease byID;
     private List<MentalDisease> byName = new ArrayList<>();
@@ -108,15 +127,14 @@ public class MentalDisease1Controller {
         btnSearch.setTooltip(new Tooltip("Search"));
         btnSignOff.setTooltip(new Tooltip("Sign Off"));
 
-        //
+        //Combo box loading
         this.cmbSearch.getItems().addAll("by ID", "by name");
-        //
         this.cmbSearch.setValue("by ID");
 
         //The focus will be on the Search field.
         this.txtfSearch.requestFocus();
 
-        // The Search, Modify, Delete and Print buttons are disabled.
+        // The Search, Modify and Delete buttons are disabled.
         this.btnSearch.setDisable(true);
         this.btnModify.setDisable(true);
         this.btnDelete.setDisable(true);
@@ -129,6 +147,7 @@ public class MentalDisease1Controller {
 
         LOGGER.info("window initialized");
 
+        //Table column values
         this.tcID.setCellValueFactory(
                 new PropertyValueFactory<>("idMentalDisease")
         );
@@ -218,10 +237,10 @@ public class MentalDisease1Controller {
     }
 
     /**
+     * Handle Action event on Search Button
      *
-     * @param event
-     * @return
-     * @throws Exception
+     * @param event The Action event object
+     * @throws ClientErrorException
      */
     @FXML
     private ObservableList<MentalDisease> handleSearchButtonAction(javafx.event.ActionEvent event) throws ClientErrorException {
@@ -263,10 +282,11 @@ public class MentalDisease1Controller {
     }
 
     /**
-     * Handle Action event on Create Button The “Mental disease 2” window will
+     * Handle Action event on Create Button. The “Mental disease 2” window will
      * open.
      *
      * @param event The Action event object
+     * @throws ClientErrorException
      */
     @FXML
     private void handleCreateButtonAction(javafx.event.ActionEvent event) throws ClientErrorException, IOException {
@@ -290,6 +310,7 @@ public class MentalDisease1Controller {
      * open.
      *
      * @param event The Action event object
+     * @throws ClientErrorException
      */
     @FXML
     private void handleModifyButtonAction(javafx.event.ActionEvent event) throws ClientErrorException, IOException {
@@ -314,9 +335,10 @@ public class MentalDisease1Controller {
 
     /**
      * Action event handler for delete button. It asks for confirmation on
-     * delete.
+     * delete. Updates user table view.
      *
      * @param event The ActionEvent object for the event.
+     * @throws ClientErrorException
      */
     @FXML
     private void handleDeleteButtonAction(javafx.event.ActionEvent event) throws ClientErrorException {
@@ -347,8 +369,10 @@ public class MentalDisease1Controller {
     }
 
     /**
+     * Handle Action event on SignOff Button. It asks you if you want to sign
+     * off or close the application.
      *
-     * @param event
+     * @param event The Action event object
      */
     @FXML
     private void handleSignOffButtonAction(javafx.event.ActionEvent event
@@ -372,8 +396,10 @@ public class MentalDisease1Controller {
     }
 
     /**
+     * Action event handler for print button. It shows a JFrame containing a
+     * report. This JFrame allows to print the report.
      *
-     * @param event
+     * @param event The ActionEvent object for the event.
      */
     @FXML
     private void handlePrintButtonAction(javafx.event.ActionEvent event) {
@@ -402,6 +428,22 @@ public class MentalDisease1Controller {
         }
     }
 
+    @FXML
+    private void handleHelpAction(javafx.event.ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mentalDisease/Help1.fxml"));
+            Parent root = (Parent) loader.load();
+            Help1Controller help1Controller = ((Help1Controller) loader.getController());
+            //Initializes and shows help stage
+            help1Controller.initialize(root);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE,
+                    "UI GestionUsuariosController: Error loading help window: {0}",
+                    ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
     /**
      * Show error alert
      *
@@ -420,6 +462,10 @@ public class MentalDisease1Controller {
      */
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public void initData(User user) {
+        this.user = user;
     }
 
 }

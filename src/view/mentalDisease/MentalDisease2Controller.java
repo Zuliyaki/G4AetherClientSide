@@ -5,11 +5,19 @@
  */
 package view.mentalDisease;
 
-import application.G4AetherClientSide;
+import factories.MentalDiseaseFactory;
+
+import interfaces.MentalDiseaseInterface;
+
 import entities.Admin;
 import entities.MentalDisease;
+import entities.EnumMentalDisease;
+
 import java.util.logging.Logger;
+
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -20,28 +28,33 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+
 import javafx.stage.Stage;
-import entities.EnumMentalDisease;
-import factories.MentalDiseaseFactory;
-import interfaces.MentalDiseaseInterface;
+
 import java.io.IOException;
-import java.util.Date;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
+
+import java.util.Date;
 import java.util.Optional;
 import java.util.logging.Level;
+
 import javafx.application.Platform;
+
 import javafx.beans.value.ObservableValue;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventType;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.Menu;
-import javafx.scene.input.KeyEvent;
-import javafx.stage.Modality;
+
 import javax.ws.rs.ClientErrorException;
 
 /**
+ * Controller UI class for Mental Disease view.
  *
  * @author Leire
  */
@@ -55,10 +68,6 @@ public class MentalDisease2Controller {
     MentalDiseaseFactory mentalFactory = new MentalDiseaseFactory();
     //obtener mediante la factoria la interface
     MentalDiseaseInterface mentalDiseaseInterface = mentalFactory.getModel();
-
-    private static final String USERNAME_REGEX = "^[a-zñÑA-Z0-9]*$";
-    private static final String FULLNAME_REGEX = "^[a-zA-Z]{1,} [a-zA-Z]{1,}$";
-    private static final String EMAIL_REGEX = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
     @FXML
     private TextField txtfName, txtfSymptons, txtfDescription;
@@ -79,6 +88,12 @@ public class MentalDisease2Controller {
     @FXML
     private Menu mnUser;
 
+    /**
+     * Initialization method of the Mental Disease 2 Stage to create a mental
+     * disease.
+     *
+     * @param root The Parent object representing root node of view graph.
+     */
     public void initializeCreate(Parent root) {
         LOGGER.info("Initializing the window");
         Scene scene = new Scene(root);
@@ -97,7 +112,6 @@ public class MentalDisease2Controller {
 
         //Fill the ComboBox
         this.cmbType.getItems().addAll(EnumMentalDisease.values());
-        //
         this.cmbType.setValue(EnumMentalDisease.MENTALILLNESS);
 
         //The focus will be on the Search field.
@@ -110,7 +124,7 @@ public class MentalDisease2Controller {
         //The menu user is disabled
         this.mnUser.setDisable(true);
 
-        //
+        //Add property change listeners for controls
         this.txtfName.textProperty().addListener((event) -> this.textChangeCreate(KeyEvent.KEY_TYPED));
         this.txtfDescription.textProperty().addListener((event) -> this.textChangeCreate(KeyEvent.KEY_TYPED));
         this.txtfSymptons.textProperty().addListener((event) -> this.textChangeCreate(KeyEvent.KEY_TYPED));
@@ -126,6 +140,14 @@ public class MentalDisease2Controller {
         stage.show();
     }
 
+    /**
+     * Initialization method of the Mental Disease 2 Stage to modify a mental
+     * disease.
+     *
+     * @param root The Parent object representing root node of view graph.
+     * @param selectedMentalDisease The mental disease that you want to modify
+     * selected in the table.
+     */
     public void initializeModify(Parent root, MentalDisease selectedMentalDisease) {
         LOGGER.info("Initializing the window");
         Scene scene = new Scene(root);
@@ -159,7 +181,7 @@ public class MentalDisease2Controller {
         this.btnModify.setDisable(true);
         this.btnCreate.setDisable(true);
 
-        //
+        //Add property change listeners for controls
         this.txtfName.textProperty().addListener((event) -> this.textChangeModify(KeyEvent.KEY_TYPED));
         this.txtfDescription.textProperty().addListener((event) -> this.textChangeModify(KeyEvent.KEY_TYPED));
         this.txtfSymptons.textProperty().addListener((event) -> this.textChangeModify(KeyEvent.KEY_TYPED));
@@ -176,9 +198,7 @@ public class MentalDisease2Controller {
     }
 
     /**
-     *
-     * Validates that user, fullname, email, password, and repeatpassword fields
-     * has any content to enable/disable continue button.
+     * Text change event handler for name, description and symptom fields.
      *
      * @param observable The value being observed.
      * @param oldValue The old value of the observable.
@@ -229,11 +249,13 @@ public class MentalDisease2Controller {
     }
 
     /**
+     * Action event handler for create button. It validates new mental disease
+     * data, send it to the business logic tier and updates mental disease table
+     * view with new mental disease data.
      *
-     * @param event
+     * @param event The ActionEvent object for the event.
      * @throws ClientErrorException
      */
-    //TODO
     @FXML
     private void handleCreateButtonAction(ActionEvent event) throws ClientErrorException {
         try {
@@ -266,6 +288,14 @@ public class MentalDisease2Controller {
         }
     }
 
+    /**
+     * Action event handler for modify button. It validates user data, send it
+     * to the business logic tier and updates user table view with new mental
+     * disease data.
+     *
+     * @param event The ActionEvent object for the event.
+     * @throws ClientErrorException
+     */
     @FXML
     private void handleModifyButtonAction(ActionEvent event) throws ClientErrorException {
         try {
@@ -296,6 +326,13 @@ public class MentalDisease2Controller {
         }
     }
 
+    /**
+     * Handle Action event on Back Button. The “Mental disease 1” window will
+     * open.
+     *
+     * @param event The Action event object
+     * @throws IOException
+     */
     @FXML
     private void handleBackButtonAction(ActionEvent event) throws IOException {
         LOGGER.info("Trying to open mental window disease 1");
@@ -323,6 +360,12 @@ public class MentalDisease2Controller {
         stage.show();
     }
 
+    /**
+     * Handle Action event on SignOff Button. It asks you if you want to sign
+     * off or close the application.
+     *
+     * @param event The Action event object
+     */
     @FXML
     private void handleSignOffButtonAction(ActionEvent event
     ) {
@@ -344,6 +387,11 @@ public class MentalDisease2Controller {
         }
     }
 
+    /**
+     *
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void handleFindAllDiseasesMenuAction(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mentalDisease/MentalDisease1.fxml"));
@@ -368,6 +416,22 @@ public class MentalDisease2Controller {
         stage.setScene(scene);
         stage.show();
     }
+    
+    @FXML
+    private void handleHelpAction(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mentalDisease/Help2.fxml"));
+            Parent root = (Parent) loader.load();
+            Help2Controller help2Controller = ((Help2Controller) loader.getController());
+            //Initializes and shows help stage
+            help2Controller.initialize(root);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE,
+                    "UI GestionUsuariosController: Error loading help window: {0}",
+                    ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
 
     protected void showErrorAlert(String errorMsg) {
         //Shows error dialog.
@@ -378,5 +442,4 @@ public class MentalDisease2Controller {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
 }
