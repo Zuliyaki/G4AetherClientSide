@@ -1,6 +1,7 @@
 package restful;
 
 import interfaces.AppointmentInterface;
+import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -29,7 +30,8 @@ public class AppointmentRestful implements AppointmentInterface {
     //REST appointment web client
     private final WebTarget webTarget;
     private final Client client;
-    private static final String BASE_URI = "http://localhost:8080/G4Aether/webresources";
+    private final ResourceBundle configFile = ResourceBundle.getBundle("config.config");
+    private final String BASE_URI = configFile.getString("BASE_URI");
 
     /**
      * Create a AppointmentRestful object. It constructs a web client for
@@ -186,8 +188,8 @@ public class AppointmentRestful implements AppointmentInterface {
     }
 
     /**
-     * This method deletes data for an existing appointment. This is done by sending a
-     * DELETE request to a RESTful web service.
+     * This method deletes data for an existing appointment. This is done by
+     * sending a DELETE request to a RESTful web service.
      *
      * @param id The Appointment object to be deleted.
      * @throws ClientErrorException If there is any error while processing.

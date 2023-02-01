@@ -5,7 +5,9 @@
  */
 package restful;
 
+import exceptions.UserException;
 import interfaces.PatientInterface;
+import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -28,7 +30,8 @@ public class PatientRestful implements PatientInterface {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/G4Aether/webresources";
+    private final ResourceBundle configFile = ResourceBundle.getBundle("config.config");
+    private final String BASE_URI = configFile.getString("BASE_URI");
 
     public PatientRestful() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
@@ -67,10 +70,15 @@ public class PatientRestful implements PatientInterface {
         webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{dni})).request().delete();
     }
 
-    public <T> T findAllPatientsByPsychologist_XML(GenericType<T> responseType, String dniPsychologist) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        resource = resource.path(java.text.MessageFormat.format("findPatientsByPsychologist/{0}", new Object[]{dniPsychologist}));
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+    public <T> T findAllPatientsByPsychologist_XML(GenericType<T> responseType, String dniPsychologist) throws UserException {
+        try {
+            WebTarget resource = webTarget;
+            resource = resource.path(java.text.MessageFormat.format("findPatientsByPsychologist/{0}", new Object[]{dniPsychologist}));
+            return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        } catch (Exception e) {
+            throw new UserException("patients not found");
+        }
+
     }
 
     public <T> T findAllPatientsByPsychologist_JSON(Class<T> responseType, String dniPsychologist) throws ClientErrorException {

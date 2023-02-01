@@ -7,6 +7,7 @@ package restful;
 
 import exceptions.MentalDiseaseException;
 import interfaces.MentalDiseaseInterface;
+import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -30,7 +31,8 @@ public class MentalDiseaseRestful implements MentalDiseaseInterface {
     private WebTarget webTarget;
     private Client client;
     //TODO
-    private static final String BASE_URI = "http://localhost:8080/G4Aether/webresources";
+    private final ResourceBundle configFile = ResourceBundle.getBundle("config.config");
+    private final String BASE_URI = configFile.getString("BASE_URI");
 
     public MentalDiseaseRestful() {
         client = javax.ws.rs.client.ClientBuilder.newClient();

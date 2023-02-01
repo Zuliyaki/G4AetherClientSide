@@ -17,6 +17,7 @@ import exceptions.DiagnosisNotFoundException;
 import exceptions.MentalDiseaseException;
 import exceptions.TreatmentNotFoundException;
 import exceptions.UpdateException;
+import exceptions.UserException;
 import factories.DiagnosisFactory;
 import factories.MentalDiseaseFactory;
 import factories.PatientFactory;
@@ -99,6 +100,7 @@ import restful.DiagnosisRestful;
 import restful.MentalDiseaseRestful;
 import restful.PatientRestful;
 import restful.TreatmentResful;
+import view.Appointment.AppointmentController;
 import view.dailyNote.DailyNoteWindowController;
 import view.mentalDisease.Help2Controller;
 
@@ -135,13 +137,13 @@ public class DiagnosisController {
     private TextField tfPatientDNI;
 
     @FXML
-    private Text txtDateLow;
+    private Text From;
 
     @FXML
     private DatePicker dpDateLow;
 
     @FXML
-    private Text txtDateGreat;
+    private Text To;
 
     @FXML
     private DatePicker dtDateGreat;
@@ -216,11 +218,11 @@ public class DiagnosisController {
         //Not a resizable window.
         stage.setResizable(false);
         //Modal window of LogIn.
-        // stage.initModality(Modality.APPLICATION_MODAL);
-        //The window title will be ”SignUp”
+        stage.initModality(Modality.APPLICATION_MODAL);
+        //The window title will be ”Diagnosis”
         stage.setTitle("Diagnosis");
         //Add a leaf icon.
-        //stage.getIcons().add(new Image("/resources/icon.png"));
+        stage.getIcons().add(new Image("resources/icon.png"));
         //Add scene 
         Scene scene = new Scene(root);
         //set all disable
@@ -247,13 +249,13 @@ public class DiagnosisController {
 
         // FILTRADO
         if (user instanceof Psychologist) {
-            String[] a = {"Find all diagnosis", "Find all diagnosis by patient id", "Find all diangosis if patient on teraphy", "Find diagnosis between dates"};
+            String[] a = {"Find all diagnosis", "Find all diagnosis by patient id", "Find all diangosis if patient on teraphy", "Find diagnosis between dates and patient id"};
             ObservableList<String> searchMethods = FXCollections.observableArrayList(a);
             comboboxSearchBy.setItems(searchMethods);
             comboboxSearchBy.getSelectionModel().select(-1);
             diagnosises = loadAllDiagnosises();
         } else {
-            String[] a = {"Find all diagnosis by patient id", "Find all diangosis if patient on teraphy", "Find diagnosis between dates"};
+            String[] a = {"Find all diagnosis by patient id", "Find all diangosis if patient on teraphy", "Find diagnosis between dates and patient id"};
             ObservableList<String> searchMethods = FXCollections.observableArrayList(a);
             comboboxSearchBy.setItems(searchMethods);
             comboboxSearchBy.getSelectionModel().select(-1);
@@ -265,22 +267,27 @@ public class DiagnosisController {
         //
         //Mental disease combobox for the table
         List<MentalDisease> allMentalDisease = null;
+        ObservableList<MentalDisease> mentaldisease = null;
 
         try {
             allMentalDisease = mentalDiseaseInterface.getAllMentalDiseasesOrderByName_XML(new GenericType<List<MentalDisease>>() {
             });
+            mentaldisease = FXCollections.observableArrayList(allMentalDisease);
         } catch (MentalDiseaseException ex) {
             showErrorAlert(ex.getMessage());
         }
 
-        ObservableList<MentalDisease> mentaldisease = FXCollections.observableArrayList(allMentalDisease);
         //////////
         //Patients combobox for the table
+        List<Patient> allPatients = null;
+        ObservableList<Patient> patients = null;
+        try {
+            allPatients = patientInterface.findAllPatientsByPsychologist_XML(new GenericType<List<Patient>>() {
+            }, user.getDni());
+            patients = FXCollections.observableArrayList(allPatients);
+        } catch (UserException ex) {
 
-        List<Patient> allPatients;
-        allPatients = patientInterface.findAllPatientsByPsychologist_XML(new GenericType<List<Patient>>() {
-        }, user.getDni());
-        ObservableList<Patient> patients = FXCollections.observableArrayList(allPatients);
+        }
 
         ////////////
         //the date editing cell factory
@@ -323,16 +330,19 @@ public class DiagnosisController {
 
         tbcOnTherapy.setCellValueFactory(
                 (CellDataFeatures<Diagnosis, Boolean> param) -> param.getValue().onTherapyProperty());
-
-        diagnosises.forEach(
-                diagnosis -> diagnosis.onTherapyProperty().addListener((observable, oldValue, newValue) -> {
-                    try {
-                        diagnosisInterface.updateDiagnosis_XML(diagnosis);
-                    } catch (UpdateException ex) {
-                        showErrorAlert(ex.getMessage());
-                    }
-                })
-        );
+        if (diagnosises.isEmpty()) {
+            showErrorAlert("cannot load all diagnosis");
+        } else {
+            diagnosises.forEach(
+                    diagnosis -> diagnosis.onTherapyProperty().addListener((observable, oldValue, newValue) -> {
+                        try {
+                            diagnosisInterface.updateDiagnosis_XML(diagnosis);
+                        } catch (UpdateException ex) {
+                            showErrorAlert(ex.getMessage());
+                        }
+                    })
+            );
+        }
 
         //////////////
         ////////////////
@@ -418,12 +428,14 @@ public class DiagnosisController {
         try {
             allDiangosis = diagnosisInterface.findAllDiagnosis_XML(new GenericType<List<Diagnosis>>() {
             });
+
+            diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
+            tbDiagnosis.setItems(diagnosisTableInfo);
+            return diagnosisTableInfo;
         } catch (DiagnosisNotFoundException ex) {
             showErrorAlert(ex.getMessage());
         }
-        diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
-        tbDiagnosis.setItems(diagnosisTableInfo);
-        return diagnosisTableInfo;
+        return null;
 
     }
 
@@ -439,12 +451,15 @@ public class DiagnosisController {
         try {
             allDiangosis = diagnosisInterface.findPatientDiagnosisByDate_XML(new GenericType<List<Diagnosis>>() {
             }, tfPatientDNI.getText(), dateStartString, dateEndString);
+            diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
+            tbDiagnosis.setItems(diagnosisTableInfo);
+            return diagnosisTableInfo;
+
         } catch (DiagnosisNotFoundException ex) {
             showErrorAlert(ex.getMessage());
         }
-        diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
-        tbDiagnosis.setItems(diagnosisTableInfo);
-        return diagnosisTableInfo;
+        return null;
+
     }
 
     private ObservableList<Treatment> loadAllTreaments(Diagnosis diagnosis) {
@@ -499,14 +514,16 @@ public class DiagnosisController {
             try {
                 allDiangosis = diagnosisInterface.findAllDiagnosisByPatient_XML(new GenericType<List<Diagnosis>>() {
                 }, tfPatientDNI.getText());
+                diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
+                tbDiagnosis.setItems(diagnosisTableInfo);
+                return diagnosisTableInfo;
             } catch (DiagnosisNotFoundException ex) {
                 showErrorAlert(ex.getMessage());
             }
-            diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
-            tbDiagnosis.setItems(diagnosisTableInfo);
 
         }
-        return diagnosisTableInfo;
+        return null;
+
     }
 
 //SELECTION CHANGES
@@ -533,11 +550,11 @@ public class DiagnosisController {
             DeleteDiagnosisMenuIt.setOnAction((ActionEvent e) -> {
                 try {
                     diagnosisInterface.deleteDiagnosis(selectedDiagnosis.getDiagnosisId().toString());
+                    diagnosises.remove(selectedDiagnosis);
+                    diagnosises = loadAllDiagnosises();
                 } catch (DeleteException ex) {
                     showErrorAlert(ex.getMessage());
                 }
-                diagnosises.remove(selectedDiagnosis);
-                diagnosises = loadAllDiagnosises();
 
             });
 
@@ -563,11 +580,12 @@ public class DiagnosisController {
                 newDiagnosis.setOnTherapy(true);
                 try {
                     diagnosisInterface.updateDiagnosis_XML(newDiagnosis);
+                    diagnosises = loadAllDiagnosises();
+                    //  diagnosises = loadAllDiagnosises();
                 } catch (UpdateException ex) {
                     showErrorAlert(ex.getMessage());
                 }
-                diagnosises = loadAllDiagnosises();
-                //  diagnosises = loadAllDiagnosises();
+
             });
             //SET THE CONTEXT MENU
             contextMenu1.getItems().add(createNewDiagnosisMenuIt);
@@ -600,7 +618,7 @@ public class DiagnosisController {
         tfMentalDisease.clear();
         tfMentalDisease.setVisible(false);
         switch (newValue.toString()) {
-            case "Find diagnosis between dates":
+            case "Find diagnosis between dates and patient id":
 
                 if (user instanceof Psychologist) {
                     tfPatientDNI.setDisable(false);
@@ -613,7 +631,6 @@ public class DiagnosisController {
                 dpDateLow.getEditor().clear();
                 dtDateGreat.setDisable(false);
                 dtDateGreat.getEditor().clear();
-                tfPatientDNI.setDisable(false);
                 tfMentalDisease.setDisable(true);
                 cbxOnTherapy.setDisable(true);
                 cbxOnTherapy.setSelected(false);
@@ -686,7 +703,7 @@ public class DiagnosisController {
     @FXML
     private void handleSearchButtonAction(ActionEvent event) {
         switch (comboboxSearchBy.getValue().toString()) {
-            case "Find diagnosis between dates":
+            case "Find diagnosis between dates and patient id":
                 diagnosises = loadDiagnosisesBetweenDates();
                 //loadDailyNoteByDate();
                 break;
@@ -731,7 +748,7 @@ public class DiagnosisController {
             LocalDate oldValue,
             LocalDate newValue) {
         switch (comboboxSearchBy.getSelectionModel().getSelectedItem().toString()) {
-            case "Find diagnosis between dates":
+            case "Find diagnosis between dates and patient id":
                 if (dpDateLow.getValue() == null || dtDateGreat.getValue() == null || dpDateLow.getValue().isAfter(dtDateGreat.getValue()) || tfPatientDNI.getText().isEmpty()) {
                     btnSearch.setDisable(true);
                 } else {
@@ -785,6 +802,26 @@ public class DiagnosisController {
     }
 
     @FXML
+    private void handleOpenAppointment(ActionEvent event) {
+        Stage stage = new Stage();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../Appointment/Appointment.fxml"));
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        AppointmentController controller = (AppointmentController) loader.getController();
+
+        controller.setStage(stage);
+
+        controller.initData(user);
+        controller.initialize(root);
+    }
+
+    @FXML
     private void exitapp(ActionEvent event) {
 
         ButtonType chooseExit = new ButtonType("Exit", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -797,7 +834,9 @@ public class DiagnosisController {
                 == chooseExit) {
             Platform.exit();
         }
+
     }
+
     @FXML
     private void menuHelp(ActionEvent event) {
         try {

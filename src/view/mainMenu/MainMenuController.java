@@ -104,18 +104,20 @@ public class MainMenuController {
      */
     public void initialize(Parent Root) {
         Scene scene = new Scene(Root);
-
+stage.getIcons().add(new Image("resources/icon.png"));
         if (user.getDni().equals("45949977w")) {
-
+            
             Psychologist initPsychologist = new Psychologist();
             initPsychologist.setUser_type("Psychologist");
             initPsychologist.setDni("45949977w");
+            initPsychologist.setFullName("Unai Zuluaga");
             user = initPsychologist;
 
         } else {
             Patient initPatient = new Patient();
             initPatient.setUser_type("Patient");
             initPatient.setDni("35140444d");
+            initPatient.setFullName("Sendoa Badiola");
             user = initPatient;
         }
         txtDiagnosis.setVisible(true);
