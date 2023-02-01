@@ -85,7 +85,7 @@
 		<band height="13" splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="125" splitType="Stretch">
+		<band height="28" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="0" width="30" height="20" uuid="8a25a3d4-18be-46c2-8121-3c5bb152fa9c"/>
 				<textElement textAlignment="Center">

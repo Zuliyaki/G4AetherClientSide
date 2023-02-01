@@ -72,22 +72,6 @@ public class AppointmentController {
     private List<Appointment> allAppointments;
     private static final Logger LOGGER = Logger.getLogger(AppointmentController.class.getName());
 
-    // VBox
-    @FXML
-    private VBox vbox;
-
-    // Appointmentmenu
-    @FXML
-    private Menu appointmentmenu;
-
-    // Appointment Menuitems
-    @FXML
-    private MenuItem findall;
-    @FXML
-    private MenuItem findbyid;
-    @FXML
-    private MenuItem findbydate;
-
     // TextFields
     @FXML
     private TextField idtf;
@@ -142,8 +126,6 @@ public class AppointmentController {
 
     // All tablecolumn
     @FXML
-    private TableColumn idtc;
-    @FXML
     private TableColumn datetc;
     @FXML
     private TableColumn changetc;
@@ -170,7 +152,6 @@ public class AppointmentController {
             //Set the Event handlers
             stage.setOnShowing(this::handlerWindowShowing);
 
-            //idtc.setCellValueFactory(new PropertyValueFactory<>("idAppointment"));
             datetc.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
 
             datetc.setCellFactory(column -> {
@@ -234,7 +215,7 @@ public class AppointmentController {
             this.psychologisttf.textProperty().addListener(this::handleFieldsTextChange);
 
             // Load combobox with search methods
-            String[] a = {"Find all Appointment", /*"Find Appointment by ID" ,  "Find Appointment by Date"*/};
+            String[] a = {"Find all Appointment", "Find Appointment by ID" ,  "Find Appointment by Date"};
 
             ObservableList<String> searchMethods = FXCollections.observableArrayList(a);
 
