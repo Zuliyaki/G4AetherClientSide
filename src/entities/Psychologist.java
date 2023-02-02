@@ -2,8 +2,7 @@ package entities;
 
 import java.util.Date;
 import java.util.Set;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -11,26 +10,15 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author unaibAndLeire
  */
-@Entity
-@DiscriminatorValue("psychologist")
-@NamedQueries({
-    @NamedQuery(
-            name = "findAllPsychologists", query = "SELECT u FROM User u, Psychologist p WHERE u.dni=p.dni"
-    )
-})
-@XmlRootElement
+
 public class Psychologist extends User {
 
-    @NotNull
     private String titulation;
 
-    @NotNull
     private String invitationCode;
 
-    @OneToMany(mappedBy = "psychologist")
     private Set<Patient> patient;
 
-    @OneToMany(mappedBy = "psychologist")
     private Set<Appointment> appointments;
 
     /**
@@ -50,7 +38,7 @@ public class Psychologist extends User {
 
     //Pshychologist with super constructor
     public Psychologist(String titulation, String invitationCode, Set<Patient> patient, Set<Appointment> appointments, String dni, String fullName, Date birthDate, String password, Integer phoneNumber, String email) {
-        super(dni, fullName, birthDate, password, phoneNumber, email);
+        super(dni, fullName, birthDate, password, phoneNumber, email, "Psychologist");
         this.titulation = titulation;
         this.invitationCode = invitationCode;
         this.patient = patient;
@@ -90,6 +78,11 @@ public class Psychologist extends User {
 
     public void setAppointments(Set<Appointment> appointments) {
         this.appointments = appointments;
+    }
+
+    @Override
+    public String toString() {
+        return this.getDni();
     }
 
 }

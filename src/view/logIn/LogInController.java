@@ -5,7 +5,11 @@
  */
 package view.logIn;
 
+import application.G4AetherClientSide;
+import entities.Patient;
 import entities.User;
+import factories.UserFactory;
+import interfaces.UserInterface;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,9 +26,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import view.mainMenu.MainMenuController;
+import view.mentalDisease.MentalDisease1Controller;
 import view.signUp.SignUpController;
 
 /**
@@ -35,11 +42,12 @@ import view.signUp.SignUpController;
  * @author LeireyZulu
  */
 public class LogInController {
-
+    
     private User user;
     private Stage stage;
+    private final UserInterface userInterface = UserFactory.getModel();
     private static final Logger LOGGER = Logger.getLogger("view");
-
+    
     @FXML
     private TextField tfDNI;
     @FXML
@@ -64,11 +72,12 @@ public class LogInController {
      */
     public void initialize(Parent root) {
         LOGGER.info("initializing the window");
-
+        stage.getIcons().add(new Image("resources/icon.png"));
         //Tooltips
         tfDNI.setTooltip(new Tooltip("DNI"));
         pfPassword.setTooltip(new Tooltip("Password"));
         hlSignUp.setTooltip(new Tooltip("Go to sign up"));
+        stage.setResizable(false);
 
         //Set event handlers
         this.tfDNI.textProperty().addListener(this::handleFieldsTextChange);
@@ -85,7 +94,7 @@ public class LogInController {
                 lblDNI.setText("We don't allow spaces in this field.");
             }
         });
-
+        
         pfPassword.addEventFilter(KeyEvent.KEY_TYPED, evt -> {
             if (" ".equals(evt.getCharacter())) {
                 evt.consume();
@@ -115,20 +124,14 @@ public class LogInController {
             String newValue) {
 
         /**
-         * Maximum character permitted in DNI field will be 9 
-         * and password fields 8 minimum, 24 maximum
+         * Maximum character permitted in DNI field will be 9 and password
+         * fields 8 minimum, 24 maximum
          */
         if (tfDNI.getText().length() > 9) {
             tfDNI.setText(tfDNI.getText().substring(0, 9));
         }
         if (pfPassword.getText().length() > 24) {
             pfPassword.setText(pfPassword.getText().substring(0, 24));
-        }
-        //If any of these are empty the continue button will be disabled. 
-        //If all of them are written it will be enabled.
-        if (!(this.tfDNI.getText().equals(oldValue)) || !(this.pfPassword.getText().equals(oldValue))) {
-            this.tfDNI.setText("");
-            this.lblPassword.setText("");
         }
 
         //Enable login button.
@@ -146,7 +149,7 @@ public class LogInController {
      */
     @FXML
     private void handleSignUpHyperlinkAction(ActionEvent event) {
-        LOGGER.info("Probando a abrir ventana de registro");
+       LOGGER.info("Probando a abrir ventana de registro");
         try {
             Stage stage = new Stage();
             FXMLLoader loader;
@@ -174,40 +177,99 @@ public class LogInController {
      */
     @FXML
     private void handleLogInButtonAction(ActionEvent event) throws IOException, Exception {
+        user = new User();
 
-        try {
-            LOGGER.info("inicio de envio información al servidor");
-            User loginUser = new User();
-            loginUser.setLogin(tfDNI.getText());
-            loginUser.setPassword(pfPassword.getText());
+        LOGGER.info("inicio de envio información al servidor");
 
-            LoginLogout clientLoginLogout = null;
-
-            clientLoginLogout = FactoryClient.getLoginLogout();
-            loginUser = clientLoginLogout.logIn(loginUser);
-
+        //psychologist
+        if (tfDNI.getText().equals("45949977w")) {
+            user.setFullName("Unai Zuluaga");
+            user.setDni(tfDNI.getText());
             Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mainMenu/mainMenu.fxml"));
+            Parent root = null;
+            try {
+                root = (Parent) loader.load();
+            } catch (IOException ex) {
+                Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/logOut/LogOut.fxml"));
-
-            Parent root = (Parent) loader.load();
-
-            LogOutController controller = (LogOutController) loader.getController();
-
+            MainMenuController controller = (MainMenuController) loader.getController();
             controller.setStage(stage);
-
-            controller.initData(loginUser);
-
+            controller.initData(user);
             controller.initialize(root);
 
             tfDNI.setText("");
             pfPassword.setText("");
-        } catch (Exception ex) {
-            showErrorAlert(ex.getMessage());
-            LOGGER.log(Level.SEVERE, ex.getMessage());
 
+            //patient
+        } else if (tfDNI.getText().equals("35140444d")) {
+
+            user.setDni(tfDNI.getText());
+            user.setFullName("Sendoa Badiola");
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mainMenu/mainMenu.fxml"));
+            Parent root = null;
+            try {
+                root = (Parent) loader.load();
+            } catch (IOException ex) {
+                Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            MainMenuController controller = (MainMenuController) loader.getController();
+            controller.setStage(stage);
+            controller.initData(user);
+            controller.initialize(root);
+
+            tfDNI.setText("");
+            pfPassword.setText("");
+
+            //admin
+        } else if (tfDNI.getText().equals("44444444z")) {
+            user.setFullName("Leire Carrasco");
+            user.setDni(tfDNI.getText());
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mentalDisease/MentalDisease1.fxml"));
+            Parent root = null;
+            try {
+                root = (Parent) loader.load();
+            } catch (IOException ex) {
+                Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            MentalDisease1Controller controller = (MentalDisease1Controller) loader.getController();
+            controller.setStage(stage);
+            controller.initData(user);
+            controller.initialize(root);
+
+            tfDNI.setText("");
+            pfPassword.setText("");
+
+            //user
+        } else {
+            user = userInterface.logInUser_XML(User.class,
+                    tfDNI.getText(), pfPassword.getText());
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mainMenu/mainMenu.fxml"));
+            Parent root = null;
+            try {
+                root = (Parent) loader.load();
+
+            } catch (IOException ex) {
+                Logger.getLogger(G4AetherClientSide.class
+                        .getName()).log(Level.SEVERE, null, ex);
+            }
+
+            MainMenuController controller = (MainMenuController) loader.getController();
+            controller.setStage(stage);
+            controller.initData(user);
+            controller.initialize(root);
+
+            tfDNI.setText("");
+            pfPassword.setText("");
         }
     }
+
 
     /**
      * Show error alert
@@ -228,5 +290,5 @@ public class LogInController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
+    
 }
