@@ -150,7 +150,7 @@ public class MainMenuController {
 
         Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../viewDiagnosis/Diagnosis.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/viewDiagnosis/Diagnosis.fxml"));
         Parent root = null;
         try {
             root = (Parent) loader.load();

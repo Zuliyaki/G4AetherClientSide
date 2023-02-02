@@ -71,7 +71,7 @@
                     </children>
                 </Pane>
                 <Separator layoutX="21.0" layoutY="192.0" prefHeight="0.0" prefWidth="1149.0" />
-                <Pane fx:id="paneTables" layoutX="30.0" layoutY="210.0" prefHeight="616.0" prefWidth="1150.0">
+                <Pane fx:id="paneTables" layoutX="34.0" layoutY="214.0" prefHeight="616.0" prefWidth="1150.0">
                     <children>
                         <Text fx:id="txtdiagnosises" fill="#9a8a8a" layoutX="101.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Diagnosises" />
                         <TableView fx:id="tbDiagnosis" layoutX="8.0" layoutY="27.0" prefHeight="248.0" prefWidth="1085.0">
@@ -86,15 +86,15 @@
                             </columns>
                         </TableView>
                         <Separator layoutX="15.0" layoutY="292.0" prefHeight="16.0" prefWidth="908.0" />
-                        <Text fx:id="txtTreatments" fill="#9a8a8a" layoutX="99.0" layoutY="321.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Treatment for diagnosis:" />
-                        <TableView fx:id="tbTreatment" layoutX="100.0" layoutY="328.0" prefHeight="277.0" prefWidth="357.0">
+                        <Text fx:id="txtTreatments" fill="#9a8a8a" layoutX="21.0" layoutY="320.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Treatment for diagnosis:" />
+                        <TableView fx:id="tbTreatment" layoutX="21.0" layoutY="328.0" prefHeight="277.0" prefWidth="357.0">
                             <columns>
                                 <TableColumn fx:id="tbcDay" prefWidth="168.00006103515625" text="Day || DayTIme" />
                                 <TableColumn fx:id="tbcMedication" prefWidth="188.79989624023438" text="Medication" />
                             </columns>
                         </TableView>
-                        <Text fx:id="txtMentalDisease" fill="#9a8a8a" layoutX="505.0" layoutY="321.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Information about: &lt;MentalDisease&gt;" />
-                        <TextField fx:id="tfMentalDisease" editable="false" layoutX="505.0" layoutY="328.0" prefHeight="277.0" prefWidth="333.0" />
+                        <Text fx:id="txtMentalDisease" fill="#9a8a8a" layoutX="407.0" layoutY="320.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Information about: &lt;MentalDisease&gt;" />
+                        <TextField fx:id="tfMentalDisease" editable="false" layoutX="407.0" layoutY="328.0" prefHeight="277.0" prefWidth="588.0" />
                         <Button fx:id="btnPrint" layoutX="1031.0" layoutY="556.0" mnemonicParsing="false" onAction="#handlePrintButtonAction" text="Print" />
                     </children>
                 </Pane>

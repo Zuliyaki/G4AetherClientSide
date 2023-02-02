@@ -218,7 +218,7 @@ public class DiagnosisController {
         //Not a resizable window.
         stage.setResizable(false);
         //Modal window of LogIn.
-        stage.initModality(Modality.APPLICATION_MODAL);
+        //stage.initModality(Modality.APPLICATION_MODAL);
         //The window title will be ”Diagnosis”
         stage.setTitle("Diagnosis");
         //Add a leaf icon.
@@ -547,7 +547,6 @@ public class DiagnosisController {
                 try {
                     diagnosisInterface.deleteDiagnosis(selectedDiagnosis.getDiagnosisId().toString());
                     diagnosises.remove(selectedDiagnosis);
-                    diagnosises = loadAllDiagnosises();
                 } catch (DeleteException ex) {
                     showErrorAlert(ex.getMessage());
                 }
