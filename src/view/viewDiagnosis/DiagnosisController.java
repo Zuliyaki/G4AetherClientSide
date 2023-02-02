@@ -108,7 +108,7 @@ public class DiagnosisController {
 
     public User user = null;
     public Stage stage;
-    private ObservableList<Diagnosis> diagnosises;
+    private  ObservableList<Diagnosis> diagnosises;
     private DiagnosisInterface diagnosisInterface = DiagnosisFactory.getModel();
     private TreatmentInterface treatmentInterface = TreatmentFactory.getModel();
     private MentalDiseaseInterface mentalDiseaseInterface = MentalDiseaseFactory.getModel();
@@ -397,7 +397,7 @@ public class DiagnosisController {
                 showErrorAlert(ex.getMessage());
             }
             diagnosises = loadAllDiagnosises();
-            //  diagnosises = loadAllDiagnosises();
+            // diagnosises = loadAllDiagnosises();
         });
         //SET THE CONTEXT MENU
         contextMenu.getItems().add(createNewDiagnosisMenuIt);
