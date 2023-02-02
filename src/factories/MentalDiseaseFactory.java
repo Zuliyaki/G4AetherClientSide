@@ -6,7 +6,9 @@
 package factories;
 
 import interfaces.MentalDiseaseInterface;
+import interfaces.PatientInterface;
 import restful.MentalDiseaseRestful;
+import restful.PatientRestful;
 
 /**
  *
@@ -17,18 +19,12 @@ public class MentalDiseaseFactory {
     /**
      *
      */
-    public MentalDiseaseInterface data;
+     public static MentalDiseaseInterface model;
 
-    /**
-     * Load the data variable, if it is not previously loaded
-     *
-     * @return data MentalDisease
-     */
-    public MentalDiseaseInterface getModel() {
-        if (data == null) {
-            data = new MentalDiseaseRestful();
+    public static MentalDiseaseInterface getModel() {
+        if (model == null) {
+            model = new MentalDiseaseRestful();
         }
-        return data;
+        return model;
     }
-
 }

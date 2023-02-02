@@ -41,6 +41,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -111,6 +112,8 @@ public class MentalDisease1Controller {
      * @param root The Parent object representing root node of view graph.
      */
     public void initialize(Parent root) {
+        
+         Scene scene = new Scene(root);
         LOGGER.info("Initializing the window");
 
         //Not a resizable window.
@@ -190,12 +193,15 @@ public class MentalDisease1Controller {
         mentalDiseaseData = FXCollections.observableArrayList(mentalDiseaseInterface.getAllMentalDiseases_XML(new GenericType<List<MentalDisease>>() {
         }));
         this.tbvMentalDiseases.setItems(mentalDiseaseData);
-        stage.show();
+        
 
         //Add property change listeners for controls
         this.txtfSearch.textProperty().addListener((event) -> this.textChange(KeyEvent.KEY_TYPED));
         this.tbvMentalDiseases.getSelectionModel().selectedItemProperty()
                 .addListener(this::handleMentalDiseaseTableSelectionChanged);
+        
+        stage.setScene(scene);
+        stage.show();
     }
 
     /**

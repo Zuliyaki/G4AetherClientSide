@@ -4,15 +4,16 @@ import java.io.Serializable;
 
 import java.util.Date;
 
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author unaibAndLeire
  */
+
 @XmlRootElement
 public class User implements Serializable {
-
     private String user_type;
     private String dni;
     private String fullName;
@@ -20,6 +21,7 @@ public class User implements Serializable {
     private String password;
     private Integer phoneNumber;
     private String email;
+    
 
     /**
      * Empty constructor
@@ -104,4 +106,6 @@ public class User implements Serializable {
     public void setUser_type(String user_type) {
         this.user_type = user_type;
     }
+    
+    
 }

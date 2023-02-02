@@ -2,64 +2,39 @@ package entities;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.*;
-import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.FetchType.LAZY;
-import javax.validation.constraints.NotNull;
+import javafx.beans.property.*;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
-@Entity
-@Table(name = "treatment", schema = "aether")
-@NamedQueries({
-    @NamedQuery(
-            name = "findAllTreatments", query = "SELECT tr FROM Treatment tr"
-    )
-    ,
-    @NamedQuery(
-            name = "findTreatmentsByDiagnosisId", query = "SELECT tr FROM Treatment tr WHERE tr.diagnosis=:diagnosis"
-    )
-})
-@XmlRootElement
+@XmlRootElement(name = "treatment")
 public class Treatment implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    private TreatmentId treatmentId;
-    
-    @ManyToOne(targetEntity=Diagnosis.class)
-    @MapsId("diagnosisId")
-    private Diagnosis diagnosis;
 
-    @ManyToOne(targetEntity= Medication.class)
-    @MapsId("medicationId")
+    private SimpleObjectProperty<TreatmentId> treatmentId;
     private Medication medication;
 
-    
     public Treatment() {
+        this.treatmentId = new SimpleObjectProperty();
+        this.medication = new Medication();
+       
     }
 
-    public Treatment(TreatmentId treatmentId, Diagnosis diagnosis, Medication medication) {
-        this.treatmentId = treatmentId;
-        this.diagnosis = diagnosis;
+    public Treatment(TreatmentId treatmentId, Medication medication) {
+        this.treatmentId = new SimpleObjectProperty<>(treatmentId);
         this.medication = medication;
     }
 
+     @XmlElement(name = "treatmentId")
     public TreatmentId getTreatmentId() {
-        return treatmentId;
+        return treatmentId.getValue();
     }
 
     public void setTreatmentId(TreatmentId treatmentId) {
-        this.treatmentId = treatmentId;
-    }
-    public Diagnosis getDiagnosis() {
-        return diagnosis;
+        this.treatmentId.set(treatmentId);
     }
 
-    public void setDiagnosis(Diagnosis diagnosis) {
-        this.diagnosis = diagnosis;
-    }
-     
+    @XmlElement(name = "medication")
     public Medication getMedication() {
         return medication;
     }
@@ -71,9 +46,8 @@ public class Treatment implements Serializable {
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 37 * hash + Objects.hashCode(this.treatmentId);
-        hash = 37 * hash + Objects.hashCode(this.diagnosis);
-        hash = 37 * hash + Objects.hashCode(this.medication);
+        hash = 47 * hash + Objects.hashCode(this.treatmentId);
+        hash = 47 * hash + Objects.hashCode(this.medication);
         return hash;
     }
 

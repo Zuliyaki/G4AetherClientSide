@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="vbox" prefHeight="570.0" prefWidth="604.0" style="-fx-background-color: #E7F1FF;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Appointment.AppointmentController">
+  <children>
+    <MenuBar fx:id="menubar" VBox.vgrow="NEVER">
+      <menus>
+        <Menu fx:id="diagnosis" mnemonicParsing="false" text="Diagnosis">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Find diagnosis by id" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Find all diagnosis" />
+                  <MenuItem mnemonicParsing="false" text="Find all diagnosis by patient" />
+                  <MenuItem mnemonicParsing="false" text="Find all diagnosis by date" />
+                  <MenuItem mnemonicParsing="false" text="Find all diagnosis on teraphy" />
+               </items>
+        </Menu>
+        <Menu fx:id="dailynotes" mnemonicParsing="false" text="Daily Notes">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Find note by id" />
+            <MenuItem mnemonicParsing="false" text="Find note by date" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Find all notes" />
+            <MenuItem mnemonicParsing="false" text="Find all notes by patient" />
+            <MenuItem mnemonicParsing="false" text="Find all patient edited notes" />
+            <MenuItem mnemonicParsing="false" text="Find all patient notes by not readable" />
+            <MenuItem mnemonicParsing="false" text="Find all patient notes between dates" />
+            <MenuItem mnemonicParsing="false" text="Find all patient notes between day scores" />
+          </items>
+        </Menu>
+        <Menu fx:id="appointmentmenu" mnemonicParsing="false" text="Appointments">
+               <items>
+                  <MenuItem fx:id="appointmentmt" mnemonicParsing="false" text="Find all Appointment" />
+               </items>
+        </Menu>
+            <Menu fx:id="mentaldisease" mnemonicParsing="false" text="Mental diseases">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Find all diseases" />
+               </items>
+            </Menu>
+            <Menu fx:id="users" mnemonicParsing="false" text="&lt;User&gt;">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Find all users" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Register a psychologist" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Log out" />
+               </items>
+            </Menu>
+      </menus>
+    </MenuBar>
+      <Pane fx:id="pane" prefHeight="213.0" prefWidth="604.0">
+         <children>
+            <Label layoutX="24.0" layoutY="51.0" prefHeight="17.0" prefWidth="80.0" text="Identification" />
+            <TextField fx:id="idtf" layoutX="24.0" layoutY="68.0" promptText="Id" />
+            <Label layoutX="212.0" layoutY="51.0" prefHeight="17.0" prefWidth="80.0" text="Date" />
+            <Label layoutX="212.0" layoutY="110.0" prefHeight="17.0" prefWidth="80.0" text="Psychologist" />
+            <TextField fx:id="psychologisttf" layoutX="212.0" layoutY="130.0" promptText="Psychologist DNI" />
+            <Label layoutX="24.0" layoutY="109.0" prefHeight="17.0" prefWidth="80.0" text="Patient" />
+            <ComboBox fx:id="combobox" layoutX="388.0" layoutY="130.0" prefHeight="25.0" prefWidth="188.0" />
+            <Label fx:id="appointmentsearchlbl" layoutX="388.0" layoutY="109.0" prefHeight="17.0" prefWidth="149.0" text="Appointment Search " />
+            <Button fx:id="searchbtn" layoutX="492.0" layoutY="68.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Search" />
+            <TextField fx:id="patienttf" layoutX="24.0" layoutY="130.0" promptText="Patient DNI" />
+            <CheckBox fx:id="checkbox" layoutX="24.0" layoutY="14.0" mnemonicParsing="false" text="Appointment Change" />
+            <Button fx:id="printbtn" layoutX="388.0" layoutY="68.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Print" />
+            <Label fx:id="patientlbl" layoutX="24.0" layoutY="152.0" prefHeight="17.0" prefWidth="149.0" />
+            <Label fx:id="psychologistlbl" layoutX="212.0" layoutY="152.0" prefHeight="17.0" prefWidth="149.0" />
+            <DatePicker fx:id="datepicker" layoutX="212.0" layoutY="68.0" prefHeight="25.0" prefWidth="149.0" promptText="dd-mm-yyyy" />
+            <Button fx:id="helpbtn" layoutX="492.0" layoutY="19.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Help" />
+         </children>
+      </Pane>
+      <Pane fx:id="panetable" prefHeight="366.0" prefWidth="604.0">
+         <children>
+            <TableView fx:id="tableview" layoutX="86.0" prefHeight="280.0" prefWidth="422.0">
+               <columns>
+                  <TableColumn minWidth="0.0" prefWidth="10.0" resizable="false" />
+                  <TableColumn fx:id="datetc" prefWidth="100.0" resizable="false" text="Date" />
+                  <TableColumn fx:id="changetc" minWidth="0.0" prefWidth="100.0" resizable="false" text="Change" />
+                  <TableColumn fx:id="patienttc" minWidth="0.0" prefWidth="100.0" resizable="false" text="Patient" />
+                  <TableColumn fx:id="psychologisttc" minWidth="0.0" prefWidth="100.0" resizable="false" text="Psychologist" />
+                  <TableColumn minWidth="0.0" prefWidth="10.0" resizable="false" />
+               </columns>
+            </TableView>
+            <Button fx:id="deletebtn" layoutX="276.0" layoutY="310.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Delete" />
+            <Button fx:id="updatebtn" layoutX="151.0" layoutY="310.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Update" />
+            <Button fx:id="createbtn" layoutX="26.0" layoutY="310.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Create" />
+            <Button fx:id="leavebtn" layoutX="497.0" layoutY="310.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Leave" />
+         </children>
+      </Pane>
+  </children>
+</VBox>

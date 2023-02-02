@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="mentalDisease")
+@XmlRootElement(name = "mentalDisease")
 public class MentalDisease implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,26 +31,29 @@ public class MentalDisease implements Serializable {
      * Empty constructor
      */
     public MentalDisease() {
-        
     }
 
     /**
      * Costructor with parameters
      *
+     * @param idMentalDisease
      * @param mdadmin
      * @param mdType
      * @param mdName
      * @param mdDescription
      * @param mdSympton
      * @param mdAddDate
+     * @param diagnosis
      */
-    public MentalDisease(Admin mdadmin, EnumMentalDisease mdType, String mdName, String mdDescription, String mdSympton, Date mdAddDate) {
+    public MentalDisease(Long idMentalDisease, Admin mdadmin, EnumMentalDisease mdType, String mdName, String mdDescription, String mdSympton, Date mdAddDate, Set<Diagnosis> diagnosis) {
+        this.idMentalDisease = idMentalDisease;
         this.mdadmin = mdadmin;
         this.mdType = mdType;
         this.mdName = mdName;
         this.mdDescription = mdDescription;
         this.mdSympton = mdSympton;
         this.mdAddDate = mdAddDate;
+        this.diagnosis = diagnosis;
     }
 
     //Getters & Setters
@@ -116,6 +119,11 @@ public class MentalDisease implements Serializable {
 
     public void setDiagnosis(Set<Diagnosis> diagnosis) {
         this.diagnosis = diagnosis;
+    }
+
+    @Override
+    public String toString() {
+        return this.getMdName();
     }
 
 }

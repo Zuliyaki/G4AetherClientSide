@@ -1,4 +1,4 @@
-*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -26,6 +26,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -71,11 +72,12 @@ public class LogInController {
      */
     public void initialize(Parent root) {
         LOGGER.info("initializing the window");
-
+        stage.getIcons().add(new Image("resources/icon.png"));
         //Tooltips
         tfDNI.setTooltip(new Tooltip("DNI"));
         pfPassword.setTooltip(new Tooltip("Password"));
         hlSignUp.setTooltip(new Tooltip("Go to sign up"));
+        stage.setResizable(false);
 
         //Set event handlers
         this.tfDNI.textProperty().addListener(this::handleFieldsTextChange);
@@ -147,7 +149,7 @@ public class LogInController {
      */
     @FXML
     private void handleSignUpHyperlinkAction(ActionEvent event) {
-        LOGGER.info("Probando a abrir ventana de registro");
+       LOGGER.info("Probando a abrir ventana de registro");
         try {
             Stage stage = new Stage();
             FXMLLoader loader;
@@ -156,14 +158,14 @@ public class LogInController {
             SignUpController controller = (SignUpController) loader.getController();
             controller.setStage(stage);
             controller.initialize(root);
-            
+
             LOGGER.info("ventana de registro abierta");
-            
+
         } catch (IOException ex) {
             showErrorAlert("No se ha podido abrir la ventana");
             LOGGER.log(Level.SEVERE,
                     ex.getMessage());
-            
+
         }
     }
 
@@ -181,6 +183,7 @@ public class LogInController {
 
         //psychologist
         if (tfDNI.getText().equals("45949977w")) {
+            user.setFullName("Unai Zuluaga");
             user.setDni(tfDNI.getText());
             Stage stage = new Stage();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mainMenu/mainMenu.fxml"));
@@ -203,6 +206,7 @@ public class LogInController {
         } else if (tfDNI.getText().equals("35140444d")) {
 
             user.setDni(tfDNI.getText());
+            user.setFullName("Sendoa Badiola");
             Stage stage = new Stage();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mainMenu/mainMenu.fxml"));
             Parent root = null;
@@ -222,6 +226,7 @@ public class LogInController {
 
             //admin
         } else if (tfDNI.getText().equals("44444444z")) {
+            user.setFullName("Leire Carrasco");
             user.setDni(tfDNI.getText());
             Stage stage = new Stage();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/mentalDisease/MentalDisease1.fxml"));

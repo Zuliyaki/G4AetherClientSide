@@ -4,62 +4,13 @@ import java.io.Serializable;
 
 import java.util.Date;
 import java.util.Objects;
-
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author unaib
  */
-@Entity
-@Table(name = "dailynote", schema = "aether")
-@NamedQueries({
-    @NamedQuery(
-            name = "findAllNotes", query = "SELECT dn FROM DailyNote dn"
-    )
-    ,
-    @NamedQuery(
-            name = "findDailyNoteById", query = "SELECT dn FROM DailyNote dn WHERE dn.id=:idDailyNote"
-    )
-    ,
-    @NamedQuery(
-            name = "findAllNotesByPatient", query = "SELECT dn FROM DailyNote dn WHERE dn.dnPatient.dni=:idUser"
-    )
-    ,
-    @NamedQuery(
-            name = "findPatientNoteByDate", query = "SELECT dn FROM DailyNote dn WHERE dn.dnPatient.dni=:idUser and dn.dnNoteDate=:noteDate"
-    )
-    ,
-    @NamedQuery(
-            name = "findPatientNotesBetweenDates", query = "SELECT dn FROM DailyNote dn WHERE dn.dnPatient.dni=:idUser and dn.dnNoteDate BETWEEN :noteDateLow AND :noteDateGreat"
-    )
-    ,
-    @NamedQuery(
-            name = "findPatientEditedNotes", query = "SELECT dn FROM DailyNote dn WHERE dn.dnPatient.dni=:idUser and dn.dnNoteDate!=dn.dnNoteDateLastEdited"
-    )
-    ,
-    @NamedQuery(
-            name = "findPatientNotesByNotReadable", query = "SELECT dn FROM DailyNote dn WHERE dn.dnPatient.dni=:idUser and dn.dnNoteReadable = FALSE"
-    )
-    ,
-    @NamedQuery(
-            name = "findPatientNotesBetweenDayScores", query = "SELECT dn FROM DailyNote dn WHERE dn.dnPatient.dni=:idUser and dn.dnDayScore BETWEEN :dayScoreLow AND :dayScoreGreat"
-    )
-})
-@XmlRootElement
+@XmlRootElement(name = "dailyNote")
 public class DailyNote implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -67,19 +18,15 @@ public class DailyNote implements Serializable {
     /**
      * Auto generated daily note id
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     /**
      * Patient that wrote the note
      */
-    @ManyToOne
-    @NotNull
+
     private Patient dnPatient;
     /**
      * Content of the note
      */
-    @NotNull
     private String dnNoteText;
     /**
      * Comment the psychologist can do about the note
@@ -88,23 +35,19 @@ public class DailyNote implements Serializable {
     /**
      * Enum for the note if was readen or not
      */
-    @Enumerated(EnumType.STRING)
     private EnumReadedStatus dnNoteStatus;
     /**
      * Date of creation of the note
      */
-    @NotNull
-    @Temporal(TemporalType.DATE)
+
     private Date dnNoteDate;
     /**
      * Date of the last time the note was edited
      */
-    @Temporal(TemporalType.DATE)
     private Date dnNoteDateLastEdited;
     /**
      * Score of the day [1-100] depending how it was
      */
-    @NotNull
     private Double dnDayScore;
     /**
      * Lets the dnPatient choose if the psychologist can read the note
