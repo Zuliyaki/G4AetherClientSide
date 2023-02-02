@@ -53,7 +53,6 @@ public class G4AetherClientSide extends Application {
      */
     public static void main(String[] args) {
         launch(args);
-        
     }
 
 }
