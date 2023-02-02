@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- *
+ * 
  * @author unaibAndLeire
  */
 @XmlRootElement(name = "patient")
@@ -16,9 +16,10 @@ public class Patient extends User {
     private String mbti;
 
     private Set<DailyNote> dailyNotes;
-
+    
     private Set<Diagnosis> diagnosises;
 
+   
     private Psychologist psychologist;
 
     private Set<Appointment> appointments;
@@ -28,6 +29,16 @@ public class Patient extends User {
     }
 
     public Patient(String mbti, Set<DailyNote> dailyNotes, Set<Diagnosis> diagnosises, Psychologist psychologist, Set<Appointment> appointments) {
+        super();
+        this.mbti = mbti;
+        this.dailyNotes = dailyNotes;
+        this.diagnosises = diagnosises;
+        this.psychologist = psychologist;
+        this.appointments = appointments;
+    }
+
+    public Patient(String mbti, Set<DailyNote> dailyNotes, Set<Diagnosis> diagnosises, Psychologist psychologist, Set<Appointment> appointments, String dni, String fullName, Date birthDate, String password, Integer phoneNumber, String email) {
+        super(dni, fullName, birthDate, password, phoneNumber, email, "Patient");
         this.mbti = mbti;
         this.dailyNotes = dailyNotes;
         this.diagnosises = diagnosises;
@@ -43,7 +54,6 @@ public class Patient extends User {
         this.mbti = mbti;
     }
 
-    @XmlTransient
     public Set<DailyNote> getDailyNotes() {
         return dailyNotes;
     }
@@ -52,7 +62,6 @@ public class Patient extends User {
         this.dailyNotes = dailyNotes;
     }
 
-    @XmlTransient
     public Set<Diagnosis> getDiagnosises() {
         return diagnosises;
     }
@@ -69,7 +78,6 @@ public class Patient extends User {
         this.psychologist = psychologist;
     }
 
-    @XmlTransient
     public Set<Appointment> getAppointments() {
         return appointments;
     }
@@ -77,4 +85,10 @@ public class Patient extends User {
     public void setAppointments(Set<Appointment> appointments) {
         this.appointments = appointments;
     }
+
+    @Override
+    public String toString() {
+        return this.getDni();
+    }
+    
 }

@@ -342,16 +342,20 @@ public class SignUpController {
             //The information of all text fields will be collected, validated, and stored in an object of type User.
             Patient newUser = new Patient();
             Psychologist newPsychologist = new Psychologist();
+            newPsychologist.setDni(tfInvitationCode.getText());
             List<Psychologist> newPsychologists;
             List<Patient> newPatients;
 
-            newPsychologists = psychologistInterface.findAllPsychologists_XML(new GenericType<List<Psychologist>>() {
+            /**
+             *   newPsychologists = psychologistInterface.findAllPsychologists_XML(new GenericType<List<Psychologist>>() {
             });
             for (Psychologist newPsychologist1 : newPsychologists) {
                 if (tfInvitationCode.getText().equals(newPsychologist1.getDni())) {
                     newPsychologist = newPsychologist1;
                 }
             }
+             */
+          
 
             newUser.setUser_type("patient");
             newUser.setDni(tfDNI.getText().toLowerCase());

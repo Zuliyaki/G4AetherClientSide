@@ -32,12 +32,12 @@ public class DailyNoteHelpController {
      *
      * @param root The FXML document hierarchy root.
      */
-    public void initAndShowStage(Parent root) {
+    public void initialize(Parent root) {
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(scene);
-        stage.setTitle("Ayuda para la Gestion de Usuarios");
+        stage.setTitle("Daily Note Help Window");
         stage.setResizable(false);
         stage.setMinWidth(800);
         stage.setMinHeight(600);
@@ -55,6 +55,6 @@ public class DailyNoteHelpController {
         WebEngine webEngine = webView.getEngine();
         //Load help page.
         webEngine.load(getClass()
-                .getResource("/javafxapplicationud3example/ui/view/help.html").toExternalForm());
+                .getResource("/view/dailyNote/DailyNoteHelp.html").toExternalForm());
     }
 }

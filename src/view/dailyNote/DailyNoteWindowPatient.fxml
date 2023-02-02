@@ -21,29 +21,16 @@
 
 <VBox prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.dailyNote.DailyNoteWindowController">
     <children>
-        <MenuBar VBox.vgrow="NEVER">
+        <MenuBar prefHeight="26.0" prefWidth="603.0">
             <menus>
                 <Menu mnemonicParsing="false" text="Diagnosis">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Find diagnosis by id" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Find all diagnosis" />
-                        <MenuItem mnemonicParsing="false" text="Find all diagnosis by patient" />
-                        <MenuItem mnemonicParsing="false" text="Find all diagnosis by date" />
-                        <MenuItem mnemonicParsing="false" text="Find all diagnosis on teraphy" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleOpenDiagnosis" text="Open" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Daily Notes">
+                <Menu fx:id="dailyNoteMenu" mnemonicParsing="false" text="Daily Notes">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Find note by id" />
-                        <MenuItem mnemonicParsing="false" text="Find note by date" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Find all notes" />
-                        <MenuItem mnemonicParsing="false" text="Find all notes by patient" />
-                        <MenuItem mnemonicParsing="false" text="Find all patient edited notes" />
-                        <MenuItem mnemonicParsing="false" text="Find all patient notes by not readable" />
-                        <MenuItem mnemonicParsing="false" text="Find all patient notes between dates" />
-                        <MenuItem mnemonicParsing="false" text="Find all patient notes between day scores" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleOpenDailyNote" text="Open" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Appointments">
@@ -55,18 +42,15 @@
                         <MenuItem mnemonicParsing="false" text="Find all appointment by change" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Mental diseases">
+                <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Find all diseases" />
+                        <MenuItem mnemonicParsing="false" onAction="#menuHelp" text="User Manual" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="&lt;User&gt;">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Find all users" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Register a psychologist" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Log out" />
+                        <MenuItem mnemonicParsing="false" text="Change Password" />
+                        <MenuItem mnemonicParsing="false" onAction="#exitApp" text="Log out" />
                     </items>
                 </Menu>
             </menus>

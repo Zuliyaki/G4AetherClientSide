@@ -5,21 +5,22 @@
  */
 package view.dailyNote;
 
+import application.G4AetherClientSide;
 import entities.DailyNote;
 import entities.EnumReadedStatus;
 import entities.Patient;
 import entities.User;
+import exceptions.DailyNoteNotFoundException;
+import exceptions.DeleteException;
 import factories.DailyNoteFactory;
 import factories.PatientFactory;
 import interfaces.DailyNotesInterface;
 import interfaces.PatientInterface;
+import java.io.IOException;
 import java.util.Date;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -27,19 +28,24 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -49,7 +55,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
@@ -60,6 +68,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
+import view.viewDiagnosis.DiagnosisController;
 
 /**
  * Controller UI class for Daily Note Patient view in users' management
@@ -130,6 +139,8 @@ public class DailyNoteWindowController {
     private Button btnDelete;
     @FXML
     private ContextMenu tableContextMenu;
+    @FXML
+    private Menu dailyNoteMenu;
 
     private Patient patient;
 
@@ -139,29 +150,34 @@ public class DailyNoteWindowController {
      * @param root The Parent object representing root node of view graph.
      */
     public void initialize(Parent root) {
+        
+        Scene scene = new Scene(root);
         //Not a resizable window.
         stage.setResizable(false);
         //Modal window of LogIn.
-        // stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initModality(Modality.APPLICATION_MODAL);
         //The window title will be ”SignUp”
         stage.setTitle("Daily Notes");
         //Add a leaf icon.
-        //stage.getIcons().add(new Image("/resources/icon.png"));
-
+        stage.getIcons().add(new Image("resources/icon.png"));
+        //init values
         List<Patient> patients;
+        
         try {
             patients = pInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
             });
             for (Patient newPatient : patients) {
-                if (newPatient.getDni().equals("35140444d")) {
+                if (newPatient.getDni().equals(user.getDni())) {
                     patient = newPatient;
+                    patient.setDni("35140444d");
                 }
             }
         } catch (Exception ex) {
             Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE,
                     null, ex);
         }
-
+        
+        tfPatientDni.setText(user.getDni());
         this.tfPatientDni.setDisable(true);
         this.tfPatientDni.setEditable(false);
         spinnerDayScore.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 10, 5, 0.1));
@@ -180,6 +196,7 @@ public class DailyNoteWindowController {
         txtaComment.setDisable(true);
         btnPrint.setDisable(true);
         txtaNote.setPromptText("Writte a description of your day");
+        dailyNoteMenu.setDisable(true);
 
         //Valores de las columnas de la tabla
         tb.setEditable(false);
@@ -222,12 +239,14 @@ public class DailyNoteWindowController {
         miDelete.setOnAction((ActionEvent e) -> {
             this.handleDeleteButtonAction(e);
         });
+        stage.setScene(scene);
 
         stage.show();
     }
 
     public void initData(User user) {
         this.user = user;
+        this.user.setDni("35140444d");
     }
 
     private void handleFieldsTextChange(ObservableValue observable,
@@ -432,9 +451,10 @@ public class DailyNoteWindowController {
             olDailyNote = FXCollections.observableArrayList(dailyNote);
             tb.setItems(olDailyNote);
             tb.refresh();
-        } catch (Exception ex) {
+        } catch (DailyNoteNotFoundException ex) {
             Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE,
-                    null, ex);
+                    null, ex.getMessage());
+            showErrorAlert(ex.getMessage());
         }
         return olDailyNote;
     }
@@ -447,8 +467,10 @@ public class DailyNoteWindowController {
             olDailyNote = FXCollections.observableArrayList(allPatientDailyNote);
             tb.setItems(olDailyNote);
             tb.refresh();
-        } catch (ClientErrorException ex) {
-            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DailyNoteNotFoundException ex) {
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE,
+                    null, ex.getMessage());
+            showErrorAlert(ex.getMessage());
         }
         return olDailyNote;
     }
@@ -461,8 +483,10 @@ public class DailyNoteWindowController {
             olDailyNote = FXCollections.observableArrayList(allPatientEditedDailyNote);
             tb.setItems(olDailyNote);
             tb.refresh();
-        } catch (ClientErrorException ex) {
-            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DailyNoteNotFoundException ex) {
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE,
+                    null, ex.getMessage());
+            showErrorAlert(ex.getMessage());
         }
         return olDailyNote;
     }
@@ -475,8 +499,10 @@ public class DailyNoteWindowController {
             olDailyNote = FXCollections.observableArrayList(allPatientNotReadableDailyNote);
             tb.setItems(olDailyNote);
             tb.refresh();
-        } catch (ClientErrorException ex) {
-            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DailyNoteNotFoundException ex) {
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE,
+                    null, ex.getMessage());
+            showErrorAlert(ex.getMessage());
         }
         return olDailyNote;
     }
@@ -493,8 +519,10 @@ public class DailyNoteWindowController {
             } else {
                 showInfoAlert("The bottom score spinner must have a lowe value than the top score spinner");
             }
-        } catch (ClientErrorException ex) {
-            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DailyNoteNotFoundException ex) {
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE,
+                    null, ex.getMessage());
+            showErrorAlert(ex.getMessage());
         }
         return olDailyNote;
     }
@@ -516,8 +544,10 @@ public class DailyNoteWindowController {
             } else {
                 showInfoAlert("The start date must be before the end date field");
             }
-        } catch (ClientErrorException ex) {
-            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DailyNoteNotFoundException ex) {
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE,
+                    null, ex.getMessage());
+            showErrorAlert(ex.getMessage());
         }
         return olDailyNote;
     }
@@ -580,7 +610,6 @@ public class DailyNoteWindowController {
             } else {
                 newDailyNote.setNoteReadable(false);
             }
-            Patient patient = new Patient();
             List<Patient> allPatients = pInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
             });
             for (Patient allPatient : allPatients) {
@@ -638,7 +667,6 @@ public class DailyNoteWindowController {
                 newDailyNote.setNoteReadable(false);
             }
 
-            Patient patient = new Patient();
             List<Patient> allPatients = pInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
             });
             for (Patient patientFromAll : allPatients) {
@@ -689,16 +717,106 @@ public class DailyNoteWindowController {
                 LOGGER.info("Delete canceled");
             }
 
-        } catch (ClientErrorException ex) {
-            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DeleteException ex) {
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE,
+                    null, ex.getMessage());
+            showErrorAlert(ex.getMessage());
         }
     }
 
-    /*
-    private void initData(User loginUser) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    /**
+     * Handle Action event on Diagnosis Menu item
+     * 
+     * @param event 
      */
+    @FXML
+    public void handleOpenDiagnosis(ActionEvent event) {
+        Stage stage = new Stage();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../viewDiagnosis/Diagnosis.fxml"));
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+            showErrorAlert("Error opening diagnosis window");
+        }
+
+        DiagnosisController controller = (DiagnosisController) loader.getController();
+
+        controller.setStage(stage);
+
+        controller.initData(user);
+        controller.initialize(root);
+
+    }
+
+    /**
+     * Handle Action event on DailyNote Menu item
+     * 
+     * @param event 
+     */
+    @FXML
+    private void handleOpenDailyNote(ActionEvent event) {
+        Stage stage = new Stage();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../dailyNote/DailyNoteWindowPatient.fxml"));
+        Parent root = null;
+        try {
+            root = (Parent) loader.load();
+        } catch (IOException ex) {
+            Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+            showErrorAlert("Error opening daily notes window");
+        }
+
+        DailyNoteWindowController controller = (DailyNoteWindowController) loader.getController();
+
+        controller.setStage(stage);
+        controller.initData(user);
+        controller.initialize(root);
+    }
+
+    /**
+     * Handle Action event on exitApp Menu item
+     * 
+     * @param event 
+     */
+    @FXML
+    private void exitApp(ActionEvent event) {
+
+        ButtonType chooseExit = new ButtonType("Exit", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert alert = new Alert(Alert.AlertType.NONE, "Do you want to log out or exit the application?", chooseExit);
+
+        alert.setTitle("Log out or exit");
+
+        Optional<ButtonType> option = alert.showAndWait();
+        if (option.get()
+                == chooseExit) {
+            Platform.exit();
+        }
+    }
+
+    /**
+     * Handle Action event on HelpMenu Menu item
+     * 
+     * @param event 
+     */
+    @FXML
+    private void menuHelp(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dailyNote/DailyNoteHelp.fxml"));
+            Parent root = (Parent) loader.load();
+            DailyNoteHelpController helpDailyNoteController = ((DailyNoteHelpController) loader.getController());
+            //Initializes and shows help stage
+            helpDailyNoteController.initialize(root);
+        } catch (IOException ex) {
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE,
+                    "Error opening the help window",
+                    ex.getMessage());
+            showErrorAlert(ex.getMessage());
+        }
+    }
+
     /**
      * Show error alert
      *
@@ -720,4 +838,5 @@ public class DailyNoteWindowController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, infoMsg, ButtonType.OK);
         alert.showAndWait();
     }
+
 }

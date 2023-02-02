@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import java.util.Date;
 import java.util.Objects;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -23,6 +22,7 @@ public class DailyNote implements Serializable {
     /**
      * Patient that wrote the note
      */
+
     private Patient dnPatient;
     /**
      * Content of the note
@@ -39,6 +39,7 @@ public class DailyNote implements Serializable {
     /**
      * Date of creation of the note
      */
+
     private Date dnNoteDate;
     /**
      * Date of the last time the note was edited

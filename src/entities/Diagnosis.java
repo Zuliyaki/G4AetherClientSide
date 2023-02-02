@@ -7,27 +7,28 @@ import java.util.Objects;
 import java.util.Set;
 import javafx.beans.property.*;
 import javafx.collections.ObservableSet;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-
 
 /**
  *
  * @author zuli
  */
+@XmlRootElement(name = "diagnosis")
 public class Diagnosis implements Serializable {
 
     private static final long serialVersionUID = 1L;
- 
-    private SimpleLongProperty  diagnosisId;
-   
+
+    private SimpleLongProperty diagnosisId;
+
     private SimpleObjectProperty<Date> diagnosisDate;
-  
+
     private SimpleObjectProperty<Date> lastDiagnosisChangeDate;
-  
+
     private SimpleObjectProperty<Patient> patient;
-   
+
     private SimpleObjectProperty<Psychologist> psychologist;
- 
+
     private SimpleObjectProperty<MentalDisease> mentalDisease;
     private Set<Treatment> treatments;
     private SimpleBooleanProperty onTherapy;
@@ -36,16 +37,23 @@ public class Diagnosis implements Serializable {
      * Empty constructor
      */
     public Diagnosis() {
-        super();
+        this.diagnosisId = new SimpleLongProperty();
+        this.diagnosisDate = new SimpleObjectProperty();
+        this.diagnosisDate = new SimpleObjectProperty();
+        this.lastDiagnosisChangeDate = new SimpleObjectProperty();
+        this.patient = new SimpleObjectProperty();
+        this.psychologist = new SimpleObjectProperty();
+        this.mentalDisease = new SimpleObjectProperty();
+        this.onTherapy = new SimpleBooleanProperty();
     }
 
     public Diagnosis(Long diagnosisId, Date diagnosisDate, Date lastDiagnosisChangeDate, Patient patient, Psychologist psychologist, MentalDisease mentalDisease, Set<Treatment> treatments, Boolean onTherapy) {
-      //   this.diagnosisId = diagnosisId;
+        this.diagnosisId = new SimpleLongProperty(diagnosisId);
         this.diagnosisDate = new SimpleObjectProperty(diagnosisDate);
         this.lastDiagnosisChangeDate = new SimpleObjectProperty(lastDiagnosisChangeDate);
         this.patient = new SimpleObjectProperty(patient);
         this.psychologist = new SimpleObjectProperty(psychologist);
-        this.mentalDisease =  new SimpleObjectProperty(mentalDisease);
+        this.mentalDisease = new SimpleObjectProperty(mentalDisease);
         this.treatments = treatments;
         this.onTherapy = new SimpleBooleanProperty(onTherapy);
     }
@@ -97,7 +105,7 @@ public class Diagnosis implements Serializable {
     public void setMentalDisease(MentalDisease mentalDisease) {
         this.mentalDisease.set(mentalDisease);
     }
-    
+
     @XmlTransient
     public Set<Treatment> getTreatments() {
         return treatments;
@@ -112,7 +120,10 @@ public class Diagnosis implements Serializable {
     }
 
     public void setOnTherapy(Boolean onTherapy) {
-        this.onTherapy.set(true);
+        this.onTherapy.set(onTherapy);
+    }
+       public SimpleBooleanProperty onTherapyProperty(){
+        return this.onTherapy;
     }
 
     @Override
@@ -144,7 +155,7 @@ public class Diagnosis implements Serializable {
         if (!Objects.equals(this.diagnosisId, other.diagnosisId)) {
             return false;
         }
-      
+
         return true;
     }
 

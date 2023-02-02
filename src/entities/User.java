@@ -4,15 +4,16 @@ import java.io.Serializable;
 
 import java.util.Date;
 
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author unaibAndLeire
  */
-@XmlRootElement(name = "user")
-public class User implements Serializable {
 
+@XmlRootElement
+public class User implements Serializable {
     private String user_type;
     private String dni;
     private String fullName;
@@ -20,6 +21,7 @@ public class User implements Serializable {
     private String password;
     private Integer phoneNumber;
     private String email;
+    
 
     /**
      * Empty constructor
@@ -27,25 +29,28 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String user_type, String dni, String fullName, Date birthDate, String password, Integer phoneNumber, String email) {
-        this.user_type = user_type;
+    /**
+     * Costructor with parameters
+     *
+     * @param dni
+     * @param fullName
+     * @param birthDate
+     * @param password
+     * @param phoneNumber
+     * @param email
+     * @param userType
+     */
+    public User(String dni, String fullName, Date birthDate, String password, Integer phoneNumber, String email, String userType) {
         this.dni = dni;
         this.fullName = fullName;
         this.birthDate = birthDate;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.user_type = userType;
     }
 
     //Getters & Setters
-    public void setUser_type(String user_type) {
-        this.user_type = user_type;
-    }
-
-    public String getUser_type() {
-        return user_type;
-    }
-
     public void setDni(String dni) {
         this.dni = dni;
     }
@@ -93,4 +98,14 @@ public class User implements Serializable {
     public String getEmail() {
         return email;
     }
+
+    public String getUser_type() {
+        return user_type;
+    }
+
+    public void setUser_type(String user_type) {
+        this.user_type = user_type;
+    }
+    
+    
 }

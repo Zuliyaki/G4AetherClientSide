@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Help page</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                font: 16px arial, sans-serif;
+            }            
+            h3 {
+                font: 20px arial, sans-serif;
+                text-decoration: underline;
+                font-weight: bold;
+            }            
+            h4 {
+                font: 18px arial, sans-serif;
+                text-decoration: underline;
+                font-weight: bold;
+            }            
+        </style>    
+    </head>
+    <body>
+        <div>
+            <h3>Diagnosis Management: Help</h3>
+            <h4>General description</h4>
+            <p>Login as a patient, you can make search from with different types of filters,
+            he can click on any of the result table rows so he can read information
+            about your mental disease and lool at your diagnosis treatments,
+            there is also a print button in order to print it, login as a psychologist you can make
+            all of mentioned above and all the Create/Modify/Delete funtions</p>
+            <h4>Behaviour</h4>
+            <strong>Create a Diagnosis</strong>
+            <p>To create a diagnosis, you need to be loged in as a psychologist,
+            you need to right click on the Diagnosis table and selected the
+            <strong>Create new Diagnosis</strong> on the menu that shows.
+            the diagnosis will be created and you will need to modify it with the 
+            needed values on each cell, the patient cell will show a box with all
+            the patients DNI, the psychologist cell will be created with your DNI,
+            the Date of creation cell will show the date of today, the on therapy
+            checkbox will be set false, and the last treatment change date cell will
+            set at today date</p>
+            <strong>Modify a Diagnosis</strong>
+            <p>In oder to modify you need to click on the diagnosis you want to
+            modfiy and each cell will be editable, you can change the patient, and select
+            a new patient, the date of creation cannot be edited, the psychologist cell can not be edited
+            it will be yours, the cell on therapy you can check it or uncheck it, and you can change
+            the last treatment change date cell and set a new one with the datepicker </p> 
+            <strong>Delete a Diagnosis</strong>
+            if you want to delete a diagnosis you need to select the row of the diagnosis
+            you want to delete and right click on it, a Menu will show and you need to select the
+            <p> <strong>Delete Diagnosis</strong> option, it will be removed and the 
+               table will be updated. </p>
+            <strong>Search Diagnosis</strong>
+            To search a Diagnosis you need to frist select a search method on the 
+                right top combobox that is labeled as search method,
+                if<u>Find all diagnosis</u> 
+                all fields will be deactivated, there is nothing to worry about.
+                When selecting <u>Find all diagnosis by patient id</u>, 
+                the <u>PatientDNI</u> field must be filled.
+                and if <u>Find all diagnosis by patient on therapy</u>
+                also the <u>PatientDNI</u> field must be filled.
+                when selecting <u>Find all notes beetween dates and patient id</u>,
+                the <u>From</u>, <u>to</u>, and  <u>PatientDNI</u> field will enable 
+                and it will need to be filled, the date on <u>to</u> cannot be before the data on
+                <u>From</u>,
+                In order to activate the search button the requested fields will have to be filled 
+                it will need to be filled in order to activate.
+                Once the actions mentioned above are finished, click on the <b>Search</b> button.
+                If there is no error the diagnosises will apear on the table shown in the window.
+            <strong>Print Diagnosis current info</strong>
+            <p>Pressing the <b>Print</b> button will pop up a document showing the diagnosis on the table.</p>
+            <strong>Exit the application</strong>
+            <p>On the top Menu, selecting <u>User</u> menu, two options will be shown, selecting the
+            <strong>Log out</strong> you will be asked for confirmation.</p>
+            <strong>Go to another Window</strong>
+            <p>Going into the top Menu and selecting any of the menus, it will show a menu
+            to go to that page, selecting it, the new window will pop up</p>
+        </div>
+    </body>
+</html>

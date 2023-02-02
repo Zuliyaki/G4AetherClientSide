@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author unaibAndLeire
  */
-@XmlRootElement(name="psychologist")
+
 public class Psychologist extends User {
 
     private String titulation;
@@ -30,6 +30,15 @@ public class Psychologist extends User {
 
     //OnlyPyschologist constructor
     public Psychologist(String titulation, String invitationCode, Set<Patient> patient, Set<Appointment> appointments) {
+        this.titulation = titulation;
+        this.invitationCode = invitationCode;
+        this.patient = patient;
+        this.appointments = appointments;
+    }
+
+    //Pshychologist with super constructor
+    public Psychologist(String titulation, String invitationCode, Set<Patient> patient, Set<Appointment> appointments, String dni, String fullName, Date birthDate, String password, Integer phoneNumber, String email) {
+        super(dni, fullName, birthDate, password, phoneNumber, email, "Psychologist");
         this.titulation = titulation;
         this.invitationCode = invitationCode;
         this.patient = patient;
@@ -69,6 +78,11 @@ public class Psychologist extends User {
 
     public void setAppointments(Set<Appointment> appointments) {
         this.appointments = appointments;
+    }
+
+    @Override
+    public String toString() {
+        return this.getDni();
     }
 
 }

@@ -6,6 +6,7 @@
 package restful;
 
 import interfaces.UserInterface;
+import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -24,11 +25,12 @@ import javax.ws.rs.core.GenericType;
  *
  * @author unaib
  */
-public class UserRestful implements UserInterface{
+public class UserRestful implements UserInterface {
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/G4Aether/webresources";
+    private final ResourceBundle configFile = ResourceBundle.getBundle("config.config");
+    private final String BASE_URI = configFile.getString("BASE_URI");
 
     public UserRestful() {
         client = javax.ws.rs.client.ClientBuilder.newClient();
@@ -36,6 +38,7 @@ public class UserRestful implements UserInterface{
     }
 
     public void edit_XML(Object requestEntity) throws ClientErrorException {
+
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
     }
 
@@ -92,5 +95,5 @@ public class UserRestful implements UserInterface{
     public void close() {
         client.close();
     }
-    
+
 }

@@ -6,6 +6,7 @@
 package restful;
 
 import interfaces.PsychologistInterface;
+import java.util.ResourceBundle;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
@@ -28,7 +29,8 @@ public class PsychologistRestful implements PsychologistInterface{
 
     private WebTarget webTarget;
     private Client client;
-    private static final String BASE_URI = "http://localhost:8080/G4Aether/webresources";
+    private final ResourceBundle configFile = ResourceBundle.getBundle("config.config");
+    private final String BASE_URI = configFile.getString("BASE_URI");
 
     public PsychologistRestful() {
         client = javax.ws.rs.client.ClientBuilder.newClient();

@@ -10,7 +10,7 @@ import restful.PatientRestful;
 
 /**
  *
- * @author unaib
+ * @author unaiz
  */
 public class PatientFactory {
 
