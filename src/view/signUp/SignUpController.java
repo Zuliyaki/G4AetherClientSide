@@ -373,10 +373,12 @@ public class SignUpController {
 
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             encodedMessage = cipher.doFinal(pfPassword.getText().getBytes());
-
+            
+            
             System.out.println(encodedMessage.toString());
             newUser.setPassword(encodedMessage.toString());
             newUser.setPhoneNumber(Integer.parseInt(tfPhoneNumber.getText()));
+                    
             newUser.setPsychologist(newPsychologist);
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");

@@ -169,7 +169,6 @@ public class DailyNoteWindowController {
             for (Patient newPatient : patients) {
                 if (newPatient.getDni().equals(user.getDni())) {
                     patient = newPatient;
-                    patient.setDni("35140444d");
                 }
             }
         } catch (Exception ex) {

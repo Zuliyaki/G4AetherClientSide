@@ -32,6 +32,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import view.mainMenu.MainMenuController;
 import view.mentalDisease.MentalDisease1Controller;
+import view.logIn.RememberPasswordController;
 import view.signUp.SignUpController;
 
 /**
@@ -168,6 +169,25 @@ public class LogInController {
 
         }
     }
+    
+    @FXML
+    private void handleRememberPasswordHyperlinkAction(ActionEvent event) throws IOException, Exception {
+
+        LOGGER.info("Opening remember pasword window");
+
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/logIn/RememberPassword.fxml"));
+            Parent root = null;
+            try {
+                root = (Parent) loader.load();
+            } catch (IOException ex) {
+                Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            RememberPasswordController controller = (RememberPasswordController) loader.getController();
+            controller.setStage(stage);
+            controller.initialize(root);
+        }
 
     //TODO
     /**

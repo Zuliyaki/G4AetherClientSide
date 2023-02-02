@@ -330,19 +330,16 @@ public class DiagnosisController {
 
         tbcOnTherapy.setCellValueFactory(
                 (CellDataFeatures<Diagnosis, Boolean> param) -> param.getValue().onTherapyProperty());
-        if (diagnosises.isEmpty()) {
-            showErrorAlert("cannot load all diagnosis");
-        } else {
-            diagnosises.forEach(
-                    diagnosis -> diagnosis.onTherapyProperty().addListener((observable, oldValue, newValue) -> {
-                        try {
-                            diagnosisInterface.updateDiagnosis_XML(diagnosis);
-                        } catch (UpdateException ex) {
-                            showErrorAlert(ex.getMessage());
-                        }
-                    })
-            );
-        }
+
+        diagnosises.forEach(
+                diagnosis -> diagnosis.onTherapyProperty().addListener((observable, oldValue, newValue) -> {
+                    try {
+                        diagnosisInterface.updateDiagnosis_XML(diagnosis);
+                    } catch (UpdateException ex) {
+                        showErrorAlert(ex.getMessage());
+                    }
+                })
+        );
 
         //////////////
         ////////////////
@@ -542,7 +539,6 @@ public class DiagnosisController {
             }
             tfMentalDisease.autosize();
             tfMentalDisease.alignmentProperty();
-            System.out.println(selectedDiagnosis.toString());
             //Context Menu
             final ContextMenu contextMenu = new ContextMenu();
             MenuItem DeleteDiagnosisMenuIt = new MenuItem("Delete Diagnosis");

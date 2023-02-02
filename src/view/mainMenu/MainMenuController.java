@@ -108,7 +108,7 @@ public class MainMenuController {
     public void initialize(Parent Root) {
         Scene scene = new Scene(Root);
         stage.setResizable(false);
-        
+
         stage.getIcons().add(new Image("resources/icon.png"));
         if (user.getDni().equals("45949977w")) {
 
@@ -169,23 +169,26 @@ public class MainMenuController {
 
     @FXML
     private void handleDailyNoteButtonAction(ActionEvent event) {
-        Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../dailyNote/DailyNoteWindowPatient.fxml"));
-        Parent root = null;
-        try {
-            root = (Parent) loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+        if (user.getDni().equals("35140444d")) {
+            Stage stage = new Stage();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../dailyNote/DailyNoteWindowPatient.fxml"));
+            Parent root = null;
+            try {
+                root = (Parent) loader.load();
+            } catch (IOException ex) {
+                Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            DailyNoteWindowController controller = (DailyNoteWindowController) loader.getController();
+
+            controller.setStage(stage);
+            controller.initData(user);
+            controller.initialize(root);
+        } else {
+            new Alert(Alert.AlertType.ERROR, "Admin window not implemented yet", ButtonType.OK).showAndWait();
         }
-
-        DailyNoteWindowController controller = (DailyNoteWindowController) loader.getController();
-
-        controller.setStage(stage);
-
-        controller.initData(user);
-
-        controller.initialize(root);
     }
 
     @FXML
