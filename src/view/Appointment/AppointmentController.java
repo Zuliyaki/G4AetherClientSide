@@ -3,6 +3,12 @@ package view.Appointment;
 import entities.Appointment;
 import entities.Patient;
 import entities.Psychologist;
+import exceptions.AppointmentNotFoundException;
+import exceptions.CreateException;
+import exceptions.DeleteException;
+import exceptions.PatientException;
+import exceptions.PsychologistException;
+import exceptions.UpdateException;
 import factories.AppointmentFactory;
 import factories.PatientFactory;
 import factories.PsychologistFactory;
@@ -36,8 +42,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -45,7 +49,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javax.ws.rs.ClientErrorException;
@@ -189,7 +192,7 @@ public class AppointmentController {
             // createbtn setOnAction event Handlers
             this.createbtn.setOnAction(this::handleCreateButtonAction);
 
-            // deletebtn setOnAction event Handlers
+            //deletebtn setOnAction event Handlers
             this.deletebtn.setOnAction(this::handleDeleteButtonAction);
 
             // updatebtn setOnAction event Handlers
@@ -198,7 +201,7 @@ public class AppointmentController {
             // leavebtn setOnAction event Handlers
             this.leavebtn.setOnAction(this::handleLeaveButtonAction);
 
-            // acceptbtn setOnAction event Handlers
+            // printbtn setOnAction event Handlers
             this.printbtn.setOnAction(this::handlePrintButtonAction);
 
             // searchbtn setOnAction event Handlers
@@ -215,7 +218,7 @@ public class AppointmentController {
             this.psychologisttf.textProperty().addListener(this::handleFieldsTextChange);
 
             // Load combobox with search methods
-            String[] a = {"Find all Appointment", "Find Appointment by ID" ,  "Find Appointment by Date"};
+            String[] a = {"Find all Appointment", "Find Appointment by ID", "Find Appointment by Date"};
 
             ObservableList<String> searchMethods = FXCollections.observableArrayList(a);
 
@@ -260,7 +263,7 @@ public class AppointmentController {
 
             LOGGER.info("Appointment Window initialized !!");
 
-        } catch (Exception e) {
+        } catch (AppointmentNotFoundException e) {
 
             showErrorAlert("Error Initializing Appointment Window ..." + e.getMessage());
 
@@ -324,8 +327,6 @@ public class AppointmentController {
 
                 searchbtn.setDisable(false);
 
-                reset();
-
                 break;
 
             case "Find Appointment by ID":
@@ -343,8 +344,6 @@ public class AppointmentController {
 
                 searchbtn.setDisable(false);
 
-                reset();
-
                 break;
 
             case "Find Appointment by Date":
@@ -361,11 +360,8 @@ public class AppointmentController {
                 //patienttf.setEditable(false);
                 searchbtn.setDisable(false);
 
-                reset();
-
                 break;
         }
-
     }
 
     /**
@@ -492,7 +488,7 @@ public class AppointmentController {
      *
      * @return
      */
-    private ObservableList<Appointment> loadAllAppointments() {
+    private ObservableList<Appointment> loadAllAppointments() throws AppointmentNotFoundException {
 
         ObservableList<Appointment> allAppointment = null;
 
@@ -591,7 +587,7 @@ public class AppointmentController {
      * it refresh TablewView appointment with all updated and created
      * appointments
      */
-    public void refresh() {
+    public void refresh() throws AppointmentNotFoundException {
 
         ObservableList<Appointment> allAppointment;
 
@@ -605,12 +601,12 @@ public class AppointmentController {
 
             tableview.refresh();
 
-        } catch (ClientErrorException e) {
+        } catch (AppointmentNotFoundException e) {
 
         }
     }
 
-    public void reset() {
+    public void reset() throws AppointmentNotFoundException {
 
         //Empty fields
         idtf.setText("");
@@ -718,11 +714,16 @@ public class AppointmentController {
 
             LOGGER.info("Appointment Created successfully !!");
 
-        } catch (ClientErrorException ex) {
+        } catch (CreateException ex) {
 
             Logger.getLogger(AppointmentController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
 
             showErrorAlert(ex.getMessage());
+
+        } catch (PatientException | PsychologistException | AppointmentNotFoundException ex) {
+
+            Logger.getLogger(AppointmentController.class.getName()).log(Level.SEVERE, null, ex);
+
         }
 
     }
@@ -769,28 +770,18 @@ public class AppointmentController {
             List<Patient> allPatients = patientInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
             });
 
-            for (Patient patientFromAll : allPatients) {
-
-                if (patientFromAll.getDni().equals(patienttf.getText())) {
-
-                    appointmentUpdate.setPatient(patientFromAll);
-
-                }
-            }
+            allPatients.stream().filter((patientFromAll) -> (patientFromAll.getDni().equals(patienttf.getText()))).forEachOrdered((patientFromAll) -> {
+                appointmentUpdate.setPatient(patientFromAll);
+            });
 
             Psychologist psychologist = new Psychologist();
 
             List<Psychologist> allPsychologists = psychologistInterface.findAllPsychologists_XML(new GenericType<List<Psychologist>>() {
             });
 
-            for (Psychologist psychologisttFromAll : allPsychologists) {
-
-                if (psychologisttFromAll.getDni().equals(psychologisttf.getText())) {
-
-                    appointmentUpdate.setPsychologist(psychologisttFromAll);
-
-                }
-            }
+            allPsychologists.stream().filter((psychologisttFromAll) -> (psychologisttFromAll.getDni().equals(psychologisttf.getText()))).forEachOrdered((psychologisttFromAll) -> {
+                appointmentUpdate.setPsychologist(psychologisttFromAll);
+            });
 
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to update appointment?", ButtonType.OK, ButtonType.CANCEL);
 
@@ -812,11 +803,15 @@ public class AppointmentController {
 
             }
 
-        } catch (ClientErrorException ex) {
+        } catch (UpdateException ex) {
 
             showErrorAlert("Error Updating appointment");
 
             LOGGER.log(Level.SEVERE, ex.getMessage());
+
+        } catch (PsychologistException | AppointmentNotFoundException | PatientException ex) {
+
+            Logger.getLogger(AppointmentController.class.getName()).log(Level.SEVERE, null, ex);
 
         }
 
@@ -830,8 +825,7 @@ public class AppointmentController {
      * @param event The ActionEvent object for the event.
      */
     @FXML
-    private void handleDeleteButtonAction(ActionEvent event
-    ) {
+    private void handleDeleteButtonAction(ActionEvent event) {
 
         LOGGER.info("Deleting appointment...");
 
@@ -863,7 +857,7 @@ public class AppointmentController {
 
             }
 
-        } catch (ClientErrorException ex) {
+        } catch (DeleteException ex) {
 
             showErrorAlert("TableView Cannot be deleted !!");
 
@@ -918,24 +912,27 @@ public class AppointmentController {
      */
     @FXML
     private void handleSearchButtonAction(ActionEvent event) {
+        try {
+            switch (combobox.getValue().toString()) {
 
-        switch (combobox.getValue().toString()) {
+                case "Find all Appointment":
 
-            case "Find all Appointment":
+                    loadAllAppointments();
 
-                loadAllAppointments();
+                    break;
 
-                break;
+                case "Find Appointment by ID":
 
-            case "Find Appointment by ID":
+                    //loadAppointmentID();
+                    break;
 
-                //loadAppointmentID();
-                break;
+                case "Find Appointment by Date":
 
-            case "Find Appointment by Date":
+                    //loadAppointmentDate();
+                    break;
+            }
+        } catch (AppointmentNotFoundException e) {
 
-                //loadAppointmentDate();
-                break;
         }
 
     }

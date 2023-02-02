@@ -1,6 +1,6 @@
 package interfaces;
 
-import javax.ws.rs.ClientErrorException;
+import exceptions.PatientException;
 import javax.ws.rs.core.GenericType;
 
 /**
@@ -9,7 +9,7 @@ import javax.ws.rs.core.GenericType;
  */
 public interface PatientInterface {
 
-    public <T> T findAllPatients_XML(GenericType<T> responseType) throws ClientErrorException;
+    public <T> T findAllPatients_XML(GenericType<T> responseType) throws PatientException;
 
-    public <T> T findAllPatientsByPsychologist_XML(GenericType<T> responseType, String dniPsychologist) throws ClientErrorException;
+    public <T> T findAllPatientsByPsychologist_XML(GenericType<T> responseType, String dniPsychologist) throws PatientException;
 }

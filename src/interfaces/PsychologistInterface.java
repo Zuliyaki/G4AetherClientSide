@@ -1,6 +1,6 @@
 package interfaces;
 
-import javax.ws.rs.ClientErrorException;
+import exceptions.PsychologistException;
 import javax.ws.rs.core.GenericType;
 
 /**
@@ -9,7 +9,7 @@ import javax.ws.rs.core.GenericType;
  */
 public interface PsychologistInterface {
 
-    public void removePsychologist(String dni) throws ClientErrorException;
+    public void removePsychologist(String dni) throws PsychologistException;
 
-    public <T> T findAllPsychologists_XML(GenericType<T> responseType) throws ClientErrorException;
+    public <T> T findAllPsychologists_XML(GenericType<T> responseType) throws PsychologistException;
 }
