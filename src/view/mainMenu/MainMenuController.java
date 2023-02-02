@@ -150,7 +150,7 @@ public class MainMenuController {
 
         Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../viewDiagnosis/Diagnosis.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/viewDiagnosis/Diagnosis.fxml"));
         Parent root = null;
         try {
             root = (Parent) loader.load();
@@ -173,7 +173,7 @@ public class MainMenuController {
         if (user.getDni().equals("35140444d")) {
             Stage stage = new Stage();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../dailyNote/DailyNoteWindowPatient.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dailyNote/DailyNoteWindowPatient.fxml"));
             Parent root = null;
             try {
                 root = (Parent) loader.load();
@@ -195,7 +195,7 @@ public class MainMenuController {
     private void handleAppointmentButtonAction(ActionEvent event) {
         Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../Appointment/Appointment.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Appointment/Appointment.fxml"));
         Parent root = null;
         try {
             root = (Parent) loader.load();
@@ -215,7 +215,7 @@ public class MainMenuController {
     public void handleOpenDiagnosis(ActionEvent event) {
         Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../viewDiagnosis/Diagnosis.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/viewDiagnosis/Diagnosis.fxml"));
         Parent root = null;
         try {
             root = (Parent) loader.load();
@@ -236,7 +236,7 @@ public class MainMenuController {
     private void handleOpenDailyNote(ActionEvent event) {
         Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../dailyNote/DailyNoteWindowPatient.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dailyNote/DailyNoteWindowPatient.fxml"));
         Parent root = null;
         try {
             root = (Parent) loader.load();
@@ -257,7 +257,7 @@ public class MainMenuController {
     private void handleOpenAppointment(ActionEvent event) {
         Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../Appointment/Appointment.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Appointment/Appointment.fxml"));
         Parent root = null;
         try {
             root = (Parent) loader.load();

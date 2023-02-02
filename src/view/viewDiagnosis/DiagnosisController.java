@@ -80,6 +80,7 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -108,7 +109,7 @@ public class DiagnosisController {
 
     public User user = null;
     public Stage stage;
-    private  ObservableList<Diagnosis> diagnosises;
+    private ObservableList<Diagnosis> diagnosises = null;
     private DiagnosisInterface diagnosisInterface = DiagnosisFactory.getModel();
     private TreatmentInterface treatmentInterface = TreatmentFactory.getModel();
     private MentalDiseaseInterface mentalDiseaseInterface = MentalDiseaseFactory.getModel();
@@ -211,6 +212,8 @@ public class DiagnosisController {
     final Logger LOGGER = Logger.getLogger("paquete.NombreClase");
     @FXML
     private Menu diagnosisMenu;
+    @FXML
+    private ImageView imgBottom;
 
     public void initialize(Parent root) {
         final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -242,6 +245,7 @@ public class DiagnosisController {
         tfMentalDisease.setVisible(false);
 
         // LOAD ALL Diagnosises
+        //diagnosises = loadAllDiagnosises();
         //listeners
         comboboxSearchBy.valueProperty().addListener(this::handleComboboxChange);
         dpDateLow.valueProperty().addListener(this::handleDatePickerChange);
@@ -331,16 +335,6 @@ public class DiagnosisController {
         tbcOnTherapy.setCellValueFactory(
                 (CellDataFeatures<Diagnosis, Boolean> param) -> param.getValue().onTherapyProperty());
 
-        diagnosises.forEach(
-                diagnosis -> diagnosis.onTherapyProperty().addListener((observable, oldValue, newValue) -> {
-                    try {
-                        diagnosisInterface.updateDiagnosis_XML(diagnosis);
-                    } catch (UpdateException ex) {
-                        showErrorAlert(ex.getMessage());
-                    }
-                })
-        );
-
         //////////////
         ////////////////
         tbcMentalDisease.setCellValueFactory(
@@ -410,6 +404,19 @@ public class DiagnosisController {
         tbTreatment.getSelectionModel().selectedItemProperty().addListener(this::handleTreatmentTableSelectionChanged);
         tbcDay.setCellValueFactory(new PropertyValueFactory<>("treatmentId"));
         tbcMedication.setCellValueFactory(new PropertyValueFactory<>("medication"));
+
+        diagnosises.forEach(
+                diagnosis -> diagnosis.onTherapyProperty().addListener((observable, oldValue, newValue) -> {
+                    try {
+                        diagnosisInterface.updateDiagnosis_XML(diagnosis);
+
+                    } catch (UpdateException ex) {
+                        showErrorAlert(ex.getMessage());
+                    }
+                })
+        );
+
+        tbDiagnosis.setItems(diagnosises);
         stage.setScene(scene);
         stage.show();
     }
@@ -427,7 +434,8 @@ public class DiagnosisController {
             });
 
             diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
-            tbDiagnosis.setItems(diagnosisTableInfo);
+
+            tbDiagnosis.setItems(diagnosises);
             return diagnosisTableInfo;
         } catch (DiagnosisNotFoundException ex) {
             showErrorAlert(ex.getMessage());
@@ -473,8 +481,8 @@ public class DiagnosisController {
             tbTreatment.setVisible(false);
             txtTreatments.setVisible(false);
         } else {
-            tbTreatment.setVisible(true);
-            txtTreatments.setVisible(true);
+            tbTreatment.setVisible(false);
+            txtTreatments.setVisible(false);
 
             tbTreatment.setItems(treatmentTableInfo);
         }
@@ -529,8 +537,7 @@ public class DiagnosisController {
             final Diagnosis selectedDiagnosis = (Diagnosis) newValue;
             tfDiagnosisID.setText(selectedDiagnosis.getDiagnosisId().toString());
 
-            treatments = loadAllTreaments(selectedDiagnosis);
-
+            // treatments = loadAllTreaments(selectedDiagnosis);
             if (selectedDiagnosis.getMentalDisease() != null) {
                 txtMentalDisease.setVisible(true);
                 tfMentalDisease.setVisible(true);
@@ -759,7 +766,7 @@ public class DiagnosisController {
     public void handleOpenDiagnosis(ActionEvent event) {
         Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../viewDiagnosis/Diagnosis.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/viewDiagnosis/Diagnosis.fxml"));
         Parent root = null;
         try {
             root = (Parent) loader.load();
@@ -780,7 +787,7 @@ public class DiagnosisController {
     private void handleOpenDailyNote(ActionEvent event) {
         Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../dailyNote/DailyNoteWindowPatient.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dailyNote/DailyNoteWindowPatient.fxml"));
         Parent root = null;
         try {
             root = (Parent) loader.load();
