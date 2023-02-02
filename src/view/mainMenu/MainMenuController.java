@@ -187,7 +187,7 @@ public class MainMenuController {
             controller.initData(user);
             controller.initialize(root);
         } else {
-            new Alert(Alert.AlertType.ERROR, "Admin window not implemented yet", ButtonType.OK).showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Psychologist window not implemented yet", ButtonType.OK).showAndWait();
         }
     }
 

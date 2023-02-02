@@ -92,6 +92,10 @@ public class DailyNoteWindowControllerTest extends ApplicationTest{
         int sizeStart = tb.getItems().size();
         Node lastOne = lookup("#tbcMentalDisease").nth(sizeStart).query();
         clickOn(spinnerDayScore);
+        write("7.3");
+        clickOn(txtaNote);
+        write("Good day");
+        clickOn(btnAdd);
     }
 
     /**

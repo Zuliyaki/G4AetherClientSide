@@ -38,7 +38,7 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Appointments">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#handleOpenAppointment" text="Open Appointment" />
+                        <MenuItem mnemonicParsing="false" text="Open Appointment" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">

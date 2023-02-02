@@ -80,7 +80,6 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -109,7 +108,7 @@ public class DiagnosisController {
 
     public User user = null;
     public Stage stage;
-    private ObservableList<Diagnosis> diagnosises = null;
+    private  ObservableList<Diagnosis> diagnosises;
     private DiagnosisInterface diagnosisInterface = DiagnosisFactory.getModel();
     private TreatmentInterface treatmentInterface = TreatmentFactory.getModel();
     private MentalDiseaseInterface mentalDiseaseInterface = MentalDiseaseFactory.getModel();
@@ -212,8 +211,6 @@ public class DiagnosisController {
     final Logger LOGGER = Logger.getLogger("paquete.NombreClase");
     @FXML
     private Menu diagnosisMenu;
-    @FXML
-    private ImageView imgBottom;
 
     public void initialize(Parent root) {
         final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -221,7 +218,7 @@ public class DiagnosisController {
         //Not a resizable window.
         stage.setResizable(false);
         //Modal window of LogIn.
-        stage.initModality(Modality.APPLICATION_MODAL);
+        //stage.initModality(Modality.APPLICATION_MODAL);
         //The window title will be ”Diagnosis”
         stage.setTitle("Diagnosis");
         //Add a leaf icon.
@@ -245,7 +242,6 @@ public class DiagnosisController {
         tfMentalDisease.setVisible(false);
 
         // LOAD ALL Diagnosises
-        //diagnosises = loadAllDiagnosises();
         //listeners
         comboboxSearchBy.valueProperty().addListener(this::handleComboboxChange);
         dpDateLow.valueProperty().addListener(this::handleDatePickerChange);
@@ -335,6 +331,16 @@ public class DiagnosisController {
         tbcOnTherapy.setCellValueFactory(
                 (CellDataFeatures<Diagnosis, Boolean> param) -> param.getValue().onTherapyProperty());
 
+        diagnosises.forEach(
+                diagnosis -> diagnosis.onTherapyProperty().addListener((observable, oldValue, newValue) -> {
+                    try {
+                        diagnosisInterface.updateDiagnosis_XML(diagnosis);
+                    } catch (UpdateException ex) {
+                        showErrorAlert(ex.getMessage());
+                    }
+                })
+        );
+
         //////////////
         ////////////////
         tbcMentalDisease.setCellValueFactory(
@@ -400,23 +406,10 @@ public class DiagnosisController {
         //tb treatment
         tbTreatment.setVisible(false);
         txtTreatments.setVisible(false);
-        tbTreatment.setEditable(true);
+        tbTreatment.setEditable(false);
         tbTreatment.getSelectionModel().selectedItemProperty().addListener(this::handleTreatmentTableSelectionChanged);
         tbcDay.setCellValueFactory(new PropertyValueFactory<>("treatmentId"));
         tbcMedication.setCellValueFactory(new PropertyValueFactory<>("medication"));
-
-        diagnosises.forEach(
-                diagnosis -> diagnosis.onTherapyProperty().addListener((observable, oldValue, newValue) -> {
-                    try {
-                        diagnosisInterface.updateDiagnosis_XML(diagnosis);
-
-                    } catch (UpdateException ex) {
-                        showErrorAlert(ex.getMessage());
-                    }
-                })
-        );
-
-        tbDiagnosis.setItems(diagnosises);
         stage.setScene(scene);
         stage.show();
     }
@@ -434,8 +427,7 @@ public class DiagnosisController {
             });
 
             diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
-
-            tbDiagnosis.setItems(diagnosises);
+            tbDiagnosis.setItems(diagnosisTableInfo);
             return diagnosisTableInfo;
         } catch (DiagnosisNotFoundException ex) {
             showErrorAlert(ex.getMessage());
@@ -537,7 +529,8 @@ public class DiagnosisController {
             final Diagnosis selectedDiagnosis = (Diagnosis) newValue;
             tfDiagnosisID.setText(selectedDiagnosis.getDiagnosisId().toString());
 
-            // treatments = loadAllTreaments(selectedDiagnosis);
+            treatments = loadAllTreaments(selectedDiagnosis);
+
             if (selectedDiagnosis.getMentalDisease() != null) {
                 txtMentalDisease.setVisible(true);
                 tfMentalDisease.setVisible(true);
@@ -554,7 +547,6 @@ public class DiagnosisController {
                 try {
                     diagnosisInterface.deleteDiagnosis(selectedDiagnosis.getDiagnosisId().toString());
                     diagnosises.remove(selectedDiagnosis);
-                    diagnosises = loadAllDiagnosises();
                 } catch (DeleteException ex) {
                     showErrorAlert(ex.getMessage());
                 }
@@ -785,43 +777,25 @@ public class DiagnosisController {
 
     @FXML
     private void handleOpenDailyNote(ActionEvent event) {
-        Stage stage = new Stage();
+        if (user.getDni().equals("35140444d")) {
+            Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dailyNote/DailyNoteWindowPatient.fxml"));
-        Parent root = null;
-        try {
-            root = (Parent) loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dailyNote/DailyNoteWindowPatient.fxml"));
+            Parent root = null;
+            try {
+                root = (Parent) loader.load();
+            } catch (IOException ex) {
+                Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            DailyNoteWindowController controller = (DailyNoteWindowController) loader.getController();
+
+            controller.setStage(stage);
+            controller.initData(user);
+            controller.initialize(root);
+        } else {
+            new Alert(Alert.AlertType.ERROR, "Psychologist window not implemented yet", ButtonType.OK).showAndWait();
         }
-
-        DailyNoteWindowController controller = (DailyNoteWindowController) loader.getController();
-
-        controller.setStage(stage);
-
-        controller.initData(user);
-
-        controller.initialize(root);
-    }
-
-    @FXML
-    private void handleOpenAppointment(ActionEvent event) {
-        Stage stage = new Stage();
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../Appointment/Appointment.fxml"));
-        Parent root = null;
-        try {
-            root = (Parent) loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        AppointmentController controller = (AppointmentController) loader.getController();
-
-        controller.setStage(stage);
-
-        controller.initData(user);
-        controller.initialize(root);
     }
 
     @FXML
