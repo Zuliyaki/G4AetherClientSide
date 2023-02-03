@@ -33,18 +33,6 @@ public class MentalDisease implements Serializable {
     public MentalDisease() {
     }
 
-    /**
-     * Costructor with parameters
-     *
-     * @param idMentalDisease
-     * @param mdadmin
-     * @param mdType
-     * @param mdName
-     * @param mdDescription
-     * @param mdSympton
-     * @param mdAddDate
-     * @param diagnosis
-     */
     public MentalDisease(Long idMentalDisease, Admin mdadmin, EnumMentalDisease mdType, String mdName, String mdDescription, String mdSympton, Date mdAddDate, Set<Diagnosis> diagnosis) {
         this.idMentalDisease = idMentalDisease;
         this.mdadmin = mdadmin;

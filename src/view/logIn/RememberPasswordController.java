@@ -84,19 +84,11 @@ public class RememberPasswordController {
         stage.show();
     }
 
-    /**
-     * Return the stage
-     *
-     * @param stage
-     */
+    
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    /**
-     *
-     * @param KEY_TYPED
-     */
     private void textChangeCreate(EventType<KeyEvent> KEY_TYPED) {
         if (!this.tfEmailAddress.getText().trim().isEmpty()) {
             this.btnSend.setDisable(false);

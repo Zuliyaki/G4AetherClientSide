@@ -44,12 +44,12 @@ public class AppointmentRestful implements AppointmentInterface {
     }
 
     /**
-     * XML This method returns a Collection of {@link Appointment}, containing
+     * XML This method returns a Collection of Appointment, containing
      * all appointments data.
      *
-     * @param <T>
-     * @param responseType
-     * @return Collection The collection with all {@link Appointment} data for
+     * @param <T> s
+     * @param responseType s
+     * @return Collection The collection with all Appointment data for
      * users.
      * @throws ClientErrorException If there is any error while processing.
      */
@@ -60,12 +60,12 @@ public class AppointmentRestful implements AppointmentInterface {
     }
 
     /**
-     * JSON This method returns a Collection of {@link Appointment}, containing
+     * JSON This method returns a Collection of Appointment, containing
      * all appointments data.
      *
-     * @param <T>
-     * @param responseType
-     * @return Collection The collection with all {@link Appointment} data for
+     * @param <T> Appointment  
+     * @param responseType Appointment  
+     * @return Collection The collection with all Appointment data for
      * users.
      * @throws ClientErrorException If there is any error while processing.
      */
@@ -102,10 +102,10 @@ public class AppointmentRestful implements AppointmentInterface {
     /**
      * XML
      *
-     * @param <T>
-     * @param responseType
-     * @param appointmentchange
-     * @return
+     * @param <T> Appointment  
+     * @param responseType Appointment  
+     * @param appointmentchange Appointment  
+     * @return Appointment  
      * @throws ClientErrorException If there is any error while processing.
      */
     @Override
@@ -118,10 +118,10 @@ public class AppointmentRestful implements AppointmentInterface {
     /**
      * JSON
      *
-     * @param <T>
-     * @param responseType
-     * @param appointmentchange
-     * @return
+     * @param <T> Appointment  
+     * @param responseType Appointment  
+     * @param appointmentchange Appointment  
+     * @return Appointment  
      * @throws ClientErrorException If there is any error while processing.
      */
     @Override
@@ -158,10 +158,10 @@ public class AppointmentRestful implements AppointmentInterface {
     /**
      * XML
      *
-     * @param <T>
-     * @param responseType
-     * @param id
-     * @return
+     * @param <T> Appointment  
+     * @param responseType Appointment  
+     * @param id Appointment  
+     * @return Appointment  
      * @throws ClientErrorException If there is any error while processing.
      */
     @Override
@@ -174,10 +174,10 @@ public class AppointmentRestful implements AppointmentInterface {
     /**
      * JSON
      *
-     * @param <T>
-     * @param responseType
-     * @param id
-     * @return
+     * @param <T> Appointment  
+     * @param responseType Appointment  
+     * @param id Appointment  
+     * @return Appointment  
      * @throws ClientErrorException If there is any error while processing.
      */
     @Override
@@ -202,10 +202,10 @@ public class AppointmentRestful implements AppointmentInterface {
     /**
      * XML
      *
-     * @param <T>
-     * @param responseType
-     * @param appointmentDate
-     * @return
+     * @param <T> Appointment  
+     * @param responseType Appointment  
+     * @param appointmentDate Appointment  
+     * @return Appointment  
      * @throws ClientErrorException If there is any error while processing.
      */
     @Override
@@ -218,10 +218,10 @@ public class AppointmentRestful implements AppointmentInterface {
     /**
      * JSON
      *
-     * @param <T>
-     * @param responseType
-     * @param appointmentDate
-     * @return
+     * @param <T> Appointment  
+     * @param responseType Appointment  
+     * @param appointmentDate Appointment  
+     * @return Appointment  
      * @throws ClientErrorException If there is any error while processing.
      */
     @Override

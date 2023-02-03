@@ -150,19 +150,19 @@ public class DailyNoteWindowController {
      * @param root The Parent object representing root node of view graph.
      */
     public void initialize(Parent root) {
-        
+
         Scene scene = new Scene(root);
         //Not a resizable window.
         stage.setResizable(false);
         //Modal window of LogIn.
-        stage.initModality(Modality.APPLICATION_MODAL);
+        //stage.initModality(Modality.APPLICATION_MODAL);
         //The window title will be ”SignUp”
         stage.setTitle("Daily Notes");
         //Add a leaf icon.
         stage.getIcons().add(new Image("resources/icon.png"));
         //init values
         List<Patient> patients;
-        
+
         try {
             patients = pInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
             });
@@ -175,7 +175,7 @@ public class DailyNoteWindowController {
             Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE,
                     null, ex);
         }
-        
+
         tfPatientDni.setText(user.getDni());
         this.tfPatientDni.setDisable(true);
         this.tfPatientDni.setEditable(false);
@@ -196,8 +196,11 @@ public class DailyNoteWindowController {
         btnPrint.setDisable(true);
         txtaNote.setPromptText("Writte a description of your day");
         dailyNoteMenu.setDisable(true);
+        btnAdd.setDisable(false);
+        btnModify.setDisable(true);
+        btnDelete.setDisable(true);
 
-        //Valores de las columnas de la tabla
+        //Values of the tables and format the date
         tb.setEditable(false);
         tbcDate.setCellValueFactory(new PropertyValueFactory<>("noteDate"));
         tbcDate.setCellFactory(column -> {
@@ -221,7 +224,7 @@ public class DailyNoteWindowController {
         tbcScore.setCellValueFactory(new PropertyValueFactory<>("dayScore"));
         tbcReadable.setCellValueFactory(new PropertyValueFactory<>("noteReadable"));
 
-        //Cargar combobox con metodos de busqueda
+        //Load combobox with search methods
         String[] a = {"Find note by date", "Find all notes by patient", "Find all patient edited notes", "Find all patient notes by not readable", "Find all patient notes between dates", "Find all patient notes between day scores"};
         ObservableList<String> searchMethods = FXCollections.observableArrayList(a);
         comboSearchMethod.setItems(searchMethods);
@@ -241,13 +244,27 @@ public class DailyNoteWindowController {
         stage.setScene(scene);
 
         stage.show();
+
+        loadAllPatientDailyNotes();
     }
 
+    /**
+     * Initialize recived user
+     *
+     * @param user User with data
+     */
     public void initData(User user) {
         this.user = user;
-        this.user.setDni("35140444d");
     }
 
+    /**
+     * Text changed event handler. It validates that text area content is
+     * filled.
+     *
+     * @param observable The value being observed.
+     * @param oldValue The old value of the observable.
+     * @param newValue The new value of the observable.
+     */
     private void handleFieldsTextChange(ObservableValue observable,
             Object oldValue,
             Object newValue) {
@@ -260,6 +277,14 @@ public class DailyNoteWindowController {
         }
     }
 
+    /**
+     * Table selection change event handler. It validates that a teble row is
+     * selected.
+     *
+     * @param observable The value being observed.
+     * @param oldValue The old value of the observable.
+     * @param newValue The new value of the observable.
+     */
     private void handleTableSelectionChanged(ObservableValue observable,
             Object oldValue,
             Object newValue) {
@@ -281,6 +306,8 @@ public class DailyNoteWindowController {
             txtaComment.setEditable(false);
             tfNoteStatus.setDisable(false);
             tfNoteStatus.setEditable(false);
+            btnModify.setDisable(false);
+            btnDelete.setDisable(false);
             if (dailyNote.getNoteComent() == null) {
                 txtaComment.setText("Not comment yet");
                 tfNoteStatus.setText("NOTREADED");
@@ -301,9 +328,18 @@ public class DailyNoteWindowController {
             tfNoteStatus.setText("Note status");
             tfNoteStatus.setDisable(true);
             btnAdd.setDisable(false);
+            btnModify.setDisable(true);
+            btnDelete.setDisable(true);
         }
     }
 
+    /**
+     * Date picker event handler. It validates that the date picker is filled.
+     *
+     * @param observable The value being observed.
+     * @param oldValue The old value of the observable.
+     * @param newValue The new value of the observable.
+     */
     public void handleDatePickerChange(ObservableValue observable,
             LocalDate oldValue,
             LocalDate newValue) {
@@ -327,16 +363,12 @@ public class DailyNoteWindowController {
     }
 
     /**
-     * If the fields are empty the button will be disabled
-     */
-    /**
-     * Search button will be enabled when a search method has a value and all
-     * the fields needed for the search method are filled if the method does not
-     * need any field the button will be enabled.
+     * Text changed event handler. It validates what is selected in the combo
+     * box.
      *
-     * @param observable Object watched
-     * @param oldValue String with the old value
-     * @param newValue String with the new value
+     * @param observable The value being observed.
+     * @param oldValue The old value of the observable.
+     * @param newValue The new value of the observable.
      */
     private void handleComboboxChange(ObservableValue observable,
             Object oldValue,
@@ -402,14 +434,14 @@ public class DailyNoteWindowController {
     /**
      * Return the stage
      *
-     * @param stage
+     * @param stage stage
      */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
     /**
-     * Handle Action event on SignUp Hyperlink
+     * Handle Action search button
      *
      * @param event The Action event object
      */
@@ -438,6 +470,11 @@ public class DailyNoteWindowController {
         btnPrint.setDisable(false);
     }
 
+    /**
+     * Search for all daily notes by date
+     *
+     * @return ObservableList of daily notes
+     */
     private ObservableList<DailyNote> loadDailyNoteByDate() {
         ObservableList<DailyNote> olDailyNote = null;
         List<DailyNote> dailyNote;
@@ -458,6 +495,11 @@ public class DailyNoteWindowController {
         return olDailyNote;
     }
 
+    /**
+     * Search for all patient daily notes
+     *
+     * @return ObservableList of daily notes
+     */
     private ObservableList<DailyNote> loadAllPatientDailyNotes() {
         ObservableList<DailyNote> olDailyNote = null;
         try {
@@ -474,6 +516,11 @@ public class DailyNoteWindowController {
         return olDailyNote;
     }
 
+    /**
+     * Search for all patient edited daily notes
+     *
+     * @return ObservableList of daily notes
+     */
     private ObservableList<DailyNote> loadAllPatientEditedDailyNotes() {
         ObservableList<DailyNote> olDailyNote = null;
         try {
@@ -490,6 +537,11 @@ public class DailyNoteWindowController {
         return olDailyNote;
     }
 
+    /**
+     * Search for all patient daily notes by not readable
+     *
+     * @return ObservableList of daily notes
+     */
     private ObservableList<DailyNote> loadAllPatientNotReadableDailyNotes() {
         ObservableList<DailyNote> olDailyNote = null;
         try {
@@ -506,6 +558,11 @@ public class DailyNoteWindowController {
         return olDailyNote;
     }
 
+    /**
+     * Search for all patient daily notes between scores
+     *
+     * @return ObservableList of daily notes
+     */
     private ObservableList<DailyNote> loadAllPatientDailyNotesBetweenScores() {
         ObservableList<DailyNote> olDailyNote = null;
         try {
@@ -526,6 +583,11 @@ public class DailyNoteWindowController {
         return olDailyNote;
     }
 
+    /**
+     * Search for all patient daily notes between dates
+     *
+     * @return ObservableList of daily notes
+     */
     private ObservableList<DailyNote> loadAllPatientDailyNotesBetweenDates() {
         ObservableList<DailyNote> olDailyNote = null;
         try {
@@ -552,7 +614,7 @@ public class DailyNoteWindowController {
     }
 
     /**
-     * Handle Action event on SignUp Hyperlink
+     * Handle Action event for printing the content load in the table
      *
      * @param event The Action event object
      */
@@ -578,7 +640,7 @@ public class DailyNoteWindowController {
     }
 
     /**
-     * Handle Action event on SignUp Hyperlink
+     * Handle Action event adding a daily note
      *
      * @param event The Action event object
      */
@@ -633,7 +695,7 @@ public class DailyNoteWindowController {
     }
 
     /**
-     * Handle Action event on SignUp Hyperlink
+     * Handle Action event modifying a daily note
      *
      * @param event The Action event object
      */
@@ -689,7 +751,7 @@ public class DailyNoteWindowController {
     }
 
     /**
-     * Handle Action event on SignUp Hyperlink
+     * Handle Action event deleting a daily note
      *
      * @param event The Action event object
      */
@@ -724,15 +786,15 @@ public class DailyNoteWindowController {
     }
 
     /**
-     * Handle Action event on Diagnosis Menu item
-     * 
-     * @param event 
-     */
+     * Handle Action event on Diagnosis Menu item to open the Diagnosis window
+     *
+     * @param event event
+     */ 
     @FXML
     public void handleOpenDiagnosis(ActionEvent event) {
         Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../viewDiagnosis/Diagnosis.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/viewDiagnosis/Diagnosis.fxml"));
         Parent root = null;
         try {
             root = (Parent) loader.load();
@@ -751,15 +813,16 @@ public class DailyNoteWindowController {
     }
 
     /**
-     * Handle Action event on DailyNote Menu item
-     * 
-     * @param event 
+     * Handle Action event on DailyNote Menu item to open the DailyNote window.
+     * Is not enabled in this window
+     *
+     * @param event
      */
     @FXML
     private void handleOpenDailyNote(ActionEvent event) {
         Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../dailyNote/DailyNoteWindowPatient.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dailyNote/DailyNoteWindowPatient.fxml"));
         Parent root = null;
         try {
             root = (Parent) loader.load();
@@ -776,9 +839,9 @@ public class DailyNoteWindowController {
     }
 
     /**
-     * Handle Action event on exitApp Menu item
-     * 
-     * @param event 
+     * Handle Action event on exitApp Menu item to exit the apps
+     *
+     * @param event
      */
     @FXML
     private void exitApp(ActionEvent event) {
@@ -796,9 +859,9 @@ public class DailyNoteWindowController {
     }
 
     /**
-     * Handle Action event on HelpMenu Menu item
-     * 
-     * @param event 
+     * Handle Action event on HelpMenu Menu item to open the window help
+     *
+     * @param event
      */
     @FXML
     private void menuHelp(ActionEvent event) {
