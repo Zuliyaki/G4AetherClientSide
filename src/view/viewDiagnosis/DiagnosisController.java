@@ -211,7 +211,10 @@ public class DiagnosisController {
     final Logger LOGGER = Logger.getLogger("paquete.NombreClase");
     @FXML
     private Menu diagnosisMenu;
-
+    /**
+     * initialize the window, sets everything and show it
+     * @param root send the root
+     */
     public void initialize(Parent root) {
         final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
@@ -413,7 +416,10 @@ public class DiagnosisController {
         stage.setScene(scene);
         stage.show();
     }
-
+/**
+ * sets the stage sended from the preview window
+ * @param stage the stage to be setted
+ */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -435,7 +441,10 @@ public class DiagnosisController {
         return null;
 
     }
-
+/**
+ * calls the interface of diagnosis and load the table with the diagnosis created between the dates from the datepickers
+ * @return  the ObservableList loaded
+ */
     private ObservableList<Diagnosis> loadDiagnosisesBetweenDates() {
         ObservableList<Diagnosis> diagnosisTableInfo;
         List<Diagnosis> allDiangosis = null;
@@ -458,7 +467,10 @@ public class DiagnosisController {
         return null;
 
     }
-
+/**
+ * calls the interface of treatment and load the table with the treatments of the selected diagnosis
+ * @return  the ObservableList loaded
+ */
     private ObservableList<Treatment> loadAllTreaments(Diagnosis diagnosis) {
         ObservableList<Treatment> treatmentTableInfo;
         List<Treatment> allTreatment = null;
@@ -480,7 +492,11 @@ public class DiagnosisController {
         }
         return treatmentTableInfo;
     }
+/**
+ *  * calls the interface of diagnosis and load the table with the diagnosis that are on therapy with the diagnsosis of the selected patient
 
+ * @return  the loaded the ObservableList
+ */
     private ObservableList<Diagnosis> loadDiagnosisesByPatientOnTherapy() {
         ObservableList<Diagnosis> diagnosisTableInfo = null;
 
@@ -499,7 +515,11 @@ public class DiagnosisController {
         }
         return diagnosisTableInfo;
     }
+/**
+ *  * calls the interface of diagnosis and load the table with the diagnosis with the diagnsosis of the selected patient
 
+ * @return  the loaded the ObservableList
+ */
     private ObservableList<Diagnosis> loadDiagnosisesByPatient() {
         ObservableList<Diagnosis> diagnosisTableInfo = null;
 
@@ -522,8 +542,12 @@ public class DiagnosisController {
         return null;
 
     }
-
-//SELECTION CHANGES
+/**
+ * controls the new selected table row
+ * @param observableValue the row
+ * @param oldValue the old value
+ * @param newValue the new value
+ */
     private void handleDiagnosisTableSelectionChanged(ObservableValue observableValue, Object oldValue, Object newValue) {
         if (newValue != null) {
             final Diagnosis selectedDiagnosis = (Diagnosis) newValue;
@@ -589,7 +613,12 @@ public class DiagnosisController {
         }
 
     }
-
+/**
+ * handle the treatment selected row NOT IMPLEMENTED YET
+ * @param observableValue The row
+ * @param oldValue the old row
+ * @param newValue the new row
+ */
     private void handleTreatmentTableSelectionChanged(ObservableValue observableValue, Object oldValue, Object newValue) {
         if (newValue != null) {
 
@@ -599,7 +628,12 @@ public class DiagnosisController {
 
     }
 //COMBOBOX CHANGE
-
+/**
+ * handle the search combobox change
+ * @param observable the value of the combobox
+ * @param oldValue the old value
+ * @param newValue the new value
+ */
     private void handleComboboxChange(ObservableValue observable,
             Object oldValue,
             Object newValue) {
@@ -694,7 +728,10 @@ public class DiagnosisController {
 
     }
 
-    //FILTER 
+    /**
+     * handle the search button
+     * @param event on click
+     */
     @FXML
     private void handleSearchButtonAction(ActionEvent event) {
         switch (comboboxSearchBy.getValue().toString()) {
@@ -713,7 +750,10 @@ public class DiagnosisController {
                 break;
         }
     }
-
+    /**
+     * handle the print button
+     * @param event on click 
+     */
     @FXML
     private void handlePrintButtonAction(ActionEvent event) {
         try {
@@ -738,7 +778,12 @@ public class DiagnosisController {
         }
 
     }
-
+/**
+ * handle the date pickers on change, if the "to" datapicker date is before the "From" it will disable the search button
+ * @param observable
+ * @param oldValue
+ * @param newValue 
+ */
     public void handleDatePickerChange(ObservableValue observable,
             LocalDate oldValue,
             LocalDate newValue) {
@@ -753,7 +798,11 @@ public class DiagnosisController {
         }
 
     }
-
+    
+    /**
+     * handle the Menu diagnosis
+     * @param event onlcick
+     */
     @FXML
     public void handleOpenDiagnosis(ActionEvent event) {
         Stage stage = new Stage();
@@ -774,7 +823,10 @@ public class DiagnosisController {
         controller.initialize(root);
 
     }
-
+    /**
+     * handle the Daily note menu
+     * @param event onclick
+     */
     @FXML
     private void handleOpenDailyNote(ActionEvent event) {
         if (user.getDni().equals("35140444d")) {
@@ -797,7 +849,10 @@ public class DiagnosisController {
             new Alert(Alert.AlertType.ERROR, "Psychologist window not implemented yet", ButtonType.OK).showAndWait();
         }
     }
-
+    /**
+     * Handle the exit app Menu
+     * @param event onclick
+     */
     @FXML
     private void exitapp(ActionEvent event) {
 
@@ -813,7 +868,10 @@ public class DiagnosisController {
         }
 
     }
-
+/**
+ * handle the menu help menu
+ * @param event onclick
+ */
     @FXML
     private void menuHelp(ActionEvent event) {
         try {
@@ -829,17 +887,26 @@ public class DiagnosisController {
             ex.printStackTrace();
         }
     }
-
+    /**
+     * show a info alert
+     * @param infoMsg the msg to show
+     */
     private void showInfoAlert(String infoMsg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, infoMsg, ButtonType.OK);
         alert.showAndWait();
     }
-
+    /**
+     * show a error alert
+     * @param errormsg the msg to show
+     */
     private void showErrorAlert(String errormsg) {
         Alert alert = new Alert(Alert.AlertType.ERROR, errormsg, ButtonType.OK);
         alert.showAndWait();
     }
-
+    /**
+     * init the user with the one logged in
+     * @param inituser the user
+     */
     public void initData(User inituser) {
         if (inituser.getUser_type().equals("Psychologist")) {
             user = inituser;

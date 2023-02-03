@@ -17,10 +17,10 @@ import javafx.stage.WindowEvent;
 
 /**
  * Controller class for help window . 
- * It shows a help page that explains how to use the user's data management window.
- * The view is defined in Help.fmxl file and the help page is help.html.
+ * It shows a help page that explains how to use the diagnosis's data management window.
+ * The view is defined in DiagnosisHelp.fmxl file and the DiagnosisHelp page is help.html.
  *
- * @author javi
+ * @author unaiz
  */
 public class DiagnosisHelpController {
     /**

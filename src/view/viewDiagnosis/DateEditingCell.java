@@ -17,16 +17,25 @@ import javafx.scene.control.TableCell;
 
 
 
+/**
+ * 
+ * @author 2dam
+ */
+
 
  public class DateEditingCell extends TableCell<Diagnosis, Date> {
 
         private DatePicker datePicker;
-
+/**
+ * this is the defaut constructor
+ */
         DateEditingCell() {
                           
                     
         }
-
+        /**
+         * on start editing
+         */
         @Override
         public void startEdit() {
             if (!isEmpty()) {
@@ -36,7 +45,9 @@ import javafx.scene.control.TableCell;
                 setGraphic(datePicker);
             }
         }
-
+        /**
+         * on cancel edit
+         */
         @Override
         public void cancelEdit() {
             super.cancelEdit();
@@ -44,7 +55,11 @@ import javafx.scene.control.TableCell;
             setText(getDate().toString());
             setGraphic(null);
         }
-
+        /**
+         * this method update the date
+         * @param item the date to edit
+         * @param empty the boolean to check if its empty
+         */
         @Override
         public void updateItem(Date item, boolean empty) {
             super.updateItem(item, empty);
@@ -68,7 +83,9 @@ import javafx.scene.control.TableCell;
                 }
             }
         }
-
+        /**
+         * create the datepciker
+         */
         private void createDatePicker() {
             datePicker = new DatePicker(getDate());
             datePicker.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
@@ -84,7 +101,10 @@ import javafx.scene.control.TableCell;
         }
        
 
-
+        /**
+         * get the current date
+         * @return the date formated
+         */
         private LocalDate getDate() {
             return getItem() == null ? LocalDate.now() : getItem().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         }
