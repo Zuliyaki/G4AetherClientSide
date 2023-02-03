@@ -27,8 +27,7 @@ public class DailyNoteMain extends Application {
         initPatient.setFullName("Sendoa Badiola");
         Patient user = initPatient;
 
-//      System.out.println(getClass().getClassLoader().getResource("/view/dailyNote/DailyNoteWindowPatient.fxml"));
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("/view/dailyNote/DailyNoteWindowPatient.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("view/dailyNote/DailyNoteWindowPatient.fxml"));
         Parent root = (Parent) loader.load();
 
         DailyNoteWindowController controller = ((DailyNoteWindowController) loader.getController());

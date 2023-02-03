@@ -26,6 +26,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import main.DailyNoteMain;
@@ -35,15 +36,17 @@ import static org.junit.Assert.*;
 import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.runners.MethodSorters;
+import static org.testfx.api.FxAssert.verifyThat;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
+import static org.testfx.matcher.base.NodeMatchers.isVisible;
 
 /**
  *
  * @author unaib
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class DailyNoteWindowControllerTest extends ApplicationTest{
+public class DailyNoteWindowControllerTest extends ApplicationTest {
 
     final Logger LOGGER = Logger.getLogger(DailyNoteWindowControllerTest.class.getName());
     private VBox box;
@@ -83,78 +86,224 @@ public class DailyNoteWindowControllerTest extends ApplicationTest{
     }
 
     /**
-     * Test of initialize method, of class DailyNoteWindowController.
+     * Test of create daily note, of class DailyNoteWindowController.
      */
+    //@Ignore
     @Test
     public void test1_createDailyNote() {
         tb.getSelectionModel().select(null);
         tb = lookup("#tb").query();
         int sizeStart = tb.getItems().size();
         Node lastOne = lookup("#tbcMentalDisease").nth(sizeStart).query();
-        clickOn(spinnerDayScore);
-        write("7.3");
-        clickOn(txtaNote);
-        write("Good day");
-        clickOn(btnAdd);
+        clickOn("#txtaNote");
+        write("Not a good day");
+        clickOn("#btnAdd");
+        int sizeAfterCreate = tb.getItems().size();
+        clickOn("Aceptar");
+        assertEquals(sizeStart + 1, sizeAfterCreate);
     }
 
     /**
-     * Test of initData method, of class DailyNoteWindowController.
+     * Test of modify daily note, of class DailyNoteWindowController.
      */
-    @Ignore
+    //@Ignore
     @Test
     public void test2_modifyDailyNote() {
-        System.out.println("initData");
-        User user = null;
-        DailyNoteWindowController instance = new DailyNoteWindowController();
-        instance.initData(user);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Node row = lookup(".table-row-cell").nth(0).query();
+        tb = lookup("#tb").query();
+        int sizeStart = tb.getItems().size();
+        Node tbclNote = lookup("#tbcNote").nth(sizeStart).query();
+        clickOn(tbclNote);
+        DailyNote dailyNote = tb.getSelectionModel().getSelectedItem();
+        String selectedDailyNoteText = dailyNote.getNoteText();
+        clickOn("#txtaNote");
+        write(", I did not do much");
+        clickOn("#btnModify");
+        clickOn("Aceptar");
+        Node tbclNoteModify = lookup("#tbcNote").nth(sizeStart).query();
+        clickOn(tbclNoteModify);
+        DailyNote dailyNoteModify = tb.getSelectionModel().getSelectedItem();
+        String selectedDailyNoteTextModify = dailyNoteModify.getNoteText();
+
+        assertNotEquals(selectedDailyNoteTextModify, selectedDailyNoteText);
     }
 
     /**
-     * Test of handleDatePickerChange method, of class
-     * DailyNoteWindowController.
+     * Test delete daily note, of class DailyNoteWindowController.
      */
-    @Ignore
+    //@Ignore
     @Test
     public void test3_deleteDailyNote() {
-        System.out.println("handleDatePickerChange");
-        ObservableValue observable = null;
-        LocalDate oldValue = null;
-        LocalDate newValue = null;
-        DailyNoteWindowController instance = new DailyNoteWindowController();
-        instance.handleDatePickerChange(observable, oldValue, newValue);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Node row = lookup(".table-row-cell").nth(0).query();
+        tb = lookup("#tb").query();
+        int sizeStart = tb.getItems().size();
+        Node tbcNote = lookup("#tbcNote").nth(sizeStart).query();
+        rightClickOn(tbcNote);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn("Aceptar");
+        clickOn("Aceptar");
+        int sizeAfterCreate = tb.getItems().size();
+        assertEquals(sizeStart - 1, sizeAfterCreate);
     }
 
     /**
-     * Test of setStage method, of class DailyNoteWindowController.
+     * Test of find all daily notes by patient method, of class
+     * DailyNoteWindowController.
      */
-    @Ignore
+    //@Ignore
     @Test
     public void test4_finAllDailyNotesByPatient() {
-        System.out.println("setStage");
-        Stage stage = null;
-        DailyNoteWindowController instance = new DailyNoteWindowController();
-        instance.setStage(stage);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        clickOn("#comboSearchMethod");
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        int sizeClear = tb.getItems().size();
+
+        clickOn("#btnSearch");
+        int sizeAfterSearch = tb.getItems().size();
+        assertNotEquals(sizeClear, sizeAfterSearch);
     }
 
     /**
-     * Test of handleOpenDiagnosis method, of class DailyNoteWindowController.
+     * Test of find daily note by date method, of class
+     * DailyNoteWindowController.
      */
-    @Ignore
+    //@Ignore
     @Test
-    public void test5_finAllDailyNotesByPatient() {
-        System.out.println("handleOpenDiagnosis");
-        ActionEvent event = null;
-        DailyNoteWindowController instance = new DailyNoteWindowController();
-        instance.handleOpenDiagnosis(event);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void test5_findNoteByDate() {
+        clickOn("#comboSearchMethod");
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.ENTER);
+        int sizeClear = tb.getItems().size();
+        clickOn("#dpStart");
+        write("30/01/2023");
+        type(KeyCode.ENTER);
+
+        clickOn("#btnSearch");
+        int sizeAfterSearch = tb.getItems().size();
+        assertNotEquals(sizeClear, sizeAfterSearch);
     }
 
+    /**
+     * Test of find all patient edited daily notes method, of class
+     * DailyNoteWindowController.
+     */
+    //@Ignore
+    @Test
+    public void test6_finindAllPatientEditedNotes() {
+        clickOn("#comboSearchMethod");
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        int sizeClear = tb.getItems().size();
+        type(KeyCode.ENTER);
+
+        clickOn("#btnSearch");
+        int sizeAfterSearch = tb.getItems().size();
+        assertNotEquals(sizeClear, sizeAfterSearch);
+    }
+
+    /**
+     * Test of find all patient daily notes by not readable method, of class
+     * DailyNoteWindowController.
+     */
+    //@Ignore
+    @Test
+    public void test7_findAllPatientNotesByNotReadable() {
+        clickOn("#comboSearchMethod");
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        int sizeClear = tb.getItems().size();
+        type(KeyCode.ENTER);
+
+        clickOn("#btnSearch");
+        int sizeAfterSearch = tb.getItems().size();
+        assertNotEquals(sizeClear, sizeAfterSearch);
+    }
+
+    /**
+     * Test of find all patient daily notes between dates method, of class
+     * DailyNoteWindowController.
+     */
+    //@Ignore
+    @Test
+    public void test8_findAllPatientNotesBetweenDates() {
+        clickOn("#comboSearchMethod");
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        int sizeClear = tb.getItems().size();
+        clickOn("#dpStart");
+        write("25/01/2023");
+        type(KeyCode.ENTER);
+        clickOn("#dpEnd");
+        write("31/01/2023");
+        type(KeyCode.ENTER);
+
+        clickOn("#btnSearch");
+        int sizeAfterSearch = tb.getItems().size();
+        assertNotEquals(sizeClear, sizeAfterSearch);
+    }
+
+    /**
+     * Test of find all patient daily notes between scores method, of class
+     * DailyNoteWindowController.
+     */
+    //@Ignore
+    @Test
+    public void test9_FindAllPatientNotesBetweenDayScores() {
+        clickOn("#comboSearchMethod");
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.UP);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        int sizeClear = tb.getItems().size();
+        clickOn("#spinnerScoreBottom");
+        eraseText(3);
+        write("5.5");
+        type(KeyCode.ENTER);
+        clickOn("#spinnerScoreTop");
+        eraseText(3);
+        write("7");
+        type(KeyCode.ENTER);
+
+        clickOn("#btnSearch");
+        int sizeAfterSearch = tb.getItems().size();
+        assertNotEquals(sizeClear, sizeAfterSearch);
+    }
 }

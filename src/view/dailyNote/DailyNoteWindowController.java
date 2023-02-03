@@ -155,7 +155,7 @@ public class DailyNoteWindowController {
         //Not a resizable window.
         stage.setResizable(false);
         //Modal window of LogIn.
-        stage.initModality(Modality.APPLICATION_MODAL);
+        //stage.initModality(Modality.APPLICATION_MODAL);
         //The window title will be ”SignUp”
         stage.setTitle("Daily Notes");
         //Add a leaf icon.
@@ -241,6 +241,8 @@ public class DailyNoteWindowController {
         stage.setScene(scene);
 
         stage.show();
+        
+        loadAllPatientDailyNotes();
     }
 
     public void initData(User user) {
