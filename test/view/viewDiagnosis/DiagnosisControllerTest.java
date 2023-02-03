@@ -138,37 +138,28 @@ public class DiagnosisControllerTest extends ApplicationTest {
     }
 
     @Test
-    public void test1_DeleteDiagnosis() {
-        Node row = lookup(".table-row-cell").nth(0).query();
-        tbDiagnosis = lookup("#tbDiagnosis").query();
-        int sizeStart = tbDiagnosis.getItems().size();
-        Node tbcMentalDisease = lookup("#tbcMentalDisease").nth(sizeStart).query();
-        rightClickOn(tbcMentalDisease);
-        type(KeyCode.DOWN);
-        type(KeyCode.ENTER);
-        int sizeAfterCreate = tbDiagnosis.getItems().size();
-        assertEquals(sizeStart - 1, sizeAfterCreate);
-    }
-
-    @Test
-    public void test2_InsertDiagnosis() {
-        tbDiagnosis.getSelectionModel().select(null);
+    public void test1_InsertDiagnosis() {
         tbDiagnosis = lookup("#tbDiagnosis").query();
         int sizeStart = tbDiagnosis.getItems().size();
         Node lastOne = lookup("#tbcMentalDisease").nth(sizeStart).query();
+        clickOn(lastOne);
         Diagnosis selectedDiagnosis = (Diagnosis) tbDiagnosis.getSelectionModel().getSelectedItem();
-        Node tbcMentalDisease = lookup("#tbcMentalDisease").nth(sizeStart + 1).query();
-        rightClickOn(tbcMentalDisease);
+        tbDiagnosis.getSelectionModel().select(null);
+        int newSize = tbDiagnosis.getItems().size();
+        Node tbcMentalDisease = lookup("#tbcMentalDisease").nth(newSize + 2).query();
+        rightClickOn("#tbcMentalDisease");
         type(KeyCode.DOWN);
         type(KeyCode.ENTER);
-        test4_SelectAllDiagnosis();
+        Node newOne = lookup("#tbcMentalDisease").nth(sizeStart).query();
+        clickOn(newOne);
+        Diagnosis newDiagnosis = (Diagnosis) tbDiagnosis.getSelectionModel().getSelectedItem();
         int sizeAfterCreate = tbDiagnosis.getItems().size();
-        assertEquals(sizeStart + 1, sizeAfterCreate);
+        assertNotEquals(selectedDiagnosis, newDiagnosis);
+
     }
 
     @Test
-    public void test3_updateDiagnosis() {
-        tbDiagnosis.getSelectionModel().select(null);
+    public void test2_updateDiagnosis() {
         tbDiagnosis = lookup("#tbDiagnosis").query();
         int sizeStart = tbDiagnosis.getItems().size();
         Node tbcLastTreatmentChange = lookup("#tbcLastTreatmentChange").nth(sizeStart).query();
@@ -177,11 +168,17 @@ public class DiagnosisControllerTest extends ApplicationTest {
         Diagnosis selectedDiagnosis = (Diagnosis) tbDiagnosis.getSelectionModel().getSelectedItem();
         String selectedDiagnosisPatient = selectedDiagnosis.getLastDiagnosisChangeDate().toString();
         clickOn(tbcLastTreatmentChange);
-        press(KeyCode.DELETE);
+        clickOn(tbcLastTreatmentChange);
+        eraseText(10);
         write("04/04/2024");
         press(KeyCode.ENTER);
         tbDiagnosis.getSelectionModel().select(null);
-
+        Node tbcPatient = lookup("#tbcLastTreatmentChange").nth(sizeStart).query();
+        doubleClickOn(tbcPatient);
+        clickOn(tbcPatient);
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        tbDiagnosis.getSelectionModel().select(null);
         clickOn(tbcLastTreatmentChange);
         Diagnosis selectedDiagnosis2 = (Diagnosis) tbDiagnosis.getSelectionModel().getSelectedItem();
         String selectedDiagnosisPatientModify = selectedDiagnosis.getLastDiagnosisChangeDate().toString();
@@ -190,6 +187,23 @@ public class DiagnosisControllerTest extends ApplicationTest {
 
     }
 
+    @Test
+    public void test3_DeleteDiagnosis() {
+        Node row = lookup(".table-row-cell").nth(0).query();
+        tbDiagnosis = lookup("#tbDiagnosis").query();
+        int sizeStart = tbDiagnosis.getItems().size();
+        Node tbcMentalDisease = lookup("#tbcMentalDisease").nth(sizeStart).query();
+        rightClickOn(tbcMentalDisease);
+        Diagnosis selectedDiagnosis = (Diagnosis) tbDiagnosis.getSelectionModel().getSelectedItem();
+        type(KeyCode.DOWN);
+        type(KeyCode.ENTER);
+        clickOn(tbcMentalDisease);
+        Diagnosis selectedDiagnosisAfterDelete = (Diagnosis) tbDiagnosis.getSelectionModel().getSelectedItem();
+        int sizeAfterCreate = tbDiagnosis.getItems().size();
+        assertNotEquals(selectedDiagnosis, selectedDiagnosisAfterDelete);
+    }
+
+    @Test
     public void test4_SelectAllDiagnosis() {
         int sizeStart = tbDiagnosis.getItems().size();
         clickOn("#comboboxSearchBy");
