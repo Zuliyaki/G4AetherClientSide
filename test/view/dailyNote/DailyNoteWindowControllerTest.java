@@ -94,13 +94,17 @@ public class DailyNoteWindowControllerTest extends ApplicationTest {
         tb.getSelectionModel().select(null);
         tb = lookup("#tb").query();
         int sizeStart = tb.getItems().size();
-        Node lastOne = lookup("#tbcMentalDisease").nth(sizeStart).query();
+        Node lastOne = lookup("#tbcNote").nth(sizeStart).query();
         clickOn("#txtaNote");
         write("Not a good day");
         clickOn("#btnAdd");
-        int sizeAfterCreate = tb.getItems().size();
         clickOn("Aceptar");
-        assertEquals(sizeStart + 1, sizeAfterCreate);
+        int sizeAfterCreate = tb.getItems().size();
+        Node tbclNoteModify = lookup("#tbcNote").nth(sizeAfterCreate).query();
+        clickOn(tbclNoteModify);
+        DailyNote dailyNoteModify = tb.getSelectionModel().getSelectedItem();
+        String selectedDailyNoteTextCreate = dailyNoteModify.getNoteText();
+        assertEquals(selectedDailyNoteTextCreate, "Not a good day");
     }
 
     /**

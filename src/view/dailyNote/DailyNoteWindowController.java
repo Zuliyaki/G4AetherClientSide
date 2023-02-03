@@ -155,7 +155,7 @@ public class DailyNoteWindowController {
         //Not a resizable window.
         stage.setResizable(false);
         //Modal window of LogIn.
-        //stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initModality(Modality.APPLICATION_MODAL);
         //The window title will be ”SignUp”
         stage.setTitle("Daily Notes");
         //Add a leaf icon.
@@ -196,6 +196,9 @@ public class DailyNoteWindowController {
         btnPrint.setDisable(true);
         txtaNote.setPromptText("Writte a description of your day");
         dailyNoteMenu.setDisable(true);
+        btnAdd.setDisable(false);
+        btnModify.setDisable(true);
+        btnDelete.setDisable(true);
 
         //Valores de las columnas de la tabla
         tb.setEditable(false);
@@ -241,7 +244,7 @@ public class DailyNoteWindowController {
         stage.setScene(scene);
 
         stage.show();
-        
+
         loadAllPatientDailyNotes();
     }
 
@@ -283,6 +286,8 @@ public class DailyNoteWindowController {
             txtaComment.setEditable(false);
             tfNoteStatus.setDisable(false);
             tfNoteStatus.setEditable(false);
+            btnModify.setDisable(false);
+            btnDelete.setDisable(false);
             if (dailyNote.getNoteComent() == null) {
                 txtaComment.setText("Not comment yet");
                 tfNoteStatus.setText("NOTREADED");
@@ -303,6 +308,8 @@ public class DailyNoteWindowController {
             tfNoteStatus.setText("Note status");
             tfNoteStatus.setDisable(true);
             btnAdd.setDisable(false);
+            btnModify.setDisable(true);
+            btnDelete.setDisable(true);
         }
     }
 
