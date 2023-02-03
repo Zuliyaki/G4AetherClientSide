@@ -29,17 +29,6 @@ public class User implements Serializable {
     public User() {
     }
 
-    /**
-     * Costructor with parameters
-     *
-     * @param dni
-     * @param fullName
-     * @param birthDate
-     * @param password
-     * @param phoneNumber
-     * @param email
-     * @param userType
-     */
     public User(String dni, String fullName, Date birthDate, String password, Integer phoneNumber, String email, String userType) {
         this.dni = dni;
         this.fullName = fullName;

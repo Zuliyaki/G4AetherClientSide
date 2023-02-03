@@ -128,15 +128,27 @@ public class DiagnosisControllerTest extends ApplicationTest {
 
     private Menu diagnosisMenu;
 
+    /**
+     * the default constructor
+     */
     public DiagnosisControllerTest() {
     }
 
+    /**
+     * set the primary stage to be the tested window
+     *
+     * @throws TimeoutException
+     */
     @BeforeClass
     public static void setUpClass() throws TimeoutException {
         FxToolkit.registerPrimaryStage();
         FxToolkit.setupApplication(DiagnosisMain.class);
     }
 
+    /**
+     * inserts a diagnosis and compare that its not the same as the last
+     * selected diagnosis
+     */
     @Test
     public void test1_InsertDiagnosis() {
         tbDiagnosis = lookup("#tbDiagnosis").query();
@@ -158,6 +170,9 @@ public class DiagnosisControllerTest extends ApplicationTest {
 
     }
 
+    /**
+     * updates a diagnosis and compares it with the state before updating it
+     */
     @Test
     public void test2_updateDiagnosis() {
         tbDiagnosis = lookup("#tbDiagnosis").query();
@@ -187,6 +202,9 @@ public class DiagnosisControllerTest extends ApplicationTest {
 
     }
 
+    /**
+     * delete a diagnosis and compares that the diagnosis not longer exist
+     */
     @Test
     public void test3_DeleteDiagnosis() {
         Node row = lookup(".table-row-cell").nth(0).query();
@@ -203,6 +221,9 @@ public class DiagnosisControllerTest extends ApplicationTest {
         assertNotEquals(selectedDiagnosis, selectedDiagnosisAfterDelete);
     }
 
+    /**
+     * search all the diagnosises
+     */
     @Test
     public void test4_SelectAllDiagnosis() {
         int sizeStart = tbDiagnosis.getItems().size();
@@ -219,6 +240,10 @@ public class DiagnosisControllerTest extends ApplicationTest {
 
     }
 
+    /**
+     * select all diagnosises that are from a patient and confirma that the dni
+     * of the diagnosis is the same of the one in the textfield
+     */
     @Test
     public void test5_SelectAllDiagnosisFromPatient() {
         int sizeStart = tbDiagnosis.getItems().size();

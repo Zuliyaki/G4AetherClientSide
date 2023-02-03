@@ -45,7 +45,7 @@ public class DiagnosisRestful implements DiagnosisInterface {
 /**
  * create a diagnosis on the database
  * @param requestEntity the diagnosis to be created
- * @throws CreateException 
+ * @throws CreateException CreateException
  */
     @Override
     public void createDiagnosis_XML(Object requestEntity) throws CreateException {
@@ -59,7 +59,7 @@ public class DiagnosisRestful implements DiagnosisInterface {
 /**
  * create a diagnosis on the database
  * @param requestEntity the diagnosis to be created
- * @throws CreateException 
+ * @throws CreateException CreateException
  */
     @Override
     public void createDiagnosis_JSON(Object requestEntity) throws CreateException {
@@ -76,7 +76,7 @@ public class DiagnosisRestful implements DiagnosisInterface {
  * @param responseType the response type that you want to be returned
  * @param id the id of the patient
  * @return the list
- * @throws DiagnosisNotFoundException 
+ * @throws DiagnosisNotFoundException DiagnosisNotFoundException
  */
     @Override
     public <T> T findAllIfPatientOnTeraphy_XML(GenericType<T> responseType, String id) throws DiagnosisNotFoundException {
@@ -95,7 +95,7 @@ public class DiagnosisRestful implements DiagnosisInterface {
  * @param responseType the response type that you want to be returned
  * @param id the id of the patient
  * @return the list
- * @throws DiagnosisNotFoundException 
+ * @throws DiagnosisNotFoundException DiagnosisNotFoundException
  */
     @Override
     public <T> T findAllIfPatientOnTeraphy_JSON(GenericType<T> responseType, String id) throws DiagnosisNotFoundException {
@@ -114,7 +114,7 @@ public class DiagnosisRestful implements DiagnosisInterface {
  * @param responseType the response type that you want to be returned
  * @param id the id of the diagnosis to be search
  * @return the list
- * @throws DiagnosisNotFoundException 
+ * @throws DiagnosisNotFoundException DiagnosisNotFoundException
  */
     @Override
     public <T> T findDiagnosisById_XML(GenericType<T> responseType, String id) throws DiagnosisNotFoundException {
@@ -133,7 +133,7 @@ public class DiagnosisRestful implements DiagnosisInterface {
  * @param responseType the response type that you want to be returned
  * @param id the id of the diagnosis to be search
  * @return the list
- * @throws DiagnosisNotFoundException 
+ * @throws DiagnosisNotFoundException  DiagnosisNotFoundException
  */
     @Override
     public <T> T findDiagnosisById_JSON(GenericType<T> responseType, String id) throws DiagnosisNotFoundException {
@@ -149,7 +149,7 @@ public class DiagnosisRestful implements DiagnosisInterface {
 /**
  * updates the param sent diagnosis
  * @param requestEntity the diagnosis to be updated
- * @throws UpdateException 
+ * @throws UpdateException  UpdateException
  */
     @Override
     public void updateDiagnosis_XML(Object requestEntity) throws UpdateException {
@@ -164,7 +164,7 @@ public class DiagnosisRestful implements DiagnosisInterface {
 /**
  * updates the param sent diagnosis
  * @param requestEntity the diagnosis to be updated
- * @throws UpdateException 
+ * @throws UpdateException  UpdateException
  */
     @Override
     public void updateDiagnosis_JSON(Object requestEntity) throws UpdateException {
@@ -180,7 +180,7 @@ public class DiagnosisRestful implements DiagnosisInterface {
  * @param <T> return the list
  * @param responseType the response type that you want to be returned
  * @return the list
- * @throws DiagnosisNotFoundException 
+ * @throws DiagnosisNotFoundException DiagnosisNotFoundException 
  */
     @Override
     public <T> T findAllDiagnosis_XML(GenericType<T> responseType) throws DiagnosisNotFoundException {
@@ -197,7 +197,7 @@ public class DiagnosisRestful implements DiagnosisInterface {
  * @param <T> return the list
  * @param responseType the response type that you want to be returned
  * @return the list
- * @throws DiagnosisNotFoundException 
+ * @throws DiagnosisNotFoundException  DiagnosisNotFoundException
  */
     @Override
     public <T> T findAllDiagnosis_JSON(GenericType<T> responseType) throws DiagnosisNotFoundException {
@@ -216,8 +216,8 @@ public class DiagnosisRestful implements DiagnosisInterface {
  * @param id the id of the patient
  * @param dateLow the date of start
  * @param dateGreat the date of finish
- * @returnthe list
- * @throws DiagnosisNotFoundException 
+ * @return the list
+ * @throws DiagnosisNotFoundException  DiagnosisNotFoundException
  */
     @Override
     public <T> T findPatientDiagnosisByDate_XML(GenericType<T> responseType, String id, String dateLow, String dateGreat) throws DiagnosisNotFoundException {
@@ -237,8 +237,8 @@ public class DiagnosisRestful implements DiagnosisInterface {
  * @param id the id of the patient
  * @param dateLow the date of start
  * @param dateGreat the date of finish
- * @returnthe list
- * @throws DiagnosisNotFoundException 
+ * @return the list
+ * @throws DiagnosisNotFoundException  DiagnosisNotFoundException
  */
     @Override
     public <T> T findPatientDiagnosisByDate_JSON(GenericType<T> responseType, String id, String dateLow, String dateGreat) throws DiagnosisNotFoundException {
@@ -254,7 +254,7 @@ public class DiagnosisRestful implements DiagnosisInterface {
 /**
  * delete the sended diagnosis
  * @param id the id of the diagnosis to be deleted
- * @throws DeleteException 
+ * @throws DeleteException  DeleteException
  */
     @Override
     public void deleteDiagnosis(String id) throws DeleteException {
@@ -269,9 +269,9 @@ public class DiagnosisRestful implements DiagnosisInterface {
  *  finds all diagnosis from a patient
  * @param <T> the list to be returned
  * @param responseType the type of response
- * @param id
+ * @param id id
  * @return the list of diagnosis
- * @throws DiagnosisNotFoundException 
+ * @throws DiagnosisNotFoundException  DiagnosisNotFoundException
  */
     @Override
     public <T> T findAllDiagnosisByPatient_XML(GenericType<T> responseType, String id) throws DiagnosisNotFoundException {
@@ -288,9 +288,9 @@ public class DiagnosisRestful implements DiagnosisInterface {
  *  finds all diagnosis from a patient
  * @param <T> the list to be returned
  * @param responseType the type of response
- * @param id
+ * @param id id
  * @return the list of diagnosis
- * @throws DiagnosisNotFoundException 
+ * @throws DiagnosisNotFoundException  DiagnosisNotFoundException
  */
     @Override
     public <T> T findAllDiagnosisByPatient_JSON(GenericType<T> responseType, String id) throws DiagnosisNotFoundException {

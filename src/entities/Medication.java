@@ -11,12 +11,11 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author zuli
  */
-
 @XmlRootElement(name = "medication")
 public class Medication implements Serializable {
 
     private static final long serialVersionUID = 1L;
-   
+
     private SimpleLongProperty medicationId;
     private SimpleStringProperty medicationName;
     private SimpleStringProperty description;
@@ -27,7 +26,7 @@ public class Medication implements Serializable {
      * Empty constructor
      */
     public Medication() {
-       this.medicationId =  new SimpleLongProperty();
+        this.medicationId = new SimpleLongProperty();
         this.medicationName = new SimpleStringProperty();
         this.description = new SimpleStringProperty();
         this.typeOfMedication = new SimpleObjectProperty();
@@ -35,7 +34,7 @@ public class Medication implements Serializable {
     }
 
     public Medication(Long medicationId, String medicationName, String description, EnumMedType typeOfMedication, Set<Treatment> treatments) {
-        this.medicationId =  new SimpleLongProperty(medicationId);
+        this.medicationId = new SimpleLongProperty(medicationId);
         this.medicationName = new SimpleStringProperty(medicationName);
         this.description = new SimpleStringProperty(description);
         this.typeOfMedication = new SimpleObjectProperty(typeOfMedication);
@@ -62,13 +61,14 @@ public class Medication implements Serializable {
     public void setDescription(String description) {
         this.description = new SimpleStringProperty(description);
     }
-    @XmlElement(name="typeOfMedication")
+
+    @XmlElement(name = "typeOfMedication")
     public EnumMedType getTypeOfMedication() {
         return typeOfMedication.getValue();
     }
 
     public void setTypeOfMedication(EnumMedType typeOfMedication) {
-        this.typeOfMedication  = new SimpleObjectProperty(typeOfMedication);
+        this.typeOfMedication = new SimpleObjectProperty(typeOfMedication);
     }
 
     @XmlTransient
@@ -80,15 +80,9 @@ public class Medication implements Serializable {
         this.treatments = treatments;
     }
 
-    /**
-     * 
-     * @return @Override
-    }
-     */
-     @Override
+    @Override
     public String toString() {
         return this.getMedicationName();
     }
 
-    
 }

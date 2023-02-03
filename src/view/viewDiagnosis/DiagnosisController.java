@@ -780,9 +780,9 @@ public class DiagnosisController {
     }
 /**
  * handle the date pickers on change, if the "to" datapicker date is before the "From" it will disable the search button
- * @param observable
- * @param oldValue
- * @param newValue 
+ * @param observable observable
+ * @param oldValue oldValue
+ * @param newValue newValue 
  */
     public void handleDatePickerChange(ObservableValue observable,
             LocalDate oldValue,
