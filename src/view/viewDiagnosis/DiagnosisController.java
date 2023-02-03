@@ -409,7 +409,7 @@ public class DiagnosisController {
         //tb treatment
         tbTreatment.setVisible(false);
         txtTreatments.setVisible(false);
-        tbTreatment.setEditable(true);
+        tbTreatment.setEditable(false);
         tbTreatment.getSelectionModel().selectedItemProperty().addListener(this::handleTreatmentTableSelectionChanged);
         tbcDay.setCellValueFactory(new PropertyValueFactory<>("treatmentId"));
         tbcMedication.setCellValueFactory(new PropertyValueFactory<>("medication"));
@@ -485,8 +485,8 @@ public class DiagnosisController {
             tbTreatment.setVisible(false);
             txtTreatments.setVisible(false);
         } else {
-            tbTreatment.setVisible(true);
-            txtTreatments.setVisible(true);
+            tbTreatment.setVisible(false);
+            txtTreatments.setVisible(false);
 
             tbTreatment.setItems(treatmentTableInfo);
         }
@@ -807,7 +807,7 @@ public class DiagnosisController {
     public void handleOpenDiagnosis(ActionEvent event) {
         Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../viewDiagnosis/Diagnosis.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/viewDiagnosis/Diagnosis.fxml"));
         Parent root = null;
         try {
             root = (Parent) loader.load();
@@ -829,46 +829,25 @@ public class DiagnosisController {
      */
     @FXML
     private void handleOpenDailyNote(ActionEvent event) {
-        Stage stage = new Stage();
+        if (user.getDni().equals("35140444d")) {
+            Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../dailyNote/DailyNoteWindowPatient.fxml"));
-        Parent root = null;
-        try {
-            root = (Parent) loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dailyNote/DailyNoteWindowPatient.fxml"));
+            Parent root = null;
+            try {
+                root = (Parent) loader.load();
+            } catch (IOException ex) {
+                Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            DailyNoteWindowController controller = (DailyNoteWindowController) loader.getController();
+
+            controller.setStage(stage);
+            controller.initData(user);
+            controller.initialize(root);
+        } else {
+            new Alert(Alert.AlertType.ERROR, "Psychologist window not implemented yet", ButtonType.OK).showAndWait();
         }
-
-        DailyNoteWindowController controller = (DailyNoteWindowController) loader.getController();
-
-        controller.setStage(stage);
-
-        controller.initData(user);
-
-        controller.initialize(root);
-    }
-    /**
-     * handle the appointment menu NO implemented
-     * @param event onclick 
-     */
-    @FXML
-    private void handleOpenAppointment(ActionEvent event) {
-        Stage stage = new Stage();
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../Appointment/Appointment.fxml"));
-        Parent root = null;
-        try {
-            root = (Parent) loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(G4AetherClientSide.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        AppointmentController controller = (AppointmentController) loader.getController();
-
-        controller.setStage(stage);
-
-        controller.initData(user);
-        controller.initialize(root);
     }
     /**
      * Handle the exit app Menu

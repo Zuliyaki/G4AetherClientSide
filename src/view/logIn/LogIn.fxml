@@ -32,21 +32,9 @@
                 </Label>
                 <TextField fx:id="tfDNI" layoutX="80.0" layoutY="113.0" prefHeight="30.0" prefWidth="250.0" promptText="DNI" />
                 <PasswordField fx:id="pfPassword" layoutX="78.0" layoutY="164.0" prefHeight="30.0" prefWidth="250.0" promptText="Password" />
-                <Text layoutX="80.0" layoutY="237.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You do not have an account?">
-                    <font>
-                        <Font name="Lucida Sans Regular" size="12.0" />
-                    </font>
-                </Text>
-                <Hyperlink fx:id="hlSignUp" layoutX="239.0" layoutY="218.0" onAction="#handleSignUpHyperlinkAction" prefHeight="30.0" prefWidth="52.0" text="Sign up">
-                    <font>
-                        <Font name="Lucida Sans Regular" size="12.0" />
-                    </font>
-                </Hyperlink>
-                <Text layoutX="291.0" layoutY="237.0" strokeType="OUTSIDE" strokeWidth="0.0" text="here!">
-                    <font>
-                        <Font name="Lucida Sans Regular" size="12.0" />
-                    </font>
-                </Text>
+                <Text layoutX="79.0" layoutY="237.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You do not have an account?" />
+                <Hyperlink fx:id="hlSignUp" layoutX="239.0" layoutY="218.0" onAction="#handleSignUpHyperlinkAction" prefHeight="30.0" prefWidth="52.0" text="Sign up" />
+                <Text layoutX="291.0" layoutY="237.0" strokeType="OUTSIDE" strokeWidth="0.0" text="here!" />
                 <Button fx:id="btnAccept" layoutX="177.0" layoutY="253.0" mnemonicParsing="false" onAction="#handleLogInButtonAction" style="-fx-background-color: #94BCB6;" text="Accept" />
                 <Label fx:id="lblDNI" layoutX="79.0" layoutY="144.0" textFill="RED">
                     <font>
@@ -58,7 +46,7 @@
                         <Font name="Lucida Sans Regular" size="10.0" />
                     </font>
                 </Label>
-            <Hyperlink fx:id="hlRememberPassword" layoutX="76.0" layoutY="188.0" onAction="#handleRememberPasswordHyperlinkAction" prefHeight="30.0" prefWidth="259.0" text="Do not you remember your password?">
+            <Hyperlink fx:id="hlRememberPassword" layoutX="76.0" layoutY="192.0" onAction="#handleRememberPasswordHyperlinkAction" prefHeight="16.0" prefWidth="259.0" text="Do not you remember your password?">
                <font>
                   <Font size="10.0" />
                </font>
