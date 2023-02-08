@@ -276,8 +276,7 @@ public class LogInController {
                 root = (Parent) loader.load();
 
             } catch (IOException ex) {
-                Logger.getLogger(G4AetherClientSide.class
-                        .getName()).log(Level.SEVERE, null, ex);
+                showErrorAlert("can not logging");
             }
 
             MainMenuController controller = (MainMenuController) loader.getController();
