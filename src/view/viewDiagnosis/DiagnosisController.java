@@ -96,6 +96,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
+import static org.apache.commons.lang.StringUtils.isNumeric;
 import restful.DiagnosisRestful;
 import restful.MentalDiseaseRestful;
 import restful.PatientRestful;
@@ -108,7 +109,7 @@ public class DiagnosisController {
 
     public User user = null;
     public Stage stage;
-    private  ObservableList<Diagnosis> diagnosises;
+    private ObservableList<Diagnosis> diagnosises;
     private DiagnosisInterface diagnosisInterface = DiagnosisFactory.getModel();
     private TreatmentInterface treatmentInterface = TreatmentFactory.getModel();
     private MentalDiseaseInterface mentalDiseaseInterface = MentalDiseaseFactory.getModel();
@@ -147,9 +148,6 @@ public class DiagnosisController {
 
     @FXML
     private DatePicker dtDateGreat;
-
-    @FXML
-    private CheckBox cbxOnTherapy;
 
     @FXML
     private ComboBox comboboxSearchBy;
@@ -208,11 +206,13 @@ public class DiagnosisController {
     @FXML
     private Button btnPrint;
     private Integer posDiag;
-    final Logger LOGGER = Logger.getLogger("paquete.NombreClase");
+    private static final Logger LOGGER = Logger.getLogger(DiagnosisController.class.getName());
     @FXML
     private Menu diagnosisMenu;
+
     /**
      * initialize the window, sets everything and show it
+     *
      * @param root send the root
      */
     public void initialize(Parent root) {
@@ -237,7 +237,6 @@ public class DiagnosisController {
         dtDateGreat.setDisable(true);
         dtDateGreat.getEditor().clear();
         tfMentalDisease.setDisable(true);
-        cbxOnTherapy.setDisable(true);
         tfMentalDisease.setDisable(true);
         btnSearch.setDisable(true);
         tfDiagnosisID.setDisable(true);
@@ -249,19 +248,20 @@ public class DiagnosisController {
         comboboxSearchBy.valueProperty().addListener(this::handleComboboxChange);
         dpDateLow.valueProperty().addListener(this::handleDatePickerChange);
         dtDateGreat.valueProperty().addListener(this::handleDatePickerChange);
+        tfPatientDNI.textProperty().addListener(this::handleFieldsTextChange);
 
         // FILTRADO
         if (user instanceof Psychologist) {
             String[] a = {"Find all diagnosis", "Find all diagnosis by patient id", "Find all diangosis if patient on teraphy", "Find diagnosis between dates and patient id"};
             ObservableList<String> searchMethods = FXCollections.observableArrayList(a);
             comboboxSearchBy.setItems(searchMethods);
-            comboboxSearchBy.getSelectionModel().select(-1);
+            comboboxSearchBy.getSelectionModel().select(0);
             diagnosises = loadAllDiagnosises();
         } else {
             String[] a = {"Find all diagnosis by patient id", "Find all diangosis if patient on teraphy", "Find diagnosis between dates and patient id"};
             ObservableList<String> searchMethods = FXCollections.observableArrayList(a);
             comboboxSearchBy.setItems(searchMethods);
-            comboboxSearchBy.getSelectionModel().select(-1);
+            comboboxSearchBy.getSelectionModel().select(0);
             tfPatientDNI.setText(user.getDni());
             tfPatientDNI.setDisable(true);
             diagnosises = loadDiagnosisesByPatient();
@@ -313,7 +313,10 @@ public class DiagnosisController {
                             .get(t.getTablePosition().getRow()))
                             .setPatient(t.getNewValue());
                     try {
+                        LOGGER.info("Trying to update the patient");
                         diagnosisInterface.updateDiagnosis_XML(tbDiagnosis.getSelectionModel().getSelectedItem());
+                        LOGGER.info("updated the patient");
+
                     } catch (UpdateException ex) {
                         showErrorAlert(ex.getMessage());
                     }
@@ -326,6 +329,20 @@ public class DiagnosisController {
         tbcDateOfCreation.setCellValueFactory(
                 new PropertyValueFactory<>("diagnosisDate"));
         tbcDateOfCreation.setCellFactory(dateCellFactory);
+        tbcDateOfCreation.setOnEditCommit(
+                (TableColumn.CellEditEvent<Diagnosis, Date> t) -> {
+                    ((Diagnosis) t.getTableView().getItems()
+                            .get(t.getTablePosition().getRow()))
+                            .setDiagnosisDate(t.getNewValue());
+                    try {
+                        LOGGER.info("Trying to update the diagnosis date");
+                        diagnosisInterface.updateDiagnosis_XML(tbDiagnosis.getSelectionModel().getSelectedItem());
+                        LOGGER.info("updated the diagnosis date");
+
+                    } catch (UpdateException ex) {
+                        showErrorAlert(ex.getMessage());
+                    }
+                });
         ///////////////
 
         tbcOnTherapy.setCellFactory(
@@ -337,7 +354,10 @@ public class DiagnosisController {
         diagnosises.forEach(
                 diagnosis -> diagnosis.onTherapyProperty().addListener((observable, oldValue, newValue) -> {
                     try {
+                        LOGGER.info("Trying to update the On Therapy value");
                         diagnosisInterface.updateDiagnosis_XML(diagnosis);
+                        LOGGER.info("updated the On Therapy value");
+
                     } catch (UpdateException ex) {
                         showErrorAlert(ex.getMessage());
                     }
@@ -355,7 +375,10 @@ public class DiagnosisController {
                             .get(t.getTablePosition().getRow()))
                             .setMentalDisease(t.getNewValue());
                     try {
+                        LOGGER.info("Trying to update the mental disease");
                         diagnosisInterface.updateDiagnosis_XML(tbDiagnosis.getSelectionModel().getSelectedItem());
+                        LOGGER.info(" updated the mental disease");
+
                     } catch (UpdateException ex) {
                         showErrorAlert(ex.getMessage());
                     }
@@ -375,7 +398,10 @@ public class DiagnosisController {
                             .get(t.getTablePosition().getRow()))
                             .setLastDiagnosisChangeDate(t.getNewValue());
                     try {
+                        LOGGER.info("Trying to update the last diagnosis change date");
                         diagnosisInterface.updateDiagnosis_XML(tbDiagnosis.getSelectionModel().getSelectedItem());
+                        LOGGER.info("updated the last diagnosis change date");
+
                     } catch (UpdateException ex) {
                         showErrorAlert(ex.getMessage());
                     }
@@ -395,7 +421,10 @@ public class DiagnosisController {
             newDiagnosis.setPsychologist((Psychologist) user);
             newDiagnosis.setOnTherapy(true);
             try {
+                LOGGER.info("Trying to create a new diagnosis");
                 diagnosisInterface.updateDiagnosis_XML(newDiagnosis);
+                LOGGER.info("Diagnosis Created");
+
             } catch (UpdateException ex) {
                 showErrorAlert(ex.getMessage());
             }
@@ -416,10 +445,12 @@ public class DiagnosisController {
         stage.setScene(scene);
         stage.show();
     }
-/**
- * sets the stage sended from the preview window
- * @param stage the stage to be setted
- */
+
+    /**
+     * sets the stage sended from the preview window
+     *
+     * @param stage the stage to be setted
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -441,10 +472,13 @@ public class DiagnosisController {
         return null;
 
     }
-/**
- * calls the interface of diagnosis and load the table with the diagnosis created between the dates from the datepickers
- * @return  the ObservableList loaded
- */
+
+    /**
+     * calls the interface of diagnosis and load the table with the diagnosis
+     * created between the dates from the datepickers
+     *
+     * @return the ObservableList loaded
+     */
     private ObservableList<Diagnosis> loadDiagnosisesBetweenDates() {
         ObservableList<Diagnosis> diagnosisTableInfo;
         List<Diagnosis> allDiangosis = null;
@@ -467,10 +501,13 @@ public class DiagnosisController {
         return null;
 
     }
-/**
- * calls the interface of treatment and load the table with the treatments of the selected diagnosis
- * @return  the ObservableList loaded
- */
+
+    /**
+     * calls the interface of treatment and load the table with the treatments
+     * of the selected diagnosis
+     *
+     * @return the ObservableList loaded
+     */
     private ObservableList<Treatment> loadAllTreaments(Diagnosis diagnosis) {
         ObservableList<Treatment> treatmentTableInfo;
         List<Treatment> allTreatment = null;
@@ -492,11 +529,13 @@ public class DiagnosisController {
         }
         return treatmentTableInfo;
     }
-/**
- *  * calls the interface of diagnosis and load the table with the diagnosis that are on therapy with the diagnsosis of the selected patient
 
- * @return  the loaded the ObservableList
- */
+    /**
+     *  * calls the interface of diagnosis and load the table with the diagnosis
+     * that are on therapy with the diagnsosis of the selected patient
+     *
+     * @return the loaded the ObservableList
+     */
     private ObservableList<Diagnosis> loadDiagnosisesByPatientOnTherapy() {
         ObservableList<Diagnosis> diagnosisTableInfo = null;
 
@@ -515,11 +554,13 @@ public class DiagnosisController {
         }
         return diagnosisTableInfo;
     }
-/**
- *  * calls the interface of diagnosis and load the table with the diagnosis with the diagnsosis of the selected patient
 
- * @return  the loaded the ObservableList
- */
+    /**
+     *  * calls the interface of diagnosis and load the table with the diagnosis
+     * with the diagnsosis of the selected patient
+     *
+     * @return the loaded the ObservableList
+     */
     private ObservableList<Diagnosis> loadDiagnosisesByPatient() {
         ObservableList<Diagnosis> diagnosisTableInfo = null;
 
@@ -542,12 +583,14 @@ public class DiagnosisController {
         return null;
 
     }
-/**
- * controls the new selected table row
- * @param observableValue the row
- * @param oldValue the old value
- * @param newValue the new value
- */
+
+    /**
+     * controls the new selected table row
+     *
+     * @param observableValue the row
+     * @param oldValue the old value
+     * @param newValue the new value
+     */
     private void handleDiagnosisTableSelectionChanged(ObservableValue observableValue, Object oldValue, Object newValue) {
         if (newValue != null) {
             final Diagnosis selectedDiagnosis = (Diagnosis) newValue;
@@ -569,7 +612,10 @@ public class DiagnosisController {
 
             DeleteDiagnosisMenuIt.setOnAction((ActionEvent e) -> {
                 try {
+                    LOGGER.info("Trying to DELETE");
                     diagnosisInterface.deleteDiagnosis(selectedDiagnosis.getDiagnosisId().toString());
+                    LOGGER.info("DELETED");
+
                     diagnosises.remove(selectedDiagnosis);
                 } catch (DeleteException ex) {
                     showErrorAlert(ex.getMessage());
@@ -594,11 +640,14 @@ public class DiagnosisController {
                 newDiagnosis.setDiagnosisDate(date);
                 newDiagnosis.setLastDiagnosisChangeDate(date);
                 Psychologist currentPshychologist = new Psychologist();
-                currentPshychologist.setDni("45949977w"); //ESTO HAY QUE CAMBIAR
+                currentPshychologist.setDni(user.getDni());
                 newDiagnosis.setPsychologist(currentPshychologist);
                 newDiagnosis.setOnTherapy(true);
                 try {
+                    LOGGER.info("Trying to create a new diagnosis");
                     diagnosisInterface.updateDiagnosis_XML(newDiagnosis);
+                    LOGGER.info("created a new diagnosis");
+
                     diagnosises = loadAllDiagnosises();
                     //  diagnosises = loadAllDiagnosises();
                 } catch (UpdateException ex) {
@@ -613,12 +662,14 @@ public class DiagnosisController {
         }
 
     }
-/**
- * handle the treatment selected row NOT IMPLEMENTED YET
- * @param observableValue The row
- * @param oldValue the old row
- * @param newValue the new row
- */
+
+    /**
+     * handle the treatment selected row NOT IMPLEMENTED YET
+     *
+     * @param observableValue The row
+     * @param oldValue the old row
+     * @param newValue the new row
+     */
     private void handleTreatmentTableSelectionChanged(ObservableValue observableValue, Object oldValue, Object newValue) {
         if (newValue != null) {
 
@@ -628,12 +679,14 @@ public class DiagnosisController {
 
     }
 //COMBOBOX CHANGE
-/**
- * handle the search combobox change
- * @param observable the value of the combobox
- * @param oldValue the old value
- * @param newValue the new value
- */
+
+    /**
+     * handle the search combobox change
+     *
+     * @param observable the value of the combobox
+     * @param oldValue the old value
+     * @param newValue the new value
+     */
     private void handleComboboxChange(ObservableValue observable,
             Object oldValue,
             Object newValue) {
@@ -661,8 +714,6 @@ public class DiagnosisController {
                 dtDateGreat.setDisable(false);
                 dtDateGreat.getEditor().clear();
                 tfMentalDisease.setDisable(true);
-                cbxOnTherapy.setDisable(true);
-                cbxOnTherapy.setSelected(false);
                 btnSearch.setDisable(true);
                 tfDiagnosisID.setDisable(true);
                 tfDiagnosisID.clear();
@@ -679,13 +730,11 @@ public class DiagnosisController {
                 dpDateLow.getEditor().clear();
                 dtDateGreat.setDisable(true);
                 dtDateGreat.getEditor().clear();
-                cbxOnTherapy.setDisable(true);
-                cbxOnTherapy.setSelected(true);
                 tfMentalDisease.setDisable(true);
                 tfDiagnosisID.setDisable(true);
                 tfDiagnosisID.clear();
 
-                btnSearch.setDisable(false);
+                btnSearch.setDisable(true);
 
                 break;
             case "Find all diagnosis by patient id":
@@ -699,13 +748,10 @@ public class DiagnosisController {
                 dpDateLow.getEditor().clear();
                 dtDateGreat.setDisable(true);
                 dtDateGreat.getEditor().clear();
-                cbxOnTherapy.setDisable(true);
-                cbxOnTherapy.setSelected(false);
                 tfMentalDisease.setDisable(true);
                 tfDiagnosisID.setDisable(true);
                 tfDiagnosisID.clear();
-
-                btnSearch.setDisable(false);
+                btnSearch.setDisable(true);
 
                 break;
             case "Find all diagnosis":
@@ -715,9 +761,6 @@ public class DiagnosisController {
                 dpDateLow.getEditor().clear();
                 dtDateGreat.setDisable(true);
                 dtDateGreat.getEditor().clear();
-                cbxOnTherapy.setDisable(true);
-                cbxOnTherapy.setSelected(false);
-
                 btnSearch.setDisable(false);
                 tfDiagnosisID.setDisable(true);
                 tfDiagnosisID.clear();
@@ -730,6 +773,7 @@ public class DiagnosisController {
 
     /**
      * handle the search button
+     *
      * @param event on click
      */
     @FXML
@@ -750,9 +794,11 @@ public class DiagnosisController {
                 break;
         }
     }
+
     /**
      * handle the print button
-     * @param event on click 
+     *
+     * @param event on click
      */
     @FXML
     private void handlePrintButtonAction(ActionEvent event) {
@@ -778,19 +824,23 @@ public class DiagnosisController {
         }
 
     }
-/**
- * handle the date pickers on change, if the "to" datapicker date is before the "From" it will disable the search button
- * @param observable observable
- * @param oldValue oldValue
- * @param newValue newValue 
- */
+
+    /**
+     * handle the date pickers on change, if the "to" datapicker date is before
+     * the "From" it will disable the search button
+     *
+     * @param observable observable
+     * @param oldValue oldValue
+     * @param newValue newValue
+     */
     public void handleDatePickerChange(ObservableValue observable,
             LocalDate oldValue,
             LocalDate newValue) {
         switch (comboboxSearchBy.getSelectionModel().getSelectedItem().toString()) {
             case "Find diagnosis between dates and patient id":
-                if (dpDateLow.getValue() == null || dtDateGreat.getValue() == null || dpDateLow.getValue().isAfter(dtDateGreat.getValue()) || tfPatientDNI.getText().isEmpty()) {
+                if (dpDateLow.getValue() == null || dtDateGreat.getValue() == null || dpDateLow.getValue().isAfter(dtDateGreat.getValue()) || tfPatientDNI.getText().isEmpty() ||  tfPatientDNI.getText().length() < 9 ) {
                     btnSearch.setDisable(true);
+
                 } else {
                     btnSearch.setDisable(false);
                 }
@@ -798,13 +848,41 @@ public class DiagnosisController {
         }
 
     }
-    
+
+    /**
+     * handle the text field on change, the dni needs to be validated in order
+     * to abilitate the search button
+     *
+     * @param observable observable
+     * @param oldValue old value
+     * @param newValue new value
+     */
+    private void handleFieldsTextChange(ObservableValue observable,
+            String oldValue,
+            String newValue) {
+        
+         if (tfPatientDNI.getText().length() > 9) {
+                    tfPatientDNI.setText(tfPatientDNI.getText().substring(0, 9));
+                }
+        switch (comboboxSearchBy.getSelectionModel().getSelectedItem().toString()) {
+            case "Find all diagnosis by patient id":
+                if (tfPatientDNI.getText() == null || tfPatientDNI.getText().length() < 9) {
+                    btnSearch.setDisable(true);
+                } else {
+                    btnSearch.setDisable(false);
+                }
+                break;
+        }
+    }
+
     /**
      * handle the Menu diagnosis
+     *
      * @param event onlcick
      */
     @FXML
-    public void handleOpenDiagnosis(ActionEvent event) {
+    public void handleOpenDiagnosis(ActionEvent event
+    ) {
         Stage stage = new Stage();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/viewDiagnosis/Diagnosis.fxml"));
@@ -823,12 +901,15 @@ public class DiagnosisController {
         controller.initialize(root);
 
     }
+
     /**
      * handle the Daily note menu
+     *
      * @param event onclick
      */
     @FXML
-    private void handleOpenDailyNote(ActionEvent event) {
+    private void handleOpenDailyNote(ActionEvent event
+    ) {
         if (user.getDni().equals("35140444d")) {
             Stage stage = new Stage();
 
@@ -849,12 +930,15 @@ public class DiagnosisController {
             new Alert(Alert.AlertType.ERROR, "Psychologist window not implemented yet", ButtonType.OK).showAndWait();
         }
     }
+
     /**
      * Handle the exit app Menu
+     *
      * @param event onclick
      */
     @FXML
-    private void exitapp(ActionEvent event) {
+    private void exitapp(ActionEvent event
+    ) {
 
         ButtonType chooseExit = new ButtonType("Exit", ButtonBar.ButtonData.CANCEL_CLOSE);
         Alert alert = new Alert(Alert.AlertType.NONE, "Do you want to log out or exit the application?", chooseExit);
@@ -868,12 +952,15 @@ public class DiagnosisController {
         }
 
     }
-/**
- * handle the menu help menu
- * @param event onclick
- */
+
+    /**
+     * handle the menu help menu
+     *
+     * @param event onclick
+     */
     @FXML
-    private void menuHelp(ActionEvent event) {
+    private void menuHelp(ActionEvent event
+    ) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/viewDiagnosis/DiagnosisHelp.fxml"));
             Parent root = (Parent) loader.load();
@@ -887,24 +974,30 @@ public class DiagnosisController {
             ex.printStackTrace();
         }
     }
+
     /**
      * show a info alert
+     *
      * @param infoMsg the msg to show
      */
     private void showInfoAlert(String infoMsg) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, infoMsg, ButtonType.OK);
         alert.showAndWait();
     }
+
     /**
      * show a error alert
+     *
      * @param errormsg the msg to show
      */
     private void showErrorAlert(String errormsg) {
         Alert alert = new Alert(Alert.AlertType.ERROR, errormsg, ButtonType.OK);
         alert.showAndWait();
     }
+
     /**
      * init the user with the one logged in
+     *
      * @param inituser the user
      */
     public void initData(User inituser) {
