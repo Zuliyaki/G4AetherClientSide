@@ -596,8 +596,6 @@ public class DiagnosisController {
             final Diagnosis selectedDiagnosis = (Diagnosis) newValue;
             tfDiagnosisID.setText(selectedDiagnosis.getDiagnosisId().toString());
 
-            treatments = loadAllTreaments(selectedDiagnosis);
-
             if (selectedDiagnosis.getMentalDisease() != null) {
                 txtMentalDisease.setVisible(true);
                 tfMentalDisease.setVisible(true);

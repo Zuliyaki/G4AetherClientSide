@@ -50,7 +50,7 @@ public class DiagnosisRestful implements DiagnosisInterface {
     @Override
     public void createDiagnosis_XML(Object requestEntity) throws CreateException {
         try {
-            webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+            webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML),Diagnosis.class);
 
         } catch (Exception e) {
             throw new CreateException("error creating diagnosis");
@@ -64,7 +64,7 @@ public class DiagnosisRestful implements DiagnosisInterface {
     @Override
     public void createDiagnosis_JSON(Object requestEntity) throws CreateException {
         try {
-            webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
+            webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON),Diagnosis.class);
 
         } catch (Exception e) {
             throw new CreateException("error creating diagnosis");
@@ -154,10 +154,10 @@ public class DiagnosisRestful implements DiagnosisInterface {
     @Override
     public void updateDiagnosis_XML(Object requestEntity) throws UpdateException {
         try {
-            webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+            webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML),Diagnosis.class);
 
         } catch (Exception e) {
-            throw new UpdateException("cannot update the diagnosis");
+            throw new UpdateException(e.getMessage());
         }
 
     }
@@ -169,7 +169,7 @@ public class DiagnosisRestful implements DiagnosisInterface {
     @Override
     public void updateDiagnosis_JSON(Object requestEntity) throws UpdateException {
         try {
-            webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
+            webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON),Diagnosis.class);
 
         } catch (Exception e) {
             throw new UpdateException("cannot update the diagnosis");
@@ -259,9 +259,9 @@ public class DiagnosisRestful implements DiagnosisInterface {
     @Override
     public void deleteDiagnosis(String id) throws DeleteException {
         try {
-            webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
+            webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete(Diagnosis.class);
         } catch (Exception e) {
-            throw new DeleteException("cannot delete diagnosis");
+            throw new DeleteException( e.getMessage() + "cannot delete diagnosis");
         }
 
     }
