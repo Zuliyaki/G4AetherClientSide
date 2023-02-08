@@ -6,6 +6,7 @@
 package restful;
 
 import exceptions.*;
+import entities.DailyNote;
 import interfaces.DailyNotesInterface;
 import java.util.ResourceBundle;
 import javax.ws.rs.client.Client;
@@ -37,14 +38,13 @@ public class DailyNoteRestful implements DailyNotesInterface {
         webTarget = client.target(BASE_URI).path("entities.dailynote");
     }
 
-  
     public <T> T findPatientNotesBetweenDayScores_XML(GenericType<T> responseType, String patientId, Double dayScoreLow, Double dayScoreGreat) throws DailyNoteNotFoundException {
         try {
             WebTarget resource = webTarget;
             resource = resource.path(java.text.MessageFormat.format("findBetweenScores/{0}/{1}/{2}", new Object[]{patientId, dayScoreLow, dayScoreGreat}));
             return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
         } catch (Exception e) {
-            throw new DailyNoteNotFoundException("Daily Notes not found");
+            throw new DailyNoteNotFoundException(e.getMessage() + "\nDaily Notes not found. Try again later");
         }
     }
 
@@ -54,7 +54,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
             resource = resource.path(java.text.MessageFormat.format("findBetweenScores/{0}/{1}/{2}", new Object[]{patientId, dayScoreLow, dayScoreGreat}));
             return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
         } catch (Exception e) {
-            throw new DailyNoteNotFoundException("Daily Notes not found");
+            throw new DailyNoteNotFoundException(e.getMessage() + "\nDaily Notes not found. Try again later");
         }
     }
 
@@ -63,7 +63,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
             WebTarget resource = webTarget;
             return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
         } catch (Exception e) {
-            throw new DailyNoteNotFoundException("Daily Notes not found");
+            throw new DailyNoteNotFoundException(e.getMessage() + "\nDaily Notes not found. Try again later");
         }
     }
 
@@ -72,15 +72,15 @@ public class DailyNoteRestful implements DailyNotesInterface {
             WebTarget resource = webTarget;
             return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
         } catch (Exception e) {
-            throw new DailyNoteNotFoundException("Daily Notes not found");
+            throw new DailyNoteNotFoundException(e.getMessage() + "\nDaily Notes not found. Try again later");
         }
     }
 
     public void edit_XML(Object requestEntity) throws UpdateException {
         try {
-            webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+            webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), DailyNote.class);
         } catch (Exception e) {
-            throw new UpdateException("Error modifying the daily note");
+            throw new UpdateException(e.getMessage() + "\nError modifying the daily note. Try again later");
         }
     }
 
@@ -88,7 +88,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
         try {
             webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).put(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
         } catch (Exception e) {
-            throw new UpdateException("Error modifying the daily note");
+            throw new UpdateException(e.getMessage() + "\nError modifying the daily note. Try again later");
         }
     }
 
@@ -98,7 +98,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
             resource = resource.path(java.text.MessageFormat.format("findEditedNotes/{0}", new Object[]{patientId}));
             return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
         } catch (Exception e) {
-            throw new DailyNoteNotFoundException("Daily Notes not found");
+            throw new DailyNoteNotFoundException(e.getMessage() + "\nDaily Notes not found. Try again later");
         }
     }
 
@@ -108,7 +108,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
             resource = resource.path(java.text.MessageFormat.format("findEditedNotes/{0}", new Object[]{patientId}));
             return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
         } catch (Exception e) {
-            throw new DailyNoteNotFoundException("Daily Notes not found");
+            throw new DailyNoteNotFoundException(e.getMessage() + "\nDaily Notes not found. Try again later");
         }
     }
 
@@ -118,7 +118,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
             resource = resource.path(java.text.MessageFormat.format("findNotReadableNotes/{0}", new Object[]{patientId}));
             return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
         } catch (Exception e) {
-            throw new DailyNoteNotFoundException("Daily Notes not found");
+            throw new DailyNoteNotFoundException(e.getMessage() + "\nDaily Notes not found. Try again later");
         }
     }
 
@@ -128,7 +128,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
             resource = resource.path(java.text.MessageFormat.format("findNotReadableNotes/{0}", new Object[]{patientId}));
             return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
         } catch (Exception e) {
-            throw new DailyNoteNotFoundException("Daily Notes not found");
+            throw new DailyNoteNotFoundException(e.getMessage() + "\nDaily Notes not found. Try again later");
         }
     }
 
@@ -138,7 +138,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
             resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
             return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
         } catch (Exception e) {
-            throw new DailyNoteNotFoundException("Daily Notes not found");
+            throw new DailyNoteNotFoundException(e.getMessage() + "\nDaily Notes not found. Try again later");
         }
     }
 
@@ -148,15 +148,15 @@ public class DailyNoteRestful implements DailyNotesInterface {
             resource = resource.path(java.text.MessageFormat.format("{0}", new Object[]{id}));
             return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
         } catch (Exception e) {
-            throw new DailyNoteNotFoundException("Daily Notes not found");
+            throw new DailyNoteNotFoundException(e.getMessage() + "\nDaily Notes not found. Try again later");
         }
     }
 
     public void create_XML(Object requestEntity) throws CreateException {
         try {
-            webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
+            webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML), DailyNote.class);
         } catch (Exception e) {
-            throw new CreateException("Error creating the daily note");
+            throw new CreateException(e.getMessage() + "\nError creating the daily note. Try again later");
         }
     }
 
@@ -164,7 +164,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
         try {
             webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_JSON));
         } catch (Exception e) {
-            throw new CreateException("Error creating the daily note");
+            throw new CreateException(e.getMessage() + "\nError creating the daily note. Try again later");
         }
     }
 
@@ -174,7 +174,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
             resource = resource.path(java.text.MessageFormat.format("findBetweenDates/{0}/{1}/{2}", new Object[]{patientId, dateLow, dateGreat}));
             return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
         } catch (Exception e) {
-            throw new DailyNoteNotFoundException("Daily Notes not found");
+            throw new DailyNoteNotFoundException(e.getMessage() + "\nDaily Notes not found. Try again later");
         }
     }
 
@@ -184,7 +184,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
             resource = resource.path(java.text.MessageFormat.format("findBetweenDates/{0}/{1}/{2}", new Object[]{patientId, dateLow, dateGreat}));
             return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
         } catch (Exception e) {
-            throw new DailyNoteNotFoundException("Daily Notes not found");
+            throw new DailyNoteNotFoundException(e.getMessage() + "\nDaily Notes not found. Try again later");
         }
     }
 
@@ -194,7 +194,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
             resource = resource.path(java.text.MessageFormat.format("findByDate/{0}/{1}", new Object[]{patientId, date}));
             return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
         } catch (Exception e) {
-            throw new DailyNoteNotFoundException("Daily Notes not found");
+            throw new DailyNoteNotFoundException(e.getMessage() + "\nDaily Notes not found. Try again later");
         }
     }
 
@@ -204,15 +204,15 @@ public class DailyNoteRestful implements DailyNotesInterface {
             resource = resource.path(java.text.MessageFormat.format("findByDate/{0}/{1}", new Object[]{patientId, date}));
             return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
         } catch (Exception e) {
-            throw new DailyNoteNotFoundException("Daily Notes not found");
+            throw new DailyNoteNotFoundException(e.getMessage() + "\nDaily Notes not found. Try again later");
         }
     }
 
     public void remove(String id) throws DeleteException {
         try {
-            webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete();
+            webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete(DailyNote.class);
         } catch (Exception e) {
-            throw new DeleteException("Error removing the daily note");
+            throw new DeleteException(e.getMessage() + "\nError deleting the daily note. Try again later.");
         }
     }
 
@@ -223,7 +223,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
             resource = resource.path(java.text.MessageFormat.format("findByPatient/{0}", new Object[]{patientId}));
             return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
         } catch (Exception e) {
-            throw new DailyNoteNotFoundException("Daily Notes not found");
+            throw new DailyNoteNotFoundException(e.getMessage() + "\nDaily Notes not found. Try again later");
         }
     }
 
@@ -233,7 +233,7 @@ public class DailyNoteRestful implements DailyNotesInterface {
             resource = resource.path(java.text.MessageFormat.format("findByPatient/{0}", new Object[]{patientId}));
             return resource.request(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
         } catch (Exception e) {
-            throw new DailyNoteNotFoundException("Daily Notes not found");
+            throw new DailyNoteNotFoundException(e.getMessage() + "\nDaily Notes not found. Try again later");
         }
     }
 

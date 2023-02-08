@@ -6,9 +6,9 @@
 package restful;
 
 import exceptions.UserException;
+import exceptions.ClientErrorException;
 import interfaces.PatientInterface;
 import java.util.ResourceBundle;
-import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
@@ -47,9 +47,7 @@ public class PatientRestful implements PatientInterface {
     }
 
     public void createPatient_XML(Object requestEntity) throws ClientErrorException {
-
         webTarget.request(javax.ws.rs.core.MediaType.APPLICATION_XML).post(javax.ws.rs.client.Entity.entity(requestEntity, javax.ws.rs.core.MediaType.APPLICATION_XML));
-
     }
 
     public void createPatient_JSON(Object requestEntity) throws ClientErrorException {
@@ -57,8 +55,12 @@ public class PatientRestful implements PatientInterface {
     }
 
     public <T> T findAllPatients_XML(GenericType<T> responseType) throws ClientErrorException {
-        WebTarget resource = webTarget;
-        return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        try {
+            WebTarget resource = webTarget;
+            return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
+        } catch (Exception e) {
+            throw new ClientErrorException(e.getMessage() + "\nPatients not found. Try again later");
+        }
     }
 
     public <T> T findAllPatients_JSON(Class<T> responseType) throws ClientErrorException {
@@ -76,7 +78,7 @@ public class PatientRestful implements PatientInterface {
             resource = resource.path(java.text.MessageFormat.format("findPatientsByPsychologist/{0}", new Object[]{dniPsychologist}));
             return resource.request(javax.ws.rs.core.MediaType.APPLICATION_XML).get(responseType);
         } catch (Exception e) {
-            throw new UserException("patients not found");
+            throw new UserException(e.getMessage() + "\nPatients not found. Try again later");
         }
 
     }

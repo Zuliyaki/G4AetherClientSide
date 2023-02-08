@@ -9,6 +9,23 @@ package exceptions;
  *
  * @author 2dam
  */
-public class ClientErrorException {
-    
+public class ClientErrorException extends Exception {
+
+    /**
+     * Creates a new instance of <code>ClientErrorException</code> without detail
+     * message.
+     */
+    public ClientErrorException() {
+    }
+
+    /**
+     * Constructs an instance of <code>ClientErrorException</code> with the
+     * specified detail message.
+     *
+     * @param msg the detail message.
+     */
+    public ClientErrorException(String msg) {
+        super(msg);
+    }
+
 }

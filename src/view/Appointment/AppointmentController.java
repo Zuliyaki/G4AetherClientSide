@@ -789,8 +789,13 @@ public class AppointmentController {
 
             Patient patient = new Patient();
 
-            List<Patient> allPatients = patientInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
-            });
+            List<Patient> allPatients = null;
+            try {
+                allPatients = patientInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
+                });
+            } catch (exceptions.ClientErrorException ex) {
+                Logger.getLogger(AppointmentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             allPatients.stream().filter((patientFromAll) -> (patientFromAll.getDni().equals(patienttf.getText()))).forEachOrdered((patientFromAll) -> {
                 appointmentCreate.setPatient(patientFromAll);
             });
@@ -880,8 +885,13 @@ public class AppointmentController {
 
             Patient patient = new Patient();
 
-            List<Patient> allPatients = patientInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
-            });
+            List<Patient> allPatients = null;
+            try {
+                allPatients = patientInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
+                });
+            } catch (exceptions.ClientErrorException ex) {
+                Logger.getLogger(AppointmentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             for (Patient patientFromAll : allPatients) {
 
