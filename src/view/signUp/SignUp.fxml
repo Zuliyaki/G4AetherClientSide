@@ -28,21 +28,9 @@
                 <PasswordField fx:id="pfRepeatPassword" layoutX="59.0" layoutY="300.0" prefHeight="30.0" prefWidth="300.0" promptText="Repeat Password" />
             <TextField fx:id="tfPhoneNumber" layoutX="59.0" layoutY="345.0" prefHeight="30.0" prefWidth="300.0" promptText="Phone number" />
             <TextField fx:id="tfInvitationCode" layoutX="59.0" layoutY="390.0" prefHeight="30.0" prefWidth="300.0" promptText="Invitation code (DNI of psychologist)" />
-                <Text layoutX="113.0" layoutY="530.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Already have an account?">
-                    <font>
-                        <Font name="Lucida Sans Regular" size="12.0" />
-                    </font>
-                </Text>
-                <Text layoutX="295.0" layoutY="531.0" strokeType="OUTSIDE" strokeWidth="0.0" text="here!">
-                    <font>
-                        <Font name="Lucida Sans Regular" size="12.0" />
-                    </font>
-                </Text>
-                <Hyperlink fx:id="hlLogin" layoutX="250.0" layoutY="515.0" prefHeight="23.0" prefWidth="52.0" text="Log in" textFill="#6883b0">
-                    <font>
-                        <Font name="Lucida Sans Regular" size="12.0" />
-                    </font>
-                </Hyperlink>
+                <Text layoutX="113.0" layoutY="530.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Already have an account?" />
+                <Text layoutX="295.0" layoutY="530.0" strokeType="OUTSIDE" strokeWidth="0.0" text="here!" />
+                <Hyperlink fx:id="hlLogin" layoutX="250.0" layoutY="514.0" prefHeight="23.0" prefWidth="52.0" text="Log in" textFill="#6883b0" />
                 <Button fx:id="btnContinue" layoutX="179.0" layoutY="546.0" mnemonicParsing="false" style="-fx-background-color: #94BCB6;" text="Continue">
                     <font>
                         <Font name="Lucida Sans Regular" size="14.0" />

@@ -150,7 +150,7 @@ public class DailyNoteWindowController {
      * @param root The Parent object representing root node of view graph.
      */
     public void initialize(Parent root) {
-        
+
         Scene scene = new Scene(root);
         //Not a resizable window.
         stage.setResizable(false);
@@ -162,7 +162,7 @@ public class DailyNoteWindowController {
         stage.getIcons().add(new Image("resources/icon.png"));
         //init values
         List<Patient> patients;
-        
+
         try {
             patients = pInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
             });
@@ -175,7 +175,7 @@ public class DailyNoteWindowController {
             Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE,
                     null, ex);
         }
-        
+
         tfPatientDni.setText(user.getDni());
         this.tfPatientDni.setDisable(true);
         this.tfPatientDni.setEditable(false);
@@ -196,6 +196,9 @@ public class DailyNoteWindowController {
         btnPrint.setDisable(true);
         txtaNote.setPromptText("Writte a description of your day");
         dailyNoteMenu.setDisable(true);
+        btnAdd.setDisable(false);
+        btnModify.setDisable(true);
+        btnDelete.setDisable(true);
 
         //Valores de las columnas de la tabla
         tb.setEditable(false);
@@ -241,11 +244,13 @@ public class DailyNoteWindowController {
         stage.setScene(scene);
 
         stage.show();
+
+        loadAllPatientDailyNotes();
     }
 
     public void initData(User user) {
         this.user = user;
-        this.user.setDni("35140444d");
+        //this.user.setDni("35140444d");
     }
 
     private void handleFieldsTextChange(ObservableValue observable,
@@ -281,6 +286,8 @@ public class DailyNoteWindowController {
             txtaComment.setEditable(false);
             tfNoteStatus.setDisable(false);
             tfNoteStatus.setEditable(false);
+            btnModify.setDisable(false);
+            btnDelete.setDisable(false);
             if (dailyNote.getNoteComent() == null) {
                 txtaComment.setText("Not comment yet");
                 tfNoteStatus.setText("NOTREADED");
@@ -301,6 +308,8 @@ public class DailyNoteWindowController {
             tfNoteStatus.setText("Note status");
             tfNoteStatus.setDisable(true);
             btnAdd.setDisable(false);
+            btnModify.setDisable(true);
+            btnDelete.setDisable(true);
         }
     }
 
@@ -725,14 +734,14 @@ public class DailyNoteWindowController {
 
     /**
      * Handle Action event on Diagnosis Menu item
-     * 
-     * @param event 
+     *
+     * @param event
      */
     @FXML
     public void handleOpenDiagnosis(ActionEvent event) {
         Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../viewDiagnosis/Diagnosis.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/viewDiagnosis/Diagnosis.fxml"));
         Parent root = null;
         try {
             root = (Parent) loader.load();
@@ -752,14 +761,14 @@ public class DailyNoteWindowController {
 
     /**
      * Handle Action event on DailyNote Menu item
-     * 
-     * @param event 
+     *
+     * @param event
      */
     @FXML
     private void handleOpenDailyNote(ActionEvent event) {
         Stage stage = new Stage();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../dailyNote/DailyNoteWindowPatient.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dailyNote/DailyNoteWindowPatient.fxml"));
         Parent root = null;
         try {
             root = (Parent) loader.load();
@@ -777,8 +786,8 @@ public class DailyNoteWindowController {
 
     /**
      * Handle Action event on exitApp Menu item
-     * 
-     * @param event 
+     *
+     * @param event
      */
     @FXML
     private void exitApp(ActionEvent event) {
@@ -797,8 +806,8 @@ public class DailyNoteWindowController {
 
     /**
      * Handle Action event on HelpMenu Menu item
-     * 
-     * @param event 
+     *
+     * @param event
      */
     @FXML
     private void menuHelp(ActionEvent event) {

@@ -346,17 +346,6 @@ public class SignUpController {
             List<Psychologist> newPsychologists;
             List<Patient> newPatients;
 
-            /**
-             *   newPsychologists = psychologistInterface.findAllPsychologists_XML(new GenericType<List<Psychologist>>() {
-            });
-            for (Psychologist newPsychologist1 : newPsychologists) {
-                if (tfInvitationCode.getText().equals(newPsychologist1.getDni())) {
-                    newPsychologist = newPsychologist1;
-                }
-            }
-             */
-          
-
             newUser.setUser_type("patient");
             newUser.setDni(tfDNI.getText().toLowerCase());
             newUser.setFullName(tfFullName.getText().trim());
@@ -373,12 +362,9 @@ public class SignUpController {
 
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             encodedMessage = cipher.doFinal(pfPassword.getText().getBytes());
-            
-            
-            System.out.println(encodedMessage.toString());
             newUser.setPassword(encodedMessage.toString());
             newUser.setPhoneNumber(Integer.parseInt(tfPhoneNumber.getText()));
-                    
+
             newUser.setPsychologist(newPsychologist);
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
