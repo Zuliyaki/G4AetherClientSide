@@ -89,6 +89,7 @@ import javafx.stage.Modality;
 import javafx.util.Callback;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.GenericType;
+import jdk.nashorn.internal.runtime.PropertyListeners;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -242,6 +243,9 @@ public class DiagnosisController {
         tfDiagnosisID.setDisable(true);
         txtMentalDisease.setVisible(false);
         tfMentalDisease.setVisible(false);
+        diagnosises = loadAllDiagnosises();
+                            addChbxlistener(diagnosises);
+
 
         // LOAD ALL Diagnosises
         //listeners
@@ -257,6 +261,8 @@ public class DiagnosisController {
             comboboxSearchBy.setItems(searchMethods);
             comboboxSearchBy.getSelectionModel().select(0);
             diagnosises = loadAllDiagnosises();
+                                addChbxlistener(diagnosises);
+
         } else {
             String[] a = {"Find all diagnosis by patient id", "Find all diangosis if patient on teraphy", "Find diagnosis between dates and patient id"};
             ObservableList<String> searchMethods = FXCollections.observableArrayList(a);
@@ -265,6 +271,8 @@ public class DiagnosisController {
             tfPatientDNI.setText(user.getDni());
             tfPatientDNI.setDisable(true);
             diagnosises = loadDiagnosisesByPatient();
+            addChbxlistener(diagnosises);
+
         }
 
         //
@@ -351,18 +359,23 @@ public class DiagnosisController {
         tbcOnTherapy.setCellValueFactory(
                 (CellDataFeatures<Diagnosis, Boolean> param) -> param.getValue().onTherapyProperty());
 
-        diagnosises.forEach(
-                diagnosis -> diagnosis.onTherapyProperty().addListener((observable, oldValue, newValue) -> {
-                    try {
-                        LOGGER.info("Trying to update the On Therapy value");
-                        diagnosisInterface.updateDiagnosis_XML(diagnosis);
-                        LOGGER.info("updated the On Therapy value");
+        if (diagnosises == null) {
+            diagnosises = FXCollections.observableArrayList();
+            List<Diagnosis> diags = null;
+            try {
+                diags = diagnosisInterface.findAllDiagnosis_XML(new GenericType<List<Diagnosis>>() {
+                });
+            } catch (DiagnosisNotFoundException ex) {
+                showErrorAlert(ex.getMessage());
+            }
 
-                    } catch (UpdateException ex) {
-                        showErrorAlert(ex.getMessage());
-                    }
-                })
-        );
+            for (int i = 0; i < diags.size(); i++) {
+                diagnosises.add(diagnosises.get(i));
+            }
+        }
+        addChbxlistener(diagnosises);
+
+        tbDiagnosis.setEditable(true);
 
         //////////////
         ////////////////
@@ -429,7 +442,8 @@ public class DiagnosisController {
                 showErrorAlert(ex.getMessage());
             }
             diagnosises = loadAllDiagnosises();
-            // diagnosises = loadAllDiagnosises();
+            addChbxlistener(diagnosises);
+
         });
         //SET THE CONTEXT MENU
         contextMenu.getItems().add(createNewDiagnosisMenuIt);
@@ -464,8 +478,10 @@ public class DiagnosisController {
             });
 
             diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
-            tbDiagnosis.setItems(diagnosisTableInfo);
-            return diagnosisTableInfo;
+            diagnosises = diagnosisTableInfo;
+            tbDiagnosis.setItems(diagnosises);
+            tbDiagnosis.refresh();
+            return diagnosises;
         } catch (DiagnosisNotFoundException ex) {
             showErrorAlert(ex.getMessage());
         }
@@ -492,7 +508,10 @@ public class DiagnosisController {
             allDiangosis = diagnosisInterface.findPatientDiagnosisByDate_XML(new GenericType<List<Diagnosis>>() {
             }, tfPatientDNI.getText(), dateStartString, dateEndString);
             diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
-            tbDiagnosis.setItems(diagnosisTableInfo);
+            diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
+            diagnosises = diagnosisTableInfo;
+            tbDiagnosis.setItems(diagnosises);
+            tbDiagnosis.refresh();
             return diagnosisTableInfo;
 
         } catch (DiagnosisNotFoundException ex) {
@@ -525,7 +544,6 @@ public class DiagnosisController {
             tbTreatment.setVisible(false);
             txtTreatments.setVisible(false);
 
-            tbTreatment.setItems(treatmentTableInfo);
         }
         return treatmentTableInfo;
     }
@@ -550,7 +568,9 @@ public class DiagnosisController {
                 showErrorAlert(ex.getMessage());
             }
             diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
-            tbDiagnosis.setItems(diagnosisTableInfo);
+            diagnosises = diagnosisTableInfo;
+            tbDiagnosis.setItems(diagnosises);
+            tbDiagnosis.refresh();
         }
         return diagnosisTableInfo;
     }
@@ -573,7 +593,9 @@ public class DiagnosisController {
                 allDiangosis = diagnosisInterface.findAllDiagnosisByPatient_XML(new GenericType<List<Diagnosis>>() {
                 }, tfPatientDNI.getText());
                 diagnosisTableInfo = FXCollections.observableArrayList(allDiangosis);
-                tbDiagnosis.setItems(diagnosisTableInfo);
+                diagnosises = diagnosisTableInfo;
+                tbDiagnosis.setItems(diagnosises);
+                tbDiagnosis.refresh();
                 return diagnosisTableInfo;
             } catch (DiagnosisNotFoundException ex) {
                 showErrorAlert(ex.getMessage());
@@ -615,6 +637,7 @@ public class DiagnosisController {
                     LOGGER.info("DELETED");
 
                     diagnosises.remove(selectedDiagnosis);
+                    addChbxlistener(diagnosises);
                 } catch (DeleteException ex) {
                     showErrorAlert(ex.getMessage());
                 }
@@ -647,7 +670,7 @@ public class DiagnosisController {
                     LOGGER.info("created a new diagnosis");
 
                     diagnosises = loadAllDiagnosises();
-                    //  diagnosises = loadAllDiagnosises();
+                    addChbxlistener(diagnosises);
                 } catch (UpdateException ex) {
                     showErrorAlert(ex.getMessage());
                 }
@@ -779,16 +802,26 @@ public class DiagnosisController {
         switch (comboboxSearchBy.getValue().toString()) {
             case "Find diagnosis between dates and patient id":
                 diagnosises = loadDiagnosisesBetweenDates();
-                //loadDailyNoteByDate();
+                tbDiagnosis.setItems(diagnosises);
+                addChbxlistener(diagnosises);
+
                 break;
             case "Find all diagnosis by patient id":
                 diagnosises = loadDiagnosisesByPatient();
+                tbDiagnosis.setItems(diagnosises);
+                addChbxlistener(diagnosises);
+
                 break;
             case "Find all diangosis if patient on teraphy":
                 diagnosises = loadDiagnosisesByPatientOnTherapy();
+                tbDiagnosis.setItems(diagnosises);
+                addChbxlistener(diagnosises);
+
                 break;
             case "Find all diagnosis":
                 diagnosises = loadAllDiagnosises();
+                addChbxlistener(diagnosises);
+
                 break;
         }
     }
@@ -836,7 +869,7 @@ public class DiagnosisController {
             LocalDate newValue) {
         switch (comboboxSearchBy.getSelectionModel().getSelectedItem().toString()) {
             case "Find diagnosis between dates and patient id":
-                if (dpDateLow.getValue() == null || dtDateGreat.getValue() == null || dpDateLow.getValue().isAfter(dtDateGreat.getValue()) || tfPatientDNI.getText().isEmpty() ||  tfPatientDNI.getText().length() < 9 ) {
+                if (dpDateLow.getValue() == null || dtDateGreat.getValue() == null || dpDateLow.getValue().isAfter(dtDateGreat.getValue()) || tfPatientDNI.getText().isEmpty() || tfPatientDNI.getText().length() < 9) {
                     btnSearch.setDisable(true);
 
                 } else {
@@ -858,10 +891,10 @@ public class DiagnosisController {
     private void handleFieldsTextChange(ObservableValue observable,
             String oldValue,
             String newValue) {
-        
-         if (tfPatientDNI.getText().length() > 9) {
-                    tfPatientDNI.setText(tfPatientDNI.getText().substring(0, 9));
-                }
+
+        if (tfPatientDNI.getText().length() > 9) {
+            tfPatientDNI.setText(tfPatientDNI.getText().substring(0, 9));
+        }
         switch (comboboxSearchBy.getSelectionModel().getSelectedItem().toString()) {
             case "Find all diagnosis by patient id":
                 if (tfPatientDNI.getText() == null || tfPatientDNI.getText().length() < 9) {
@@ -870,6 +903,14 @@ public class DiagnosisController {
                     btnSearch.setDisable(false);
                 }
                 break;
+            case "Find all diangosis if patient on teraphy":
+                 if (tfPatientDNI.getText() == null || tfPatientDNI.getText().length() < 9) {
+                    btnSearch.setDisable(true);
+                } else {
+                    btnSearch.setDisable(false);
+                }
+                break;
+                
         }
     }
 
@@ -1006,6 +1047,21 @@ public class DiagnosisController {
             user = inituser;
         }
 
+    }
+
+    private void addChbxlistener(ObservableList<Diagnosis> diagnosises) {
+        diagnosises.forEach(
+                diagnosis -> diagnosis.onTherapyProperty().addListener((observable, oldValue, newValue) -> {
+                    try {
+                        LOGGER.info("Trying to update the On Therapy value");
+                        diagnosisInterface.updateDiagnosis_XML(diagnosis);
+                        LOGGER.info("updated the On Therapy value");
+
+                    } catch (UpdateException ex) {
+                        showErrorAlert(ex.getMessage());
+                    }
+                })
+        );
     }
 
 }
