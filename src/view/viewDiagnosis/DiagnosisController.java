@@ -244,14 +244,13 @@ public class DiagnosisController {
         txtMentalDisease.setVisible(false);
         tfMentalDisease.setVisible(false);
         diagnosises = loadAllDiagnosises();
-                            addChbxlistener(diagnosises);
-
+        addChbxlistener(diagnosises);
 
         // LOAD ALL Diagnosises
         //listeners
         comboboxSearchBy.valueProperty().addListener(this::handleComboboxChange);
-        dpDateLow.valueProperty().addListener(this::handleDatePickerChange);
-        dtDateGreat.valueProperty().addListener(this::handleDatePickerChange);
+        dpDateLow.valueProperty().addListener(this::handleDatePickerChangeLow);
+        dtDateGreat.valueProperty().addListener(this::handleDatePickerChangeGreat);
         tfPatientDNI.textProperty().addListener(this::handleFieldsTextChange);
 
         // FILTRADO
@@ -261,7 +260,7 @@ public class DiagnosisController {
             comboboxSearchBy.setItems(searchMethods);
             comboboxSearchBy.getSelectionModel().select(0);
             diagnosises = loadAllDiagnosises();
-                                addChbxlistener(diagnosises);
+            addChbxlistener(diagnosises);
 
         } else {
             String[] a = {"Find all diagnosis by patient id", "Find all diangosis if patient on teraphy", "Find diagnosis between dates and patient id"};
@@ -864,20 +863,37 @@ public class DiagnosisController {
      * @param oldValue oldValue
      * @param newValue newValue
      */
-    public void handleDatePickerChange(ObservableValue observable,
+    public void handleDatePickerChangeLow(ObservableValue observable,
             LocalDate oldValue,
             LocalDate newValue) {
         switch (comboboxSearchBy.getSelectionModel().getSelectedItem().toString()) {
             case "Find diagnosis between dates and patient id":
                 if (dpDateLow.getValue() == null || dtDateGreat.getValue() == null || dpDateLow.getValue().isAfter(dtDateGreat.getValue()) || tfPatientDNI.getText().isEmpty() || tfPatientDNI.getText().length() < 9) {
                     btnSearch.setDisable(true);
+                    if (dtDateGreat.getValue() != null) {
+                        showInfoAlert("The ending date cannot be before the starting date");
+                    }
+                    break;
+                } else {
+                    btnSearch.setDisable(false);
+                }
 
+        }
+    }
+
+    public void handleDatePickerChangeGreat(ObservableValue observable,
+            LocalDate oldValue,
+            LocalDate newValue) {
+        switch (comboboxSearchBy.getSelectionModel().getSelectedItem().toString()) {
+            case "Find diagnosis between dates and patient id":
+                if (dpDateLow.getValue() == null || dtDateGreat.getValue() == null || dpDateLow.getValue().isAfter(dtDateGreat.getValue()) || tfPatientDNI.getText().isEmpty() || tfPatientDNI.getText().length() < 9) {
+                    btnSearch.setDisable(true);
+                    showInfoAlert("The ending date cannot be before the starting date");
                 } else {
                     btnSearch.setDisable(false);
                 }
                 break;
         }
-
     }
 
     /**
@@ -904,13 +920,13 @@ public class DiagnosisController {
                 }
                 break;
             case "Find all diangosis if patient on teraphy":
-                 if (tfPatientDNI.getText() == null || tfPatientDNI.getText().length() < 9) {
+                if (tfPatientDNI.getText() == null || tfPatientDNI.getText().length() < 9) {
                     btnSearch.setDisable(true);
                 } else {
                     btnSearch.setDisable(false);
                 }
                 break;
-                
+
         }
     }
 
