@@ -636,7 +636,9 @@ public class DiagnosisController {
                     LOGGER.info("DELETED");
 
                     diagnosises.remove(selectedDiagnosis);
+
                     addChbxlistener(diagnosises);
+
                 } catch (DeleteException ex) {
                     showErrorAlert(ex.getMessage());
                 }
@@ -1080,6 +1082,9 @@ public class DiagnosisController {
 
     }
 
+
+
+
     private void addChbxlistener(ObservableList<Diagnosis> diagnosises) {
         diagnosises.forEach(
                 diagnosis -> diagnosis.onTherapyProperty().addListener((observable, oldValue, newValue) -> {
@@ -1096,3 +1101,4 @@ public class DiagnosisController {
     }
 
 }
+
