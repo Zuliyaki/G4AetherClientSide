@@ -888,6 +888,7 @@ public class DiagnosisController {
             case "Find diagnosis between dates and patient id":
                 if (dpDateLow.getValue() == null || dtDateGreat.getValue() == null || dpDateLow.getValue().isAfter(dtDateGreat.getValue()) || tfPatientDNI.getText().isEmpty() || tfPatientDNI.getText().length() < 9) {
                     btnSearch.setDisable(true);
+                    if(dtDateGreat.getValue() != null)
                     showInfoAlert("The ending date cannot be before the starting date");
                 } else {
                     btnSearch.setDisable(false);
@@ -907,26 +908,38 @@ public class DiagnosisController {
     private void handleFieldsTextChange(ObservableValue observable,
             String oldValue,
             String newValue) {
-
+        String dni = tfPatientDNI.getText();
         if (tfPatientDNI.getText().length() > 9) {
             tfPatientDNI.setText(tfPatientDNI.getText().substring(0, 9));
         }
         switch (comboboxSearchBy.getSelectionModel().getSelectedItem().toString()) {
             case "Find all diagnosis by patient id":
-                if (tfPatientDNI.getText() == null || tfPatientDNI.getText().length() < 9) {
+
+                if (dni.length() != 9 || Character.isLetter(dni.charAt(8)) == false) {
                     btnSearch.setDisable(true);
                 } else {
                     btnSearch.setDisable(false);
                 }
+
                 break;
             case "Find all diangosis if patient on teraphy":
-                if (tfPatientDNI.getText() == null || tfPatientDNI.getText().length() < 9) {
+
+                if (dni.length() != 9 || Character.isLetter(dni.charAt(8)) == false) {
                     btnSearch.setDisable(true);
                 } else {
                     btnSearch.setDisable(false);
                 }
-                break;
 
+                break;
+            case "Find diagnosis between dates and patient id":
+
+                if (dni.length() != 9 || Character.isLetter(dni.charAt(8)) == false || dpDateLow.getValue() == null || dtDateGreat.getValue() == null) {
+                    btnSearch.setDisable(true);
+                } else {
+                    btnSearch.setDisable(false);
+                }
+
+                break;
         }
     }
 
