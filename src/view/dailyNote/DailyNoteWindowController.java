@@ -56,6 +56,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -100,13 +101,13 @@ public class DailyNoteWindowController {
     @FXML
     private TextField tfNoteStatus;
     @FXML
+    private TextField tfDayScore;
+    @FXML
     private DatePicker dpNoteDate;
     @FXML
     private DatePicker dpStart;
     @FXML
     private DatePicker dpEnd;
-    @FXML
-    private Spinner spinnerDayScore;
     @FXML
     private Spinner spinnerScoreBottom;
     @FXML
@@ -179,7 +180,6 @@ public class DailyNoteWindowController {
         tfPatientDni.setText(user.getDni());
         this.tfPatientDni.setDisable(true);
         this.tfPatientDni.setEditable(false);
-        spinnerDayScore.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 10, 5, 0.1));
         spinnerScoreBottom.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 10, 5, 0.1));
         spinnerScoreTop.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 10, 5, 0.1));
 
@@ -238,8 +238,8 @@ public class DailyNoteWindowController {
         this.dpStart.valueProperty().addListener(this::handleDatePickerChange);
         this.dpEnd.valueProperty().addListener(this::handleDatePickerChange);
         this.txtaNote.textProperty().addListener(this::handleFieldsTextChange);
+        this.tfDayScore.textProperty().addListener(this::handleFieldsTextChange);
         this.tb.getSelectionModel().selectedItemProperty().addListener(this::handleTableSelectionChanged);
-        this.spinnerDayScore.focusedProperty().addListener(this::handleSpinnerFocusLost);
         MenuItem miDelete = this.tableContextMenu.getItems().get(0);
         miDelete.setOnAction((ActionEvent e) -> {
             this.handleDeleteButtonAction(e);
@@ -261,45 +261,6 @@ public class DailyNoteWindowController {
     }
 
     /**
-     * Focus lost event handler. It validates that the spinner content is
-     * filled.
-     *
-     * @param observable The value being observed.
-     * @param oldValue The old value of the observable.
-     * @param newValue The new value of the observable.
-     */
-    private void handleSpinnerFocusLost(ObservableValue observable,
-            Object oldValue,
-            Object newValue) {
-        if (newValue.equals(false)) {
-            //NO SE PONE EL VALOR NO ENTIENDO PORQUEEEEEEEEEEEEEEEEEE
-            System.out.println(spinnerDayScore.getValue());
-            spinnerDayScore.getValueFactory().setValue(Double.parseDouble(spinnerDayScore.getValue().toString()));
-        }
-        //NOT WORKING
-        /*
-        try {
-            if (spinnerDayScore.getValue() == null) {
-                System.out.println("NULL");
-            } else {
-                System.out.println("NONULL");
-            }
-        } catch (Exception e) {
-            showInfoAlert("The day score field can not be empty");
-        }
-        try {
-            if (spinnerDayScore.getEditor().getText() == null) {
-                System.out.println("NULL");
-            } else {
-                System.out.println("NONULL");
-            }
-        } catch (Exception e) {
-            showInfoAlert("The day score field can not be empty");
-        }
-         */
-    }
-
-    /**
      * Text changed event handler. It validates that text area content is
      * filled.
      *
@@ -316,6 +277,10 @@ public class DailyNoteWindowController {
         } else {
             btnAdd.setDisable(false);
             btnModify.setDisable(false);
+        }
+
+        if (tfDayScore.getText().length() > 3) {
+            tfDayScore.setText(tfDayScore.getText().substring(0, 3));
         }
     }
 
@@ -341,7 +306,7 @@ public class DailyNoteWindowController {
             }
             dpNoteDate.setValue(dailyNote.getNoteDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
             ckbxReadable.setSelected(dailyNote.getNoteReadable());
-            spinnerDayScore.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 10, dailyNote.getDayScore(), 0.1));
+            tfDayScore.setText(dailyNote.getDayScore().toString());
             txtaNote.setText(dailyNote.getNoteText());
             txtaComment.setDisable(false);
             txtaComment.setEditable(false);
@@ -362,7 +327,7 @@ public class DailyNoteWindowController {
             //Habilitar la fecha para poder elegir el día de la nota tanto al crear como al modificar.
             //dpNoteDate.setDisable(false);
             ckbxReadable.setSelected(false);
-            spinnerDayScore.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 10, 5, 0.1));
+            tfDayScore.setText("5");
             txtaNote.setText("");
             txtaNote.setPromptText("Writte a description of your day");
             txtaComment.setText("Comment of psychologist");
@@ -701,32 +666,45 @@ public class DailyNoteWindowController {
                     throw new Exception("Already exists a note on that date");
                 }
             }
-            newDailyNote.setNoteDate(date);
-            if (tfNoteStatus.getText().equals("NOTREADED")) {
+            if (date.before(new Date())) {
+                newDailyNote.setNoteDate(date);
+            } else {
+                throw new Exception("The note date can not be after today's date");
+            }
+            if (tfNoteStatus.getText().isEmpty()) {
                 newDailyNote.setNoteStatus(EnumReadedStatus.NOTREADED);
             } else {
                 newDailyNote.setNoteStatus(EnumReadedStatus.READED);
             }
-            newDailyNote.setDayScore(Double.parseDouble(spinnerDayScore.getValue().toString()));
-            //Validar el contenido del dayScore y que el texto de la nota esté informado.
+            //Validar el contenido del dayScore y que el texto de la nota esté informado
+            if (!tfDayScore.getText().isEmpty()) {
+                String stringDayScore;
+                if (tfDayScore.getText().contains(",")) {
+                    stringDayScore = tfDayScore.getText().replace(",", ".");
+                } else {
+                    stringDayScore = tfDayScore.getText();
+                }
+                Double doubleDayScore = new Double(stringDayScore.trim());
+                if (doubleDayScore < 0 || doubleDayScore > 10) {
+                    throw new NullPointerException("The day score must be a number between 0 and 10.\nExample: 6.5");
+                } else {
+                    newDailyNote.setDayScore(doubleDayScore);
+                }
+            } else {
+                throw new Exception("The day score can not be empty");
+            }
             if (!txtaNote.getText().isEmpty()) {
                 newDailyNote.setNoteText(txtaNote.getText().trim());
             } else {
                 throw new Exception("The note content can not be empty");
             }
+
             if (ckbxReadable.isSelected()) {
                 newDailyNote.setNoteReadable(true);
             } else {
                 newDailyNote.setNoteReadable(false);
             }
-            //Aqui sale por el error de no encontrar paciente
-            List<Patient> allPatients = pInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
-            });
-            for (Patient allPatient : allPatients) {
-                if (allPatient.getDni().equals(tfPatientDni.getText())) {
-                    newDailyNote.setPatient(allPatient);
-                }
-            }
+            newDailyNote.setPatient(patient);
             dnInterface.create_XML(newDailyNote);
             loadAllPatientDailyNotes();
             tb.refresh();
@@ -734,8 +712,13 @@ public class DailyNoteWindowController {
             //Quitar el mensaje que sale despues de realizar con éxito las operaciones o de cancelar el delete
             //showInfoAlert("Added successfully");
             LOGGER.info("Added successfully");
+        } catch (NullPointerException | NumberFormatException ex) {
+            Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+            LOGGER.severe(ex.getMessage());
+            showErrorAlert("The day score must be a number between 0 and 10.\nExample: 6.5");
         } catch (Exception ex) {
             Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+            LOGGER.severe(ex.getMessage());
             showErrorAlert(ex.getMessage());
         }
 
@@ -756,13 +739,29 @@ public class DailyNoteWindowController {
                     newDailyNote = dn;
                 }
             }
-            newDailyNote.setDayScore(Double.parseDouble(spinnerDayScore.getValue().toString()));
-            //Validar el contenido del dayScore y que el texto de la nota esté informado.
+            //Validar el contenido del dayScore y que el texto de la nota esté informado
+            if (!tfDayScore.getText().isEmpty()) {
+                String stringDayScore;
+                if (tfDayScore.getText().contains(",")) {
+                    stringDayScore = tfDayScore.getText().replace(",", ".");
+                } else {
+                    stringDayScore = tfDayScore.getText();
+                }
+                Double doubleDayScore = new Double(stringDayScore.trim());
+                if (doubleDayScore < 0 || doubleDayScore > 10) {
+                    throw new NullPointerException("The day score must be a number between 0 and 10.\nExample: 6.5");
+                } else {
+                    newDailyNote.setDayScore(doubleDayScore);
+                }
+            } else {
+                throw new Exception("The day score can not be empty");
+            }
             if (!txtaNote.getText().isEmpty()) {
                 newDailyNote.setNoteText(txtaNote.getText().trim());
             } else {
                 throw new Exception("The note content can not be empty");
             }
+
             //Habilitar la fecha para poder elegir el día de la nota tanto al crear como al modificar.
             newDailyNote.setNoteDate(Date.from(dpNoteDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -775,19 +774,18 @@ public class DailyNoteWindowController {
                     }
                 }
             }
+            if (newDailyNote.getNoteDate().before(new Date())) {
+                newDailyNote.setNoteDate(newDailyNote.getNoteDate());
+            } else {
+                throw new Exception("The note date can not be after today's date");
+            }
             if (ckbxReadable.isSelected()) {
                 newDailyNote.setNoteReadable(true);
             } else {
                 newDailyNote.setNoteReadable(false);
             }
 
-            List<Patient> allPatients = pInterface.findAllPatients_XML(new GenericType<List<Patient>>() {
-            });
-            for (Patient patientFromAll : allPatients) {
-                if (patientFromAll.getDni().equals(tfPatientDni.getText())) {
-                    newDailyNote.setPatient(patientFromAll);
-                }
-            }
+            newDailyNote.setPatient(patient);
 
             dnInterface.edit_XML(newDailyNote);
             tb.refresh();
@@ -795,10 +793,12 @@ public class DailyNoteWindowController {
             //Quitar el mensaje que sale despues de realizar con éxito las operaciones o de cancelar el delete
             //showInfoAlert("Modified successfully");
             LOGGER.info("Modified successfully");
-        } catch (ClientErrorException ex) {
+        } catch (NullPointerException | NumberFormatException ex) {
             Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
-            showErrorAlert(ex.getMessage());
+            LOGGER.severe(ex.getMessage());
+            showErrorAlert("The day score must be a number between 0 and 10.\nExample: 6.5");
         } catch (Exception ex) {
+            LOGGER.severe(ex.getMessage());
             Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE, null, ex.getMessage());
             showErrorAlert(ex.getMessage());
         }
@@ -836,6 +836,7 @@ public class DailyNoteWindowController {
         } catch (DeleteException ex) {
             Logger.getLogger(DailyNoteWindowController.class.getName()).log(Level.SEVERE,
                     null, ex.getMessage());
+            LOGGER.severe(ex.getMessage());
             showErrorAlert(ex.getMessage());
         }
     }

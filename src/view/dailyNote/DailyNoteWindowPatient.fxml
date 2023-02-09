@@ -127,12 +127,12 @@
                     </font>
                 </Text>
                 <DatePicker fx:id="dpNoteDate" layoutX="68.0" layoutY="626.0" prefHeight="25.0" prefWidth="194.0" promptText="Note date" />
-                <Spinner fx:id="spinnerDayScore" editable="true" layoutX="68.0" layoutY="696.0" prefHeight="25.0" prefWidth="194.0" />
                 <Text layoutX="68.0" layoutY="683.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Day score" wrappingWidth="174.15625">
                     <font>
                         <Font size="13.0" />
                     </font>
                 </Text>
+            <TextField fx:id="tfDayScore" layoutX="67.0" layoutY="696.0" prefHeight="25.0" prefWidth="174.0" promptText="Day score" />
                 <CheckBox fx:id="ckbxReadable" layoutX="68.0" layoutY="737.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="208.0" text="Readable by psychologist">
                     <font>
                         <Font size="13.0" />
