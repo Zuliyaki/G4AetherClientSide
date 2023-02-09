@@ -884,11 +884,13 @@ public class DiagnosisController {
     public void handleDatePickerChangeGreat(ObservableValue observable,
             LocalDate oldValue,
             LocalDate newValue) {
+        if(dpDateLow.getValue() == null)
+            
         switch (comboboxSearchBy.getSelectionModel().getSelectedItem().toString()) {
             case "Find diagnosis between dates and patient id":
                 if (dpDateLow.getValue() == null || dtDateGreat.getValue() == null || dpDateLow.getValue().isAfter(dtDateGreat.getValue()) || tfPatientDNI.getText().isEmpty() || tfPatientDNI.getText().length() < 9) {
                     btnSearch.setDisable(true);
-                    if(dtDateGreat.getValue() != null)
+                    if(dtDateGreat.getValue() != null && dpDateLow.getValue() != null )
                     showInfoAlert("The ending date cannot be before the starting date");
                 } else {
                     btnSearch.setDisable(false);

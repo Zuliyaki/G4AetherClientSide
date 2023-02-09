@@ -261,7 +261,7 @@ public class DiagnosisRestful implements DiagnosisInterface {
         try {
             webTarget.path(java.text.MessageFormat.format("{0}", new Object[]{id})).request().delete(Diagnosis.class);
         } catch (Exception e) {
-            throw new DeleteException( e.getMessage() + "cannot delete diagnosis");
+            throw new DeleteException( e.getMessage() + " cannot delete diagnosis");
         }
 
     }
