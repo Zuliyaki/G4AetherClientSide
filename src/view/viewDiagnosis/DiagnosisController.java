@@ -42,6 +42,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import static javafx.application.Application.launch;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
@@ -756,7 +758,7 @@ public class DiagnosisController {
                 tfDiagnosisID.setDisable(true);
                 tfDiagnosisID.clear();
 
-                btnSearch.setDisable(true);
+                btnSearch.setDisable(false);
 
                 break;
             case "Find all diagnosis by patient id":
@@ -773,7 +775,7 @@ public class DiagnosisController {
                 tfMentalDisease.setDisable(true);
                 tfDiagnosisID.setDisable(true);
                 tfDiagnosisID.clear();
-                btnSearch.setDisable(true);
+                btnSearch.setDisable(false);
 
                 break;
             case "Find all diagnosis":
@@ -791,40 +793,6 @@ public class DiagnosisController {
 
         }
 
-    }
-
-    /**
-     * handle the search button
-     *
-     * @param event on click
-     */
-    @FXML
-    private void handleSearchButtonAction(ActionEvent event) {
-        switch (comboboxSearchBy.getValue().toString()) {
-            case "Find diagnosis between dates and patient id":
-                diagnosises = loadDiagnosisesBetweenDates();
-                tbDiagnosis.setItems(diagnosises);
-                addChbxlistener(diagnosises);
-
-                break;
-            case "Find all diagnosis by patient id":
-                diagnosises = loadDiagnosisesByPatient();
-                tbDiagnosis.setItems(diagnosises);
-                addChbxlistener(diagnosises);
-
-                break;
-            case "Find all diangosis if patient on teraphy":
-                diagnosises = loadDiagnosisesByPatientOnTherapy();
-                tbDiagnosis.setItems(diagnosises);
-                addChbxlistener(diagnosises);
-
-                break;
-            case "Find all diagnosis":
-                diagnosises = loadAllDiagnosises();
-                addChbxlistener(diagnosises);
-
-                break;
-        }
     }
 
     /**
@@ -868,13 +836,27 @@ public class DiagnosisController {
     public void handleDatePickerChangeLow(ObservableValue observable,
             LocalDate oldValue,
             LocalDate newValue) {
+
         switch (comboboxSearchBy.getSelectionModel().getSelectedItem().toString()) {
             case "Find diagnosis between dates and patient id":
-                if (dpDateLow.getValue() == null || dtDateGreat.getValue() == null || dpDateLow.getValue().isAfter(dtDateGreat.getValue()) || tfPatientDNI.getText().isEmpty() || tfPatientDNI.getText().length() < 9) {
+                if (dpDateLow.getValue() == null || dtDateGreat.getValue() == null) {
                     btnSearch.setDisable(true);
-                    if (dtDateGreat.getValue() != null) {
-                        showInfoAlert("The ending date cannot be before the starting date");
-                    }
+                    break;
+                } else {
+                    btnSearch.setDisable(false);
+                }
+
+        }
+
+    }
+
+    public void handleDatePickerChangeGreat(ObservableValue observable,
+            LocalDate oldValue,
+            LocalDate newValue) {
+        switch (comboboxSearchBy.getSelectionModel().getSelectedItem().toString()) {
+            case "Find diagnosis between dates and patient id":
+                if (dpDateLow.getValue() == null || dtDateGreat.getValue() == null) {
+                    btnSearch.setDisable(true);
                     break;
                 } else {
                     btnSearch.setDisable(false);
@@ -883,20 +865,55 @@ public class DiagnosisController {
         }
     }
 
-    public void handleDatePickerChangeGreat(ObservableValue observable,
-            LocalDate oldValue,
-            LocalDate newValue) {
-        if(dpDateLow.getValue() == null)
-            
-        switch (comboboxSearchBy.getSelectionModel().getSelectedItem().toString()) {
+    /**
+     * handle the search button
+     *
+     * @param event on click
+     */
+    @FXML
+    private void handleSearchButtonAction(ActionEvent event) {
+        Pattern pat = Pattern.compile("[0-9]{7,8}[A-Za-z]");
+        String dni = tfPatientDNI.getText();
+        Matcher mat = pat.matcher(dni);
+        switch (comboboxSearchBy.getValue().toString()) {
             case "Find diagnosis between dates and patient id":
-                if (dpDateLow.getValue() == null || dtDateGreat.getValue() == null || dpDateLow.getValue().isAfter(dtDateGreat.getValue()) || tfPatientDNI.getText().isEmpty() || tfPatientDNI.getText().length() < 9) {
-                    btnSearch.setDisable(true);
-                    if(dtDateGreat.getValue() != null && dpDateLow.getValue() != null )
+
+                if (!mat.matches()) {
+                    showInfoAlert("DNI format is not correct");
+                } else if (dpDateLow.getValue() == null || dtDateGreat.getValue() == null || dpDateLow.getValue().isAfter(dtDateGreat.getValue())) {
                     showInfoAlert("The ending date cannot be before the starting date");
                 } else {
-                    btnSearch.setDisable(false);
+                    diagnosises = loadDiagnosisesBetweenDates();
+                    tbDiagnosis.setItems(diagnosises);
+                    addChbxlistener(diagnosises);
                 }
+
+                break;
+            case "Find all diagnosis by patient id":
+                if (!mat.matches()) {
+                    showInfoAlert("DNI format is not correct");
+                } else {
+
+                    diagnosises = loadDiagnosisesByPatient();
+                    tbDiagnosis.setItems(diagnosises);
+                    addChbxlistener(diagnosises);
+                }
+
+                break;
+            case "Find all diangosis if patient on teraphy":
+                if (!mat.matches()) {
+                    showInfoAlert("DNI format is not correct");
+                } else {
+                    diagnosises = loadDiagnosisesByPatientOnTherapy();
+                    tbDiagnosis.setItems(diagnosises);
+                    addChbxlistener(diagnosises);
+                }
+
+                break;
+            case "Find all diagnosis":
+                diagnosises = loadAllDiagnosises();
+                addChbxlistener(diagnosises);
+
                 break;
         }
     }
@@ -915,35 +932,6 @@ public class DiagnosisController {
         String dni = tfPatientDNI.getText();
         if (tfPatientDNI.getText().length() > 9) {
             tfPatientDNI.setText(tfPatientDNI.getText().substring(0, 9));
-        }
-        switch (comboboxSearchBy.getSelectionModel().getSelectedItem().toString()) {
-            case "Find all diagnosis by patient id":
-
-                if (dni.length() != 9 || Character.isLetter(dni.charAt(8)) == false) {
-                    btnSearch.setDisable(true);
-                } else {
-                    btnSearch.setDisable(false);
-                }
-
-                break;
-            case "Find all diangosis if patient on teraphy":
-
-                if (dni.length() != 9 || Character.isLetter(dni.charAt(8)) == false) {
-                    btnSearch.setDisable(true);
-                } else {
-                    btnSearch.setDisable(false);
-                }
-
-                break;
-            case "Find diagnosis between dates and patient id":
-
-                if (dni.length() != 9 || Character.isLetter(dni.charAt(8)) == false || dpDateLow.getValue() == null || dtDateGreat.getValue() == null) {
-                    btnSearch.setDisable(true);
-                } else {
-                    btnSearch.setDisable(false);
-                }
-
-                break;
         }
     }
 
@@ -1082,23 +1070,20 @@ public class DiagnosisController {
 
     }
 
-
-
-
     private void addChbxlistener(ObservableList<Diagnosis> diagnosises) {
-        diagnosises.forEach(
-                diagnosis -> diagnosis.onTherapyProperty().addListener((observable, oldValue, newValue) -> {
-                    try {
-                        LOGGER.info("Trying to update the On Therapy value");
-                        diagnosisInterface.updateDiagnosis_XML(diagnosis);
-                        LOGGER.info("updated the On Therapy value");
+        if (!diagnosises.isEmpty()) {
+            diagnosises.forEach(
+                    diagnosis -> diagnosis.onTherapyProperty().addListener((observable, oldValue, newValue) -> {
+                        try {
+                            LOGGER.info("Trying to update the On Therapy value");
+                            diagnosisInterface.updateDiagnosis_XML(diagnosis);
+                            LOGGER.info("updated the On Therapy value");
 
-                    } catch (UpdateException ex) {
-                        showErrorAlert(ex.getMessage());
-                    }
-                })
-        );
+                        } catch (UpdateException ex) {
+                            showErrorAlert(ex.getMessage());
+                        }
+                    })
+            );
+        }
     }
-
 }
-
