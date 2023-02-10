@@ -111,7 +111,7 @@ public class MentalDisease2Controller {
         btnSignOff.setTooltip(new Tooltip("Sign Off"));
 
         //Fill the ComboBox
-        this.cmbType.getItems().addAll(EnumMentalDisease.values());
+        //this.cmbType.getItems().addAll(EnumMentalDisease.values());
         this.cmbType.setValue(EnumMentalDisease.MENTALILLNESS);
 
         //The focus will be on the Search field.
@@ -166,8 +166,7 @@ public class MentalDisease2Controller {
         btnSignOff.setTooltip(new Tooltip("Sign Off"));
 
         //Fill the ComboBox
-        this.cmbType.getItems().addAll(EnumMentalDisease.values());
-
+        //this.cmbType.getItems().addAll(EnumMentalDisease.values());
         //Fill in the text fields
         this.txtfName.setText(selectedMentalDisease.getMdName());
         this.txtfDescription.setText(selectedMentalDisease.getMdDescription());
@@ -416,7 +415,7 @@ public class MentalDisease2Controller {
         stage.setScene(scene);
         stage.show();
     }
-    
+
     @FXML
     private void handleHelpAction(ActionEvent event) {
         try {
